@@ -1,8 +1,3 @@
-//package com.poorknight.hello;
-//
-//public class HelloWorld {
-//
-//}
 package com.poorknight.hello;
 
 import java.io.IOException;
