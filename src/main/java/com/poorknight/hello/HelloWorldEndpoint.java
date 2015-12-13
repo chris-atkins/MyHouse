@@ -7,6 +7,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 @Path("/hello")
 public class HelloWorldEndpoint {
 
@@ -19,7 +21,8 @@ public class HelloWorldEndpoint {
 	   @POST
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)
-	   public CustomResponse response() {
+	   public CustomResponse response(JsonNode request) {
+		   System.out.println(request.toString());
 		   return new CustomResponse();
 	   }
 }

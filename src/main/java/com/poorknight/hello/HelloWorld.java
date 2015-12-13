@@ -13,6 +13,7 @@ import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.amazon.speech.Sdk;
@@ -48,7 +49,8 @@ public class HelloWorld {
         ServletHolder holder = apiContext.addServlet(ServletContainer.class, "/*");
         holder.setInitParameter("jersey.config.server.provider.classnames", 
         		"" + HelloWorldEndpoint.class.getCanonicalName() +
-        		",org.glassfish.jersey.moxy.json.MoxyJsonFeature");
+        		"," + JacksonFeature.class.getCanonicalName());
+        
         
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[] {webContext, apiContext});
