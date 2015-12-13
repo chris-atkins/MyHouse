@@ -46,7 +46,9 @@ public class HelloWorld {
         ServletContextHandler apiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
         apiContext.setContextPath("/api");
         ServletHolder holder = apiContext.addServlet(ServletContainer.class, "/*");
-        holder.setInitParameter("jersey.config.server.provider.classnames", HelloWorldEndpoint.class.getCanonicalName());
+        holder.setInitParameter("jersey.config.server.provider.classnames", 
+        		"" + HelloWorldEndpoint.class.getCanonicalName() +
+        		",org.glassfish.jersey.moxy.json.MoxyJsonFeature");
         
         ContextHandlerCollection contexts = new ContextHandlerCollection();
         contexts.setHandlers(new Handler[] {webContext, apiContext});
