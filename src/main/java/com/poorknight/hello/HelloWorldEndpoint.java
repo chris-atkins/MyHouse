@@ -21,8 +21,8 @@ public class HelloWorldEndpoint {
 	   @POST
 	   @Consumes(MediaType.APPLICATION_JSON)
 	   @Produces(MediaType.APPLICATION_JSON)
-	   public CustomResponse response(JsonNode request) {
+	   public HelloWorldResponse response(JsonNode request) {
 		   System.out.println(request.toString());
-		   return new CustomResponse();
+		   return new HelloWorldResponse();
 	   }
 }
