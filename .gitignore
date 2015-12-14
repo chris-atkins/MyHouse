@@ -2,3 +2,4 @@ target
 .classpath
 dependency-reduced-pom.xml
 docker-config/*.jar
+docker-config/keystore

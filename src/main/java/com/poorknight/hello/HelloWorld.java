@@ -20,20 +20,19 @@ import com.amazon.speech.Sdk;
 
 public class HelloWorld {
 
-    private static final int PORT = 8080;
+    private static final int PORT = 8443;
     private static final String HTTPS_SCHEME = "https";
 	
 	public static void main(String[] args) {
 		setupLogging();
-		
-
+	
 		Server server = new Server();
 		
-//		SslConnectionFactory sslConnectionFactory = setupSSL();
-//		HttpConnectionFactory httpConnectionFactory = setupHttps();
-//        ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
+		SslConnectionFactory sslConnectionFactory = setupSSL();
+		HttpConnectionFactory httpConnectionFactory = setupHttps();
+        ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
 
-		ServerConnector serverConnector = new ServerConnector(server, setupHttp());
+//		ServerConnector serverConnector = new ServerConnector(server, setupHttp());
         
 		serverConnector.setPort(PORT);
         Connector[] connectors = {serverConnector};
@@ -60,6 +59,7 @@ public class HelloWorld {
 			server.start();
 			server.join();
 		} catch (Exception e) {
+			e.printStackTrace();
 			throw new RuntimeException(e);
 		} finally {
 			server.destroy();
@@ -73,8 +73,8 @@ public class HelloWorld {
 	private static SslConnectionFactory setupSSL() {
 		SslConnectionFactory sslConnectionFactory = new SslConnectionFactory();
 		SslContextFactory sslContextFactory = sslConnectionFactory.getSslContextFactory();
-		sslContextFactory.setKeyStorePath(System.getProperty("javax.net.ssl.keyStore"));
-		sslContextFactory.setKeyStorePassword(System.getProperty("javax.net.ssl.keyStorePassword"));
+		sslContextFactory.setKeyStorePath("/Users/chrisatkins/myssl/keystore");
+		sslContextFactory.setKeyStorePassword("hiitsme5");
 		sslContextFactory.setIncludeCipherSuites(Sdk.SUPPORTED_CIPHER_SUITES);
 		return sslConnectionFactory;
 	}
