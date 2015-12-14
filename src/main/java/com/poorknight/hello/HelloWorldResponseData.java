@@ -3,6 +3,7 @@ package com.poorknight.hello;
 public class HelloWorldResponseData {
 
 	private HelloWorldOutputSpeech outputSpeech = new HelloWorldOutputSpeech();
+	private Boolean shouldEndSession = true;
 
 	public HelloWorldOutputSpeech getOutputSpeech() {
 		return outputSpeech;
@@ -10,5 +11,13 @@ public class HelloWorldResponseData {
 
 	public void setOutputSpeech(HelloWorldOutputSpeech outputSpeech) {
 		this.outputSpeech = outputSpeech;
+	}
+
+	public Boolean getShouldEndSession() {
+		return shouldEndSession;
+	}
+
+	public void setShouldEndSession(Boolean shouldEndSession) {
+		this.shouldEndSession = shouldEndSession;
 	}
 }
