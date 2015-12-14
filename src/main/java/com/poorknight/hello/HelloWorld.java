@@ -40,11 +40,11 @@ public class HelloWorld {
 
         
         ContextHandler webContext = new ContextHandler();
-        webContext.setContextPath("/hello");
+        webContext.setContextPath("/web/hello");
         webContext.setHandler(new HelloWorldHandler());
         
         ServletContextHandler apiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        apiContext.setContextPath("/api");
+        apiContext.setContextPath("/");
         ServletHolder holder = apiContext.addServlet(ServletContainer.class, "/*");
         holder.setInitParameter("jersey.config.server.provider.classnames", 
         		"" + HelloWorldEndpoint.class.getCanonicalName() +

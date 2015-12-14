@@ -9,7 +9,7 @@ import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
-@Path("/hello")
+@Path("/")
 public class HelloWorldEndpoint {
 
 	   @GET
