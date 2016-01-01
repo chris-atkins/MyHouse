@@ -1,6 +1,6 @@
-package com.poorknight.echo.hello;
+package com.poorknight.echo;
 
-public class HelloWorldOutputSpeech {
+public class EchoResponseOutputSpeech {
 	
 	private String type = "PlainText";
 	private String text = "Hi there.";

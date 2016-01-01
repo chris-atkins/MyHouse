@@ -1,15 +1,15 @@
-package com.poorknight.echo.hello;
+package com.poorknight.echo;
 
-public class HelloWorldResponseData {
+public class EchoResponseData {
 
-	private HelloWorldOutputSpeech outputSpeech = new HelloWorldOutputSpeech();
+	private EchoResponseOutputSpeech outputSpeech = new EchoResponseOutputSpeech();
 	private Boolean shouldEndSession = true;
 
-	public HelloWorldOutputSpeech getOutputSpeech() {
+	public EchoResponseOutputSpeech getOutputSpeech() {
 		return outputSpeech;
 	}
 
-	public void setOutputSpeech(HelloWorldOutputSpeech outputSpeech) {
+	public void setOutputSpeech(EchoResponseOutputSpeech outputSpeech) {
 		this.outputSpeech = outputSpeech;
 	}
 
