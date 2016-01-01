@@ -1,4 +1,4 @@
-package com.poorknight.hello;
+package com.poorknight.web;
 
 import java.io.IOException;
 
@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.handler.AbstractHandler;
 
-public class HelloWorldHandler extends AbstractHandler {
+public class HelloWorldWebPageHandler extends AbstractHandler {
 	
 	@Override
 	public void handle(String target, Request baseRequest, HttpServletRequest request, HttpServletResponse response)

@@ -1,4 +1,4 @@
-package com.poorknight.hello;
+package com.poorknight.rest;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -8,9 +8,10 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.poorknight.echo.hello.HelloWorldResponse;
 
 @Path("/")
-public class HelloWorldEndpoint {
+public class EchoEndpoint {
 
 	   @GET
 	   @Produces(MediaType.TEXT_PLAIN)

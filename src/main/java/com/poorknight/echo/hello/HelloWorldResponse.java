@@ -1,4 +1,4 @@
-package com.poorknight.hello;
+package com.poorknight.echo.hello;
 
 public class HelloWorldResponse {
 

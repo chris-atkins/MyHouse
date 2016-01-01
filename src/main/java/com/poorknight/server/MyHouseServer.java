@@ -1,4 +1,4 @@
-package com.poorknight.hello;
+package com.poorknight.server;
 
 import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Handler;
@@ -17,8 +17,10 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.amazon.speech.Sdk;
+import com.poorknight.rest.EchoEndpoint;
+import com.poorknight.web.HelloWorldWebPageHandler;
 
-public class HelloWorld {
+public class MyHouseServer {
 
     private static final int PORT = 8443;
     private static final String HTTPS_SCHEME = "https";
@@ -41,13 +43,13 @@ public class HelloWorld {
         
         ContextHandler webContext = new ContextHandler();
         webContext.setContextPath("/web/hello");
-        webContext.setHandler(new HelloWorldHandler());
+        webContext.setHandler(new HelloWorldWebPageHandler());
         
         ServletContextHandler apiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
         apiContext.setContextPath("/");
         ServletHolder holder = apiContext.addServlet(ServletContainer.class, "/*");
         holder.setInitParameter("jersey.config.server.provider.classnames", 
-        		"" + HelloWorldEndpoint.class.getCanonicalName() +
+        		"" + EchoEndpoint.class.getCanonicalName() +
         		"," + JacksonFeature.class.getCanonicalName());
         
         
