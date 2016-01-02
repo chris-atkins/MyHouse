@@ -18,7 +18,7 @@ public class HueMessager {
 
 	private ClientResponse sendLightsRequestWithOn(final boolean lightsOn) {
 		final Client client = Client.create();
-		final WebResource webResource = client.resource("http://162.205.118.185:53335/api/6b1abf1f6e7157cc3843ee8b668d32d/lights/2/state");
+		final WebResource webResource = client.resource("http://162.205.118.185:53335/api/6b1abf1f6e7157cc3843ee8b668d32d/groups/0/action");
 		final ObjectNode data = JsonNodeFactory.instance.objectNode();
 		data.set("on", JsonNodeFactory.instance.booleanNode(lightsOn));
 		final ClientResponse response = webResource.type("application/json").put(ClientResponse.class, data);
