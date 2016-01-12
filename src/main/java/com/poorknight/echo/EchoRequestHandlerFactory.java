@@ -3,8 +3,10 @@ package com.poorknight.echo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
 import com.poorknight.echo.lights.HueMessager;
-import com.poorknight.echo.lights.LightsOffRequestHandler;
-import com.poorknight.echo.lights.LightsOnRequestHandler;
+import com.poorknight.echo.lights.color.DesiredColorTranslator;
+import com.poorknight.echo.lights.color.LightColorRequestHandler;
+import com.poorknight.echo.lights.off.LightsOffRequestHandler;
+import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 
 public class EchoRequestHandlerFactory {
 
@@ -21,6 +23,10 @@ public class EchoRequestHandlerFactory {
 
 		if (intentName.equals("LightsOn")) {
 			return new LightsOnRequestHandler(new HueMessager());
+		}
+
+		if (intentName.equals("LightColor")) {
+			return new LightColorRequestHandler(request, new DesiredColorTranslator(), new HueMessager());
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);

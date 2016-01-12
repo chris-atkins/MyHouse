@@ -22,59 +22,55 @@ import com.poorknight.web.HelloWorldWebPageHandler;
 
 public class MyHouseServer {
 
-    private static final int PORT = 8443;
-    private static final String HTTPS_SCHEME = "https";
-	
-	public static void main(String[] args) {
+	private static final int PORT = 8443;
+	private static final String HTTPS_SCHEME = "https";
+
+	public static void main(final String[] args) {
 		setupLogging();
-	
-		Server server = new Server();
-		
-		SslConnectionFactory sslConnectionFactory = setupSSL();
-		HttpConnectionFactory httpConnectionFactory = setupHttps();
-        ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
 
-//		ServerConnector serverConnector = new ServerConnector(server, setupHttp());
-        
+		final Server server = new Server();
+
+		final SslConnectionFactory sslConnectionFactory = setupSSL();
+		final HttpConnectionFactory httpConnectionFactory = setupHttps();
+		final ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
+
+		// ServerConnector serverConnector = new ServerConnector(server, setupHttp());
+
 		serverConnector.setPort(PORT);
-        Connector[] connectors = {serverConnector};
-        server.setConnectors(connectors);
+		final Connector[] connectors = { serverConnector };
+		server.setConnectors(connectors);
 
-        
-        ContextHandler webContext = new ContextHandler();
-        webContext.setContextPath("/web/hello");
-        webContext.setHandler(new HelloWorldWebPageHandler());
-        
-        ServletContextHandler apiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        apiContext.setContextPath("/");
-        ServletHolder holder = apiContext.addServlet(ServletContainer.class, "/*");
-        holder.setInitParameter("jersey.config.server.provider.classnames", 
-        		"" + EchoEndpoint.class.getCanonicalName() +
-        		"," + JacksonFeature.class.getCanonicalName());
-        
-        
-        ContextHandlerCollection contexts = new ContextHandlerCollection();
-        contexts.setHandlers(new Handler[] {webContext, apiContext});
-        server.setHandler(contexts);
+		final ContextHandler webContext = new ContextHandler();
+		webContext.setContextPath("/web/hello");
+		webContext.setHandler(new HelloWorldWebPageHandler());
+
+		final ServletContextHandler apiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		apiContext.setContextPath("/");
+		final ServletHolder holder = apiContext.addServlet(ServletContainer.class, "/*");
+		holder.setInitParameter("jersey.config.server.provider.classnames", "" + EchoEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
+
+		final ContextHandlerCollection contexts = new ContextHandlerCollection();
+		contexts.setHandlers(new Handler[] { webContext, apiContext });
+		server.setHandler(contexts);
 
 		try {
 			server.start();
 			server.join();
-		} catch (Exception e) {
+		} catch (final Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		} finally {
 			server.destroy();
 		}
 	}
-	
+
 	private static void setupLogging() {
 		org.apache.log4j.BasicConfigurator.configure();
 	}
-	
+
 	private static SslConnectionFactory setupSSL() {
-		SslConnectionFactory sslConnectionFactory = new SslConnectionFactory();
-		SslContextFactory sslContextFactory = sslConnectionFactory.getSslContextFactory();
+		final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory();
+		final SslContextFactory sslContextFactory = sslConnectionFactory.getSslContextFactory();
 		sslContextFactory.setKeyStorePath("/Users/chrisatkins/myssl/keystore");
 		sslContextFactory.setKeyStorePassword("hiitsme5");
 		sslContextFactory.setIncludeCipherSuites(Sdk.SUPPORTED_CIPHER_SUITES);
@@ -82,18 +78,19 @@ public class MyHouseServer {
 	}
 
 	private static HttpConnectionFactory setupHttps() {
-		HttpConfiguration httpConf = new HttpConfiguration();
-        httpConf.setSecurePort(PORT);
-        httpConf.setSecureScheme(HTTPS_SCHEME);
-        httpConf.addCustomizer(new SecureRequestCustomizer());
-        HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConf);
+		final HttpConfiguration httpConf = new HttpConfiguration();
+		httpConf.setSecurePort(PORT);
+		httpConf.setSecureScheme(HTTPS_SCHEME);
+		httpConf.addCustomizer(new SecureRequestCustomizer());
+		final HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConf);
 		return httpConnectionFactory;
 	}
-	
+
+	@SuppressWarnings("unused")
 	private static HttpConnectionFactory setupHttp() {
-		HttpConfiguration httpConf = new HttpConfiguration();
-        httpConf.setSecurePort(PORT);
-        HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConf);
+		final HttpConfiguration httpConf = new HttpConfiguration();
+		httpConf.setSecurePort(PORT);
+		final HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConf);
 		return httpConnectionFactory;
 	}
 }

@@ -1,4 +1,4 @@
-package com.poorknight.echo.lights;
+package com.poorknight.echo.lights.on;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
@@ -11,12 +11,14 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.lights.HueMessager;
+import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LightsOffRequestHandlerTest {
+public class LightsOnRequestHandlerTest {
 
 	@InjectMocks
-	private LightsOffRequestHandler handler;
+	private LightsOnRequestHandler handler;
 
 	@Mock
 	private HueMessager hueMessager;
@@ -24,7 +26,7 @@ public class LightsOffRequestHandlerTest {
 	@Test
 	public void sendsOffRequestWhenCalled() throws Exception {
 		handler.handle();
-		verify(hueMessager).sendLightsOffRequest();
+		verify(hueMessager).sendLightsOnRequest();
 	}
 
 	@Test

@@ -10,7 +10,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
@@ -18,6 +17,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.poorknight.echo.lights.color.LightColor;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -27,7 +27,6 @@ import com.sun.jersey.api.client.WebResource.Builder;
 @PrepareForTest(Client.class)
 public class HueMessagerTest {
 
-	@InjectMocks
 	private HueMessager hueMessager;
 
 	@Mock
@@ -51,6 +50,7 @@ public class HueMessagerTest {
 		when(Client.create()).thenReturn(client);
 		when(client.resource(expectedUrl)).thenReturn(webResource);
 		when(webResource.type(expectedRestType)).thenReturn(webResourceBuilder);
+		hueMessager = new HueMessager();
 	}
 
 	@Test
@@ -65,6 +65,53 @@ public class HueMessagerTest {
 		hueMessager.sendLightsOnRequest();
 		final JsonNode sentRequest = captureSentHueArgument();
 		assertThat(sentRequest.get("on").asBoolean(), equalTo(true));
+	}
+
+	@Test
+	public void sendsColorRequestWhenCalled_WithNORMAL() throws Exception {
+		hueMessager.sendLightColorRequest(LightColor.NORMAL);
+
+		final JsonNode sentRequest = captureSentHueArgument();
+		assertExpectedNonChangingFields(sentRequest);
+
+		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.4596));
+		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.4105));
+	}
+
+	@Test
+	public void sendsColorRequestWhenCalled_WithRED() throws Exception {
+		hueMessager.sendLightColorRequest(LightColor.RED);
+
+		final JsonNode sentRequest = captureSentHueArgument();
+		assertExpectedNonChangingFields(sentRequest);
+
+		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.5787));
+		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.2694));
+	}
+
+	@Test
+	public void sendsColorRequestWhenCalled_WithBLUE() throws Exception {
+		hueMessager.sendLightColorRequest(LightColor.BLUE);
+
+		final JsonNode sentRequest = captureSentHueArgument();
+		assertExpectedNonChangingFields(sentRequest);
+
+		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.1723));
+		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.0495));
+	}
+
+	private void assertExpectedNonChangingFields(final JsonNode sentRequest) {
+		assertThat(sentRequest.get("on").asBoolean(), equalTo(true));
+		assertThat(sentRequest.get("bri").asInt(), equalTo(254));
+		assertThat(sentRequest.get("hue").asInt(), equalTo(14910));
+		assertThat(sentRequest.get("sat").asInt(), equalTo(144));
+		assertThat(sentRequest.get("ct").asInt(), equalTo(370));
+		assertThat(sentRequest.get("effect").asText(), equalTo("none"));
+		assertThat(sentRequest.get("alert").asText(), equalTo("none"));
+		assertThat(sentRequest.get("colormode").asText(), equalTo("ct"));
 	}
 
 	private JsonNode captureSentHueArgument() {

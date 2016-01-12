@@ -1,7 +1,8 @@
-package com.poorknight.echo.lights;
+package com.poorknight.echo.lights.on;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.lights.HueMessager;
 
 public class LightsOnRequestHandler implements EchoRequestHandler {
 
@@ -18,5 +19,4 @@ public class LightsOnRequestHandler implements EchoRequestHandler {
 		response.getResponse().setOutputSpeech(null);
 		return response;
 	}
-
 }

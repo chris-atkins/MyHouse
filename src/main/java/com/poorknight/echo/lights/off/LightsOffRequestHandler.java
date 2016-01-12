@@ -1,7 +1,8 @@
-package com.poorknight.echo.lights;
+package com.poorknight.echo.lights.off;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.lights.HueMessager;
 
 public class LightsOffRequestHandler implements EchoRequestHandler {
 

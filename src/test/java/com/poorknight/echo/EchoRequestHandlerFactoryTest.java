@@ -12,8 +12,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
-import com.poorknight.echo.lights.LightsOffRequestHandler;
-import com.poorknight.echo.lights.LightsOnRequestHandler;
+import com.poorknight.echo.lights.color.LightColorRequestHandler;
+import com.poorknight.echo.lights.off.LightsOffRequestHandler;
+import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 
 @RunWith(JUnit4.class)
 public class EchoRequestHandlerFactoryTest {
@@ -37,6 +38,13 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("LightsOn");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightsOnRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsLightColorRequestHandlerWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("LightColor");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(LightColorRequestHandler.class)));
 	}
 
 	@Test(expected = RuntimeException.class)
