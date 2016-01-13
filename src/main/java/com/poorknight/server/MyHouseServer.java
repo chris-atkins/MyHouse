@@ -32,9 +32,9 @@ public class MyHouseServer {
 
 		final SslConnectionFactory sslConnectionFactory = setupSSL();
 		final HttpConnectionFactory httpConnectionFactory = setupHttps();
-		final ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
+		// final ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
 
-		// ServerConnector serverConnector = new ServerConnector(server, setupHttp());
+		final ServerConnector serverConnector = new ServerConnector(server, setupHttp());
 
 		serverConnector.setPort(PORT);
 		final Connector[] connectors = { serverConnector };
