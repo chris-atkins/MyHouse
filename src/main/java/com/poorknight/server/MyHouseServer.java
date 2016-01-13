@@ -66,7 +66,7 @@ public class MyHouseServer {
 
 	private static void setupLogging() {
 		org.apache.log4j.BasicConfigurator.configure();
-	}
+	}m
 
 	private static SslConnectionFactory setupSSL() {
 		final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory();
