@@ -1,8 +1,10 @@
 package com.poorknight.echo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.fail;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -53,6 +55,19 @@ public class EchoRequestHandlerFactoryTest {
 		EchoRequestHandlerFactory.handlerFor(request);
 	}
 
+	@Test
+	public void throwsExceptionWithRequestContent_WhenRequestIsNotFormedAsExpected() throws Exception {
+		final JsonNode request = buildRequestWithNoPathToIntent();
+
+		try {
+			EchoRequestHandlerFactory.handlerFor(request);
+			fail("expecting exception");
+
+		} catch (final RuntimeException e) {
+			assertThat(e.getMessage(), containsString(request.toString()));
+		}
+	}
+
 	private JsonNode buildRequest(final String intentName) {
 		final ObjectNode rootNode = JsonNodeFactory.instance.objectNode();
 		rootNode.set("session", buildSessionNode());
@@ -90,5 +105,11 @@ public class EchoRequestHandlerFactoryTest {
 		requestNode.set("intent", intentNode);
 
 		return requestNode;
+	}
+
+	private JsonNode buildRequestWithNoPathToIntent() {
+		final ObjectNode rootNode = JsonNodeFactory.instance.objectNode();
+		rootNode.set("session", buildSessionNode());
+		return rootNode;
 	}
 }

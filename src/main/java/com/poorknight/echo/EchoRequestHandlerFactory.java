@@ -11,7 +11,7 @@ import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 public class EchoRequestHandlerFactory {
 
 	public static EchoRequestHandler handlerFor(final JsonNode request) {
-		final String intentName = request.get("request").get("intent").get("name").asText();
+		final String intentName = findRequestedIntent(request);
 
 		if (intentName.equals("SayHi")) {
 			return new HelloRequestHandler();
@@ -30,5 +30,14 @@ public class EchoRequestHandlerFactory {
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);
+	}
+
+	private static String findRequestedIntent(final JsonNode request) {
+		try {
+			return request.get("request").get("intent").get("name").asText();
+
+		} catch (final Exception e) {
+			throw new RuntimeException("Cannot find intent in request:\n" + request.toString(), e);
+		}
 	}
 }
