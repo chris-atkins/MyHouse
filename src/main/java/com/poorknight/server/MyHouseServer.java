@@ -18,6 +18,7 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 import com.amazon.speech.Sdk;
 import com.poorknight.rest.EchoEndpoint;
+import com.poorknight.rest.HouseEndpoint;
 import com.poorknight.web.HelloWorldWebPageHandler;
 
 public class MyHouseServer {
@@ -44,13 +45,11 @@ public class MyHouseServer {
 		webContext.setContextPath("/web/hello");
 		webContext.setHandler(new HelloWorldWebPageHandler());
 
-		final ServletContextHandler apiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
-		apiContext.setContextPath("/");
-		final ServletHolder holder = apiContext.addServlet(ServletContainer.class, "/*");
-		holder.setInitParameter("jersey.config.server.provider.classnames", "" + EchoEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
+		final ServletContextHandler echoContextHandler = buildEchoContextHandler("/");
+		final ServletContextHandler houseContextHandler = buildHouseContextHandler("/house");
 
 		final ContextHandlerCollection contexts = new ContextHandlerCollection();
-		contexts.setHandlers(new Handler[] { webContext, apiContext });
+		contexts.setHandlers(new Handler[] { webContext, echoContextHandler, houseContextHandler });
 		server.setHandler(contexts);
 
 		try {
@@ -84,6 +83,22 @@ public class MyHouseServer {
 		httpConf.addCustomizer(new SecureRequestCustomizer());
 		final HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConf);
 		return httpConnectionFactory;
+	}
+
+	private static ServletContextHandler buildEchoContextHandler(final String rootPath) {
+		final ServletContextHandler echoApiContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		echoApiContextHandler.setContextPath(rootPath);
+		final ServletHolder holder = echoApiContextHandler.addServlet(ServletContainer.class, "/*");
+		holder.setInitParameter("jersey.config.server.provider.classnames", "" + EchoEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
+		return echoApiContextHandler;
+	}
+
+	private static ServletContextHandler buildHouseContextHandler(final String rootPath) {
+		final ServletContextHandler houseApiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		houseApiContext.setContextPath(rootPath);
+		final ServletHolder houseHolder = houseApiContext.addServlet(ServletContainer.class, "/*");
+		houseHolder.setInitParameter("jersey.config.server.provider.classnames", "" + HouseEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
+		return houseApiContext;
 	}
 
 	@SuppressWarnings("unused")
