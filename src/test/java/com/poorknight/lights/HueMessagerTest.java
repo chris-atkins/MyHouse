@@ -1,4 +1,4 @@
-package com.poorknight.echo.lights;
+package com.poorknight.lights;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -17,7 +17,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.poorknight.echo.lights.color.LightColor;
+import com.poorknight.lights.HueMessager;
+import com.poorknight.lights.LightColor;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;

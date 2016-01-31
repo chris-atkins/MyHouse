@@ -2,11 +2,11 @@ package com.poorknight.echo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
-import com.poorknight.echo.lights.HueMessager;
 import com.poorknight.echo.lights.color.DesiredColorTranslator;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
+import com.poorknight.lights.HueMessager;
 
 public class EchoRequestHandlerFactory {
 

@@ -1,4 +1,4 @@
-package com.poorknight.echo.lights.color;
+package com.poorknight.lights;
 
 public enum LightColor {
 	NORMAL("normal"), BLUE("blue"), RED("red");

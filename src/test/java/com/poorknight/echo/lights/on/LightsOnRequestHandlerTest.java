@@ -11,8 +11,8 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.echo.lights.HueMessager;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
+import com.poorknight.lights.HueMessager;
 
 @RunWith(MockitoJUnitRunner.class)
 public class LightsOnRequestHandlerTest {
