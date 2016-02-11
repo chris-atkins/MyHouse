@@ -26,10 +26,9 @@ import com.poorknight.alerting.email.EmailFrom;
 import com.poorknight.alerting.email.EmailSubject;
 import com.poorknight.alerting.email.EmailTo;
 import com.poorknight.alerting.email.Emailer;
-import com.poorknight.alerting.email.EmailerFactory;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(EmailerFactory.class)
+@PrepareForTest(Emailer.class)
 public class TextMessageAlerterTest {
 
 	private final TextMessageAlerter textMessageAlerter = TextMessageAlerter.instance();
@@ -42,13 +41,13 @@ public class TextMessageAlerterTest {
 
 	@Before
 	public void setup() {
-		PowerMockito.mockStatic(EmailerFactory.class);
-		when(EmailerFactory.buildEmailer(new EmailTo("2483909123@vtext.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
+		PowerMockito.mockStatic(Emailer.class);
+		when(Emailer.buildEmailer(new EmailTo("2483909123@vtext.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
 	}
 
 	@Test
 	public void requestsToSendEmail_FromEmailer_BuiltWithCorrectTOAndFROM() throws Exception {
-		when(EmailerFactory.buildEmailer(new EmailTo("2483909123@vtext.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
+		when(Emailer.buildEmailer(new EmailTo("2483909123@vtext.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
 		textMessageAlerter.sendTextMessage("a message");
 		verify(emailer).sendEmail(Mockito.any(EmailSubject.class), Mockito.any(EmailBody.class));
 	}

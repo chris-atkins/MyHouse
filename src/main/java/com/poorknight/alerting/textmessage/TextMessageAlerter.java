@@ -8,7 +8,6 @@ import com.poorknight.alerting.email.EmailFrom;
 import com.poorknight.alerting.email.EmailSubject;
 import com.poorknight.alerting.email.EmailTo;
 import com.poorknight.alerting.email.Emailer;
-import com.poorknight.alerting.email.EmailerFactory;
 
 public class TextMessageAlerter {
 
@@ -24,7 +23,7 @@ public class TextMessageAlerter {
 	}
 
 	public void sendTextMessage(final String message) {
-		final Emailer emailer = EmailerFactory.buildEmailer(new EmailTo(TO), new EmailFrom(FROM));
+		final Emailer emailer = Emailer.buildEmailer(new EmailTo(TO), new EmailFrom(FROM));
 		emailer.sendEmail(new EmailSubject(buildSubject()), new EmailBody(message));
 	}
 
