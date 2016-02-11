@@ -2,6 +2,7 @@ package com.poorknight.alerting.email;
 
 import java.util.Properties;
 
+import javax.mail.AuthenticationFailedException;
 import javax.mail.Authenticator;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -12,10 +13,12 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.poorknight.settings.Environment;
+
 public class Emailer {
 
-	private static final String SMTP_AUTH_USER = System.getenv("SMTP_USER");
-	private static final String SMTP_AUTH_PWD = System.getenv("SMTP_PASSWORD");
+	private static final String SMTP_AUTH_USER = Environment.getEnvironmentVariable("SMTP_USER");
+	private static final String SMTP_AUTH_PWD = Environment.getEnvironmentVariable("SMTP_PASSWORD");
 
 	private static final String SMTP_HOST_NAME = "smtp.gmail.com";
 	private static final String SMTP_PORT = "587";
@@ -36,7 +39,7 @@ public class Emailer {
 		try {
 			buildAndSendMessage(subject, body);
 
-		} catch (final javax.mail.AuthenticationFailedException e) {
+		} catch (final AuthenticationFailedException e) {
 			throw new RuntimeException("************************ Did you set the environment variables? ************************", e);
 		} catch (final Exception e) {
 			throw new RuntimeException(e);
