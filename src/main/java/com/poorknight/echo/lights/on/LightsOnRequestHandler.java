@@ -15,8 +15,6 @@ public class LightsOnRequestHandler implements EchoRequestHandler {
 	@Override
 	public EchoResponse handle() {
 		hueMessager.sendLightsOnRequest();
-		final EchoResponse response = new EchoResponse();
-		response.getResponse().setOutputSpeech(null);
-		return response;
+		return EchoResponse.noOutputSpeechResponse();
 	}
 }

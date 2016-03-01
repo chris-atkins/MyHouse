@@ -17,5 +17,4 @@ public class PiMessager {
 	public void sendWinkRequest() {
 		webResource.type("application/json").get(ClientResponse.class);
 	}
-
 }

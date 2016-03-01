@@ -21,9 +21,6 @@ public class LightColorRequestHandler implements EchoRequestHandler {
 	public EchoResponse handle() {
 		final JsonNode slots = request.get("request").get("intent").get("slots");
 		hueMessager.sendLightColorRequest(colorTranslator.translate(slots));
-
-		final EchoResponse response = new EchoResponse();
-		response.getResponse().setOutputSpeech(null);
-		return response;
+		return EchoResponse.noOutputSpeechResponse();
 	}
 }

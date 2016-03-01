@@ -15,8 +15,6 @@ public class WinkRequestHandler implements EchoRequestHandler {
 	@Override
 	public EchoResponse handle() {
 		piMessager.sendWinkRequest();
-		final EchoResponse response = new EchoResponse();
-		response.getResponse().setOutputSpeech(null);
-		return response;
+		return EchoResponse.noOutputSpeechResponse();
 	}
 }
