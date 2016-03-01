@@ -26,5 +26,4 @@ public class EchoResponse {
 	public void setResponse(final EchoResponseData response) {
 		this.response = response;
 	}
-
 }

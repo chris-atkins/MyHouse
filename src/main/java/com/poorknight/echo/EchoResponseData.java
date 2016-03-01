@@ -9,7 +9,7 @@ public class EchoResponseData {
 		return outputSpeech;
 	}
 
-	public void setOutputSpeech(EchoResponseOutputSpeech outputSpeech) {
+	public void setOutputSpeech(final EchoResponseOutputSpeech outputSpeech) {
 		this.outputSpeech = outputSpeech;
 	}
 
@@ -17,7 +17,7 @@ public class EchoResponseData {
 		return shouldEndSession;
 	}
 
-	public void setShouldEndSession(Boolean shouldEndSession) {
+	public void setShouldEndSession(final Boolean shouldEndSession) {
 		this.shouldEndSession = shouldEndSession;
 	}
 }
