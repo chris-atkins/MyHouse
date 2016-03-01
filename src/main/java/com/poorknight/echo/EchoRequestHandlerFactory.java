@@ -6,7 +6,9 @@ import com.poorknight.echo.lights.color.DesiredColorTranslator;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
+import com.poorknight.echo.pi.WinkRequestHandler;
 import com.poorknight.lights.HueMessager;
+import com.poorknight.pi.PiMessager;
 
 public class EchoRequestHandlerFactory {
 
@@ -27,6 +29,10 @@ public class EchoRequestHandlerFactory {
 
 		if (intentName.equals("LightColor")) {
 			return new LightColorRequestHandler(request, new DesiredColorTranslator(), new HueMessager());
+		}
+
+		if (intentName.equals("Wink")) {
+			return new WinkRequestHandler(new PiMessager());
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);

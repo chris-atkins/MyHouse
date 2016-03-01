@@ -17,6 +17,7 @@ import com.poorknight.echo.hello.HelloRequestHandler;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
+import com.poorknight.echo.pi.WinkRequestHandler;
 
 @RunWith(JUnit4.class)
 public class EchoRequestHandlerFactoryTest {
@@ -47,6 +48,13 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("LightColor");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightColorRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsWinkRequestHandlerWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("Wink");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(WinkRequestHandler.class)));
 	}
 
 	@Test(expected = RuntimeException.class)

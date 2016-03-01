@@ -68,15 +68,6 @@ public class Emailer {
 		return props;
 	}
 
-	private Message buildMessage(final EmailSubject subject, final EmailBody body, final Session session) throws MessagingException, AddressException {
-		final Message message = new MimeMessage(session);
-		message.setFrom(new InternetAddress(from.getFrom()));
-		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to.getTo()));
-		message.setSubject(subject.getSubject());
-		message.setText(body.getBody());
-		return message;
-	}
-
 	private class SMTPAuthenticator extends javax.mail.Authenticator {
 		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
@@ -84,5 +75,14 @@ public class Emailer {
 			final String password = SMTP_AUTH_PWD;
 			return new PasswordAuthentication(username, password);
 		}
+	}
+
+	private Message buildMessage(final EmailSubject subject, final EmailBody body, final Session session) throws MessagingException, AddressException {
+		final Message message = new MimeMessage(session);
+		message.setFrom(new InternetAddress(from.getFrom()));
+		message.addRecipient(Message.RecipientType.TO, new InternetAddress(to.getTo()));
+		message.setSubject(subject.getSubject());
+		message.setText(body.getBody());
+		return message;
 	}
 }
