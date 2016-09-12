@@ -11,6 +11,14 @@ public class EchoResponse {
 		return echoResponse;
 	}
 
+	public static EchoResponse responseWithSpeech(final String speech) {
+		final EchoResponse echoResponse = new EchoResponse();
+		final EchoResponseOutputSpeech outputSpeech = new EchoResponseOutputSpeech();
+		outputSpeech.setText(speech);
+		echoResponse.getResponse().setOutputSpeech(outputSpeech);
+		return echoResponse;
+	}
+
 	public String getVersion() {
 		return version;
 	}

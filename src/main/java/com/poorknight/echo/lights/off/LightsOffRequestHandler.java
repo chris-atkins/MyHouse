@@ -15,6 +15,7 @@ public class LightsOffRequestHandler implements EchoRequestHandler {
 	@Override
 	public EchoResponse handle() {
 		hueMessager.sendLightsOffRequest();
-		return EchoResponse.noOutputSpeechResponse();
+		return EchoResponse.responseWithSpeech("Look at the ground!");
+//		return EchoResponse.noOutputSpeechResponse();
 	}
 }
