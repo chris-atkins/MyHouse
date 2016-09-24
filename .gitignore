@@ -3,3 +3,5 @@ target
 dependency-reduced-pom.xml
 docker-config/*.jar
 docker-config/keystore
+MyHouse.iml
+.idea

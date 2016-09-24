@@ -2,7 +2,6 @@ package com.poorknight.echo.lights.on;
 
 import com.poorknight.echo.EchoResponse;
 import com.poorknight.lights.HueMessager;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -29,7 +28,6 @@ public class LightsOnRequestHandlerTest {
 	}
 
 	@Test
-	@Ignore
 	public void returnsResponseWithNoText() {
 		final EchoResponse response = handler.handle();
 		assertThat(response.getResponse().getOutputSpeech(), nullValue());
