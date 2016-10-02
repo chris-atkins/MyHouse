@@ -9,5 +9,4 @@ public class HelloRequestHandler implements EchoRequestHandler {
 	public EchoResponse handle() {
 		return new EchoResponse();
 	}
-
 }

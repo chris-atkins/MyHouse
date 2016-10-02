@@ -1,15 +1,5 @@
 package com.poorknight.echo;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.fail;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -18,6 +8,14 @@ import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
+import com.poorknight.echo.thermostat.TempCheckHandler;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
+
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.fail;
 
 @RunWith(JUnit4.class)
 public class EchoRequestHandlerFactoryTest {
@@ -55,6 +53,13 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("Wink");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(WinkRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsTempCheckRequestHandlerWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("TempCheck");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(TempCheckHandler.class)));
 	}
 
 	@Test(expected = RuntimeException.class)

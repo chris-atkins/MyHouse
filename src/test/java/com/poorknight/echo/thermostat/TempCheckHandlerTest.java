@@ -1,0 +1,36 @@
+package com.poorknight.echo.thermostat;
+
+import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.EchoResponseData;
+import com.poorknight.thermostat.ThermostatMessager;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.math.BigDecimal;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+@RunWith(MockitoJUnitRunner.class)
+public class TempCheckHandlerTest {
+
+	@InjectMocks
+	private TempCheckHandler handler;
+
+	@Mock
+	private ThermostatMessager thermostatMessager;
+
+	@Test
+	public void whenARequestIsHandled_TheThermostatMessagerIsCalled_AndItsResponseIsReturned() throws Exception {
+		when(thermostatMessager.requestCurrentTemp()).thenReturn(new BigDecimal("42.5"));
+		final EchoResponse echoResponse = handler.handle();
+
+		final EchoResponseData response = echoResponse.getResponse();
+		assertThat(response.getOutputSpeech().getText()).isEqualTo("It's 42.5 degrees.");
+		assertThat(response.getOutputSpeech().getType()).isEqualTo("PlainText");
+		assertThat(response.getShouldEndSession()).isTrue();
+	}
+}

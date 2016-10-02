@@ -7,8 +7,10 @@ import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
+import com.poorknight.echo.thermostat.TempCheckHandler;
 import com.poorknight.lights.HueMessager;
 import com.poorknight.pi.PiMessager;
+import com.poorknight.thermostat.ThermostatMessager;
 
 public class EchoRequestHandlerFactory {
 
@@ -33,6 +35,10 @@ public class EchoRequestHandlerFactory {
 
 		if (intentName.equals("Wink")) {
 			return new WinkRequestHandler(new PiMessager());
+		}
+
+		if (intentName.equals("TempCheck")) {
+			return new TempCheckHandler(new ThermostatMessager());
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);
