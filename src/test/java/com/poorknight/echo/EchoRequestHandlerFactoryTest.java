@@ -8,6 +8,8 @@ import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
+import com.poorknight.echo.thermostat.HeatOffHandler;
+import com.poorknight.echo.thermostat.HeatOnHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -60,6 +62,20 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("TempCheck");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(TempCheckHandler.class)));
+	}
+
+	@Test
+	public void returnsHeatOnRequestHandlerWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("HeatOn");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(HeatOnHandler.class)));
+	}
+
+	@Test
+	public void returnsHeatOffRequestHandlerWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("HeatOff");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(HeatOffHandler.class)));
 	}
 
 	@Test(expected = RuntimeException.class)

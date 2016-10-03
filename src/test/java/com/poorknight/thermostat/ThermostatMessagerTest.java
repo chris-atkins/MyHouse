@@ -8,16 +8,18 @@ import com.sun.jersey.api.client.WebResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.ws.rs.core.MediaType;
-
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -27,7 +29,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @PrepareForTest(Client.class)
 public class ThermostatMessagerTest {
 
-	private String expectedEndpointOfThermostat = "http://162.205.118.185:35556/tstat";
+	private final static String expectedEndpointOfThermostat = "http://162.205.118.185:35556/tstat";
 
 	@Mock
 	private Client client;
@@ -37,6 +39,9 @@ public class ThermostatMessagerTest {
 
 	@Mock
 	WebResource.Builder builder;
+
+	@Captor
+	private ArgumentCaptor<JsonNode> captor;
 
 	private ThermostatMessager messager;
 
@@ -61,6 +66,21 @@ public class ThermostatMessagerTest {
 		verify(webResource).type(MediaType.APPLICATION_JSON_TYPE);
 		verify(builder).accept(MediaType.APPLICATION_JSON_TYPE);
 		verify(builder).get(JsonNode.class);
+	}
+
+	@Test
+	public void postsNewDesiredTempToThermostat() throws Exception {
+		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+
+		messager.postHeatTargetTemperature(new BigDecimal("68.5"));
+
+		verify(builder).post(eq(JsonNode.class), captor.capture());
+		final JsonNode requestBody = captor.getValue();
+
+		assertThat(requestBody.get("t_heat").asDouble()).isEqualTo(68.5);
+		assertThat(requestBody.get("tmode").asInt()).isEqualTo(1);
+		assertThat(requestBody.get("hold").asInt()).isEqualTo(1);
 	}
 
 	private JsonNode buildJsonResponseFromThermostat(final Double temperature) {
