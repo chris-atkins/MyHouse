@@ -37,7 +37,7 @@ public class PiMessagerTest {
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;
 
-	private final String expectedUrl = "http://162.205.118.185:35553/wink";
+	private final String expectedUrl = "http://75.38.163.141:35553/wink";
 	private final String expectedRestType = "application/json";
 
 	@Before

@@ -15,7 +15,7 @@ public class ThermostatMessager {
 
 	public ThermostatMessager() {
 		final Client client = Client.create();
-		webResource = client.resource("http://162.205.118.185:35556/tstat");
+		webResource = client.resource("http://75.38.163.141:35556/tstat");
 	}
 
 	public  BigDecimal requestCurrentTemp() {
