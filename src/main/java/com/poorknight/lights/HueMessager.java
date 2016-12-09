@@ -39,9 +39,9 @@ public class HueMessager {
 		final ObjectNode data = nodeFactory.objectNode();
 		data.set("on", nodeFactory.booleanNode(true));
 		data.set("bri", nodeFactory.numberNode(254));
-		data.set("hue", nodeFactory.numberNode(14910));
-		data.set("sat", nodeFactory.numberNode(144));
-		data.set("ct", nodeFactory.numberNode(370));
+		data.set("hue", nodeFactory.numberNode(15630));
+		data.set("sat", nodeFactory.numberNode(105));
+		data.set("ct", nodeFactory.numberNode(330));
 		data.set("effect", nodeFactory.textNode("none"));
 		data.set("alert", nodeFactory.textNode("none"));
 		data.set("colormode", nodeFactory.textNode("ct"));
@@ -58,7 +58,7 @@ public class HueMessager {
 		case RED:
 			return nodeFactory.arrayNode().add(0.5787).add(0.2694);
 		case NORMAL:
-			return nodeFactory.arrayNode().add(0.4596).add(0.4105);
+			return nodeFactory.arrayNode().add(0.435).add(0.4036);
 		default:
 			throw new RuntimeException("No color setup in HueMessager for " + lightColor.name());
 		}

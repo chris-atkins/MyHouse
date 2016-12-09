@@ -1,10 +1,10 @@
 package com.poorknight.lights;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.WebResource.Builder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,13 +16,10 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.poorknight.lights.HueMessager;
-import com.poorknight.lights.LightColor;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Client.class)
@@ -76,8 +73,8 @@ public class HueMessagerTest {
 		assertExpectedNonChangingFields(sentRequest);
 
 		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
-		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.4596));
-		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.4105));
+		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.435));
+		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.4036));
 	}
 
 	@Test
@@ -107,9 +104,9 @@ public class HueMessagerTest {
 	private void assertExpectedNonChangingFields(final JsonNode sentRequest) {
 		assertThat(sentRequest.get("on").asBoolean(), equalTo(true));
 		assertThat(sentRequest.get("bri").asInt(), equalTo(254));
-		assertThat(sentRequest.get("hue").asInt(), equalTo(14910));
-		assertThat(sentRequest.get("sat").asInt(), equalTo(144));
-		assertThat(sentRequest.get("ct").asInt(), equalTo(370));
+		assertThat(sentRequest.get("hue").asInt(), equalTo(15630));
+		assertThat(sentRequest.get("sat").asInt(), equalTo(105));
+		assertThat(sentRequest.get("ct").asInt(), equalTo(330));
 		assertThat(sentRequest.get("effect").asText(), equalTo("none"));
 		assertThat(sentRequest.get("alert").asText(), equalTo("none"));
 		assertThat(sentRequest.get("colormode").asText(), equalTo("ct"));
