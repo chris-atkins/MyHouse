@@ -11,7 +11,7 @@ public class PiMessager {
 
 	public PiMessager() {
 		client = Client.create();
-		webResource = client.resource("http://75.38.163.141:35553/wink");
+		webResource = client.resource("https://75.38.163.141:35553/wink");
 	}
 
 	public void sendWinkRequest() {

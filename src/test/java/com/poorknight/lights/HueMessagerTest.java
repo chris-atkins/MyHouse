@@ -39,7 +39,7 @@ public class HueMessagerTest {
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;
 
-	private final String expectedUrl = "http://75.38.163.141:35553/lights/state";
+	private final String expectedUrl = "https://75.38.163.141:35553/lights/state";
 	private final String expectedRestType = "application/json";
 
 	@Before

@@ -1,8 +1,10 @@
 package com.poorknight.pi;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
+import com.fasterxml.jackson.databind.JsonNode;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.WebResource.Builder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +15,8 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(Client.class)
@@ -37,7 +36,7 @@ public class PiMessagerTest {
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;
 
-	private final String expectedUrl = "http://75.38.163.141:35553/wink";
+	private final String expectedUrl = "https://75.38.163.141:35553/wink";
 	private final String expectedRestType = "application/json";
 
 	@Before

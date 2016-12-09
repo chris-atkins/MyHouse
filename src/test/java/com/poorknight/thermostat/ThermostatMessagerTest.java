@@ -29,7 +29,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 @PrepareForTest(Client.class)
 public class ThermostatMessagerTest {
 
-	private final static String expectedEndpointOfThermostat = "http://75.38.163.141:35553/tstat";
+	private final static String expectedEndpointOfThermostat = "https://75.38.163.141:35553/tstat";
 
 	@Mock
 	private Client client;

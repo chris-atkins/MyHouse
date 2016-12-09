@@ -15,7 +15,7 @@ public class HueMessager {
 
 	public HueMessager() {
 		client = Client.create();
-		webResource = client.resource("http://75.38.163.141:35553/lights/state");
+		webResource = client.resource("https://75.38.163.141:35553/lights/state");
 		nodeFactory = JsonNodeFactory.instance;
 	}
 
