@@ -3,6 +3,7 @@ package com.poorknight.thermostat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.poorknight.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import org.junit.Before;
@@ -22,14 +23,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Client.class)
+@PrepareForTest({Client.class, Environment.class})
 public class ThermostatMessagerTest {
 
-	private final static String expectedEndpointOfThermostat = "https://75.38.163.141:35553/tstat";
+	private final static String houseUrl = "houseUrl";
+	private final static String thermostatPath = "/tstat";
+	private final static String expectedEndpointOfThermostat = houseUrl + thermostatPath;
 
 	@Mock
 	private Client client;
@@ -47,9 +49,10 @@ public class ThermostatMessagerTest {
 
 	@Before
 	public void setup() {
-		initMocks(Client.class);
 		PowerMockito.mockStatic(Client.class);
+		PowerMockito.mockStatic(Environment.class);
 		PowerMockito.when(Client.create()).thenReturn(client);
+		when(Environment.getEnvironmentVariable("HOUSE_URL")).thenReturn(houseUrl);
 		when(client.resource(expectedEndpointOfThermostat)).thenReturn(webResource);
 		messager = new ThermostatMessager();
 	}

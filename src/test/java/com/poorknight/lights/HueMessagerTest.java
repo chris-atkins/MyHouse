@@ -1,6 +1,7 @@
 package com.poorknight.lights;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.poorknight.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -22,7 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Client.class)
+@PrepareForTest({Client.class, Environment.class})
 public class HueMessagerTest {
 
 	private HueMessager hueMessager;
@@ -39,13 +40,18 @@ public class HueMessagerTest {
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;
 
-	private final String expectedUrl = "https://75.38.163.141:35553/lights/state";
+	private final String houseUrl = "houseUrl";
+	private final String lightsPath = "/lights/state";
+	private final String expectedUrl = houseUrl + lightsPath;
+
 	private final String expectedRestType = "application/json";
 
 	@Before
 	public void setup() {
 		PowerMockito.mockStatic(Client.class);
+		PowerMockito.mockStatic(Environment.class);
 		when(Client.create()).thenReturn(client);
+		when(Environment.getEnvironmentVariable("HOUSE_URL")).thenReturn(houseUrl);
 		when(client.resource(expectedUrl)).thenReturn(webResource);
 		when(webResource.type(expectedRestType)).thenReturn(webResourceBuilder);
 		hueMessager = new HueMessager();

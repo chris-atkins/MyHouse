@@ -3,6 +3,7 @@ package com.poorknight.lights;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.poorknight.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -15,7 +16,8 @@ public class HueMessager {
 
 	public HueMessager() {
 		client = Client.create();
-		webResource = client.resource("https://75.38.163.141:35553/lights/state");
+		final String hueEndpoint = Environment.getEnvironmentVariable("HOUSE_URL") + "/lights/state";
+		webResource = client.resource(hueEndpoint);
 		nodeFactory = JsonNodeFactory.instance;
 	}
 

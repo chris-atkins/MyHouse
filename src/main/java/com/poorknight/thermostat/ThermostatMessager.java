@@ -3,6 +3,7 @@ package com.poorknight.thermostat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.poorknight.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 
@@ -15,7 +16,8 @@ public class ThermostatMessager {
 
 	public ThermostatMessager() {
 		final Client client = Client.create();
-		webResource = client.resource("https://75.38.163.141:35553/tstat");
+		final String thermostatEndpoint = Environment.getEnvironmentVariable("HOUSE_URL") + "/tstat";
+		webResource = client.resource(thermostatEndpoint);
 	}
 
 	public  BigDecimal requestCurrentTemp() {

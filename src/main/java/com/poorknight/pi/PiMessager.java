@@ -1,5 +1,6 @@
 package com.poorknight.pi;
 
+import com.poorknight.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -11,7 +12,8 @@ public class PiMessager {
 
 	public PiMessager() {
 		client = Client.create();
-		webResource = client.resource("https://75.38.163.141:35553/wink");
+		final String winkEndpointUrl = Environment.getEnvironmentVariable("HOUSE_URL") + "/wink";
+		webResource = client.resource(winkEndpointUrl);
 	}
 
 	public void sendWinkRequest() {
