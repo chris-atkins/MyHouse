@@ -1,11 +1,9 @@
 package com.poorknight.lights;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.poorknight.settings.Environment;
-import com.sun.jersey.api.client.Client;
+import com.poorknight.server.WebResourceFactory;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.WebResource.Builder;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,42 +15,33 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Client.class, Environment.class})
+@PrepareForTest(WebResourceFactory.class)
 public class HueMessagerTest {
 
 	private HueMessager hueMessager;
 
 	@Mock
-	private Client client;
-
-	@Mock
 	private WebResource webResource;
 
 	@Mock
-	private Builder webResourceBuilder;
+	private WebResource.Builder webResourceBuilder;
 
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;
 
-	private final String houseUrl = "houseUrl";
 	private final String lightsPath = "/lights/state";
-	private final String expectedUrl = houseUrl + lightsPath;
-
 	private final String expectedRestType = "application/json";
 
 	@Before
 	public void setup() {
-		PowerMockito.mockStatic(Client.class);
-		PowerMockito.mockStatic(Environment.class);
-		when(Client.create()).thenReturn(client);
-		when(Environment.getEnvironmentVariable("HOUSE_URL")).thenReturn(houseUrl);
-		when(client.resource(expectedUrl)).thenReturn(webResource);
+		PowerMockito.mockStatic(WebResourceFactory.class);
+		when(WebResourceFactory.buildSecuredHomeWebResource(lightsPath)).thenReturn(webResource);
 		when(webResource.type(expectedRestType)).thenReturn(webResourceBuilder);
 		hueMessager = new HueMessager();
 	}

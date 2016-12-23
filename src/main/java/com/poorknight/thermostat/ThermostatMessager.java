@@ -3,8 +3,7 @@ package com.poorknight.thermostat;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.poorknight.settings.Environment;
-import com.sun.jersey.api.client.Client;
+import com.poorknight.server.WebResourceFactory;
 import com.sun.jersey.api.client.WebResource;
 
 import javax.ws.rs.core.MediaType;
@@ -12,12 +11,8 @@ import java.math.BigDecimal;
 
 public class ThermostatMessager {
 
-	private final WebResource webResource;
-
-	public ThermostatMessager() {
-		final Client client = Client.create();
-		final String thermostatEndpoint = Environment.getEnvironmentVariable("HOUSE_URL") + "/tstat";
-		webResource = client.resource(thermostatEndpoint);
+	private WebResource buildWebResource() {
+		return WebResourceFactory.buildSecuredHomeWebResource("/tstat");
 	}
 
 	public  BigDecimal requestCurrentTemp() {
@@ -52,7 +47,7 @@ public class ThermostatMessager {
 	}
 
 	private WebResource.Builder prepareJsonRequest() {
-		return webResource
+		return buildWebResource()
 				.type(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE);
 	}

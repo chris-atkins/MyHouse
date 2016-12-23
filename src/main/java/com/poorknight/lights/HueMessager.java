@@ -3,22 +3,20 @@ package com.poorknight.lights;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.poorknight.settings.Environment;
-import com.sun.jersey.api.client.Client;
+import com.poorknight.server.WebResourceFactory;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 public class HueMessager {
 
-	private final Client client;
-	private final WebResource webResource;
 	private final JsonNodeFactory nodeFactory;
 
 	public HueMessager() {
-		client = Client.create();
-		final String hueEndpoint = Environment.getEnvironmentVariable("HOUSE_URL") + "/lights/state";
-		webResource = client.resource(hueEndpoint);
 		nodeFactory = JsonNodeFactory.instance;
+	}
+
+	private WebResource.Builder buildWebResource() {
+		return WebResourceFactory.buildSecuredHomeWebResource("/lights/state").type("application/json");
 	}
 
 	public void sendLightsOffRequest() {
@@ -33,7 +31,7 @@ public class HueMessager {
 		final ObjectNode data = nodeFactory.objectNode();
 		data.set("on", JsonNodeFactory.instance.booleanNode(lightsOn));
 
-		final ClientResponse response = webResource.type("application/json").put(ClientResponse.class, data);
+		final ClientResponse response = buildWebResource().put(ClientResponse.class, data);
 		return response;
 	}
 
@@ -49,7 +47,7 @@ public class HueMessager {
 		data.set("colormode", nodeFactory.textNode("ct"));
 		data.set("xy", buildArrayNodeForColor(lightColor));
 
-		final ClientResponse response = webResource.type("application/json").put(ClientResponse.class, data);
+		final ClientResponse response = buildWebResource().put(ClientResponse.class, data);
 		return response;
 	}
 

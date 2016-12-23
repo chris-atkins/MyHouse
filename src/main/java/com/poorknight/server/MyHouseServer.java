@@ -1,25 +1,15 @@
 package com.poorknight.server;
 
-import org.eclipse.jetty.server.Connector;
-import org.eclipse.jetty.server.Handler;
-import org.eclipse.jetty.server.HttpConfiguration;
-import org.eclipse.jetty.server.HttpConnectionFactory;
-import org.eclipse.jetty.server.SecureRequestCustomizer;
-import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.SslConnectionFactory;
+import com.poorknight.rest.EchoEndpoint;
+import com.poorknight.rest.HouseEndpoint;
+import com.poorknight.web.HelloWorldWebPageHandler;
+import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
-
-import com.amazon.speech.Sdk;
-import com.poorknight.rest.EchoEndpoint;
-import com.poorknight.rest.HouseEndpoint;
-import com.poorknight.web.HelloWorldWebPageHandler;
 
 public class MyHouseServer {
 
@@ -38,8 +28,7 @@ public class MyHouseServer {
 		// ServerConnector serverConnector = new ServerConnector(server, setupHttp());
 
 		serverConnector.setPort(PORT);
-		final Connector[] connectors = { serverConnector };
-		server.setConnectors(connectors);
+		server.addConnector(serverConnector);
 
 		final ContextHandler webContext = new ContextHandler();
 		webContext.setContextPath("/web/hello");
@@ -68,12 +57,7 @@ public class MyHouseServer {
 	}
 
 	private static SslConnectionFactory setupSSL() {
-		final SslConnectionFactory sslConnectionFactory = new SslConnectionFactory();
-		final SslContextFactory sslContextFactory = sslConnectionFactory.getSslContextFactory();
-		sslContextFactory.setKeyStorePath("/Users/chrisatkins/myssl/keystore");
-		sslContextFactory.setKeyStorePassword("hiitsme5");
-		sslContextFactory.setIncludeCipherSuites(Sdk.SUPPORTED_CIPHER_SUITES);
-		return sslConnectionFactory;
+		return SSLConnectionFactoryBuilder.build();
 	}
 
 	private static HttpConnectionFactory setupHttps() {
@@ -86,7 +70,7 @@ public class MyHouseServer {
 	}
 
 	private static ServletContextHandler buildEchoContextHandler(final String rootPath) {
-		final ServletContextHandler echoApiContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		final ServletContextHandler echoApiContextHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		echoApiContextHandler.setContextPath(rootPath);
 		final ServletHolder holder = echoApiContextHandler.addServlet(ServletContainer.class, "/*");
 		holder.setInitParameter("jersey.config.server.provider.classnames", "" + EchoEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
@@ -94,7 +78,7 @@ public class MyHouseServer {
 	}
 
 	private static ServletContextHandler buildHouseContextHandler(final String rootPath) {
-		final ServletContextHandler houseApiContext = new ServletContextHandler(ServletContextHandler.SESSIONS);
+		final ServletContextHandler houseApiContext = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		houseApiContext.setContextPath(rootPath);
 		final ServletHolder houseHolder = houseApiContext.addServlet(ServletContainer.class, "/*");
 		houseHolder.setInitParameter("jersey.config.server.provider.classnames", "" + HouseEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
