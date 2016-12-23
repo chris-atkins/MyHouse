@@ -14,14 +14,16 @@ import javax.net.ssl.SSLContext;
 
 public class WebResourceFactory {
 
-	public static WebResource buildSecuredHomeWebResource(final String path) {
+	public static WebResource.Builder buildSecuredHomeWebResource(final String path) {
 		final String url = Environment.getEnvironmentVariable("HOUSE_URL") + path;
+		final String authSecret = Environment.getEnvironmentVariable("AUTHENTICATION_SECRET");
+
 		final HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
 		final ClientConfig config = new DefaultClientConfig();
 		config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES, new HTTPSProperties(hostnameVerifier, buildSSLContext()));
 		final Client client = Client.create(config);
 
-		return client.resource(url);
+		return client.resource(url).header("auth-secret", authSecret);
 	}
 
 	private static SSLContext buildSSLContext() {

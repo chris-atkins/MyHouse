@@ -6,7 +6,7 @@ import com.sun.jersey.api.client.WebResource;
 
 public class PiMessager {
 
-	private WebResource buildWebResource() {
+	private WebResource.Builder buildWebResource() {
 		return WebResourceFactory.buildSecuredHomeWebResource("/wink");
 	}
 

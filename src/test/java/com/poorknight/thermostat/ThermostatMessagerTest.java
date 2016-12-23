@@ -35,10 +35,10 @@ public class ThermostatMessagerTest {
 	private Client client;
 
 	@Mock
-	private WebResource webResource;
+	private WebResource.Builder webResource;
 
 	@Mock
-	WebResource.Builder builder;
+	private WebResource.Builder builder;
 
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;

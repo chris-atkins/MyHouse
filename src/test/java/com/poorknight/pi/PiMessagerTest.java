@@ -29,7 +29,7 @@ public class PiMessagerTest {
 	private Client client;
 
 	@Mock
-	private WebResource webResource;
+	private WebResource.Builder webResource;
 
 	@Mock
 	private Builder webResourceBuilder;

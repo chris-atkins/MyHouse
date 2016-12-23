@@ -15,9 +15,6 @@ public class HueMessager {
 		nodeFactory = JsonNodeFactory.instance;
 	}
 
-	private WebResource.Builder buildWebResource() {
-		return WebResourceFactory.buildSecuredHomeWebResource("/lights/state").type("application/json");
-	}
 
 	public void sendLightsOffRequest() {
 		sendLightsRequestWithOn(false);
@@ -31,7 +28,7 @@ public class HueMessager {
 		final ObjectNode data = nodeFactory.objectNode();
 		data.set("on", JsonNodeFactory.instance.booleanNode(lightsOn));
 
-		final ClientResponse response = buildWebResource().put(ClientResponse.class, data);
+		final ClientResponse response = prepareJsonRequest().put(ClientResponse.class, data);
 		return response;
 	}
 
@@ -47,8 +44,12 @@ public class HueMessager {
 		data.set("colormode", nodeFactory.textNode("ct"));
 		data.set("xy", buildArrayNodeForColor(lightColor));
 
-		final ClientResponse response = buildWebResource().put(ClientResponse.class, data);
+		final ClientResponse response = prepareJsonRequest().put(ClientResponse.class, data);
 		return response;
+	}
+
+	private WebResource.Builder prepareJsonRequest() {
+		return WebResourceFactory.buildSecuredHomeWebResource("/lights/state").type("application/json");
 	}
 
 	private JsonNode buildArrayNodeForColor(final LightColor lightColor) {

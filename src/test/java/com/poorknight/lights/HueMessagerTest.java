@@ -27,7 +27,7 @@ public class HueMessagerTest {
 	private HueMessager hueMessager;
 
 	@Mock
-	private WebResource webResource;
+	private WebResource.Builder webResource;
 
 	@Mock
 	private WebResource.Builder webResourceBuilder;

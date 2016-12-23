@@ -11,10 +11,6 @@ import java.math.BigDecimal;
 
 public class ThermostatMessager {
 
-	private WebResource buildWebResource() {
-		return WebResourceFactory.buildSecuredHomeWebResource("/tstat");
-	}
-
 	public  BigDecimal requestCurrentTemp() {
 		final JsonNode response = requestThermostatState();
 		return readTempFromResponse(response);
@@ -47,7 +43,7 @@ public class ThermostatMessager {
 	}
 
 	private WebResource.Builder prepareJsonRequest() {
-		return buildWebResource()
+		return WebResourceFactory.buildSecuredHomeWebResource("/tstat")
 				.type(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE);
 	}
