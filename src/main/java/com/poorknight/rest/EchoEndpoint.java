@@ -1,14 +1,11 @@
 package com.poorknight.rest;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.EchoRequestHandlerFactory;
 import com.poorknight.echo.EchoResponse;
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 @Path("/")
 public class EchoEndpoint {
@@ -18,5 +15,12 @@ public class EchoEndpoint {
 	@Produces(MediaType.APPLICATION_JSON)
 	public EchoResponse postEchoRequest(final JsonNode request) {
 		return EchoRequestHandlerFactory.handlerFor(request).handle();
+	}
+
+	@GET
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getEchoRequest(final JsonNode request) {
+		return "you have hit the endpoint";
 	}
 }
