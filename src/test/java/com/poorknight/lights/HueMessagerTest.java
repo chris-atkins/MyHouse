@@ -54,10 +54,14 @@ public class HueMessagerTest {
 	}
 
 	@Test
-	public void sendsOnRequestWhenCalled() throws Exception {
+	public void sendsOnRequestWhenCalled_WithSameArgumentsAsNORMAL() throws Exception {
 		hueMessager.sendLightsOnRequest();
 		final JsonNode sentRequest = captureSentHueArgument();
-		assertThat(sentRequest.get("on").asBoolean(), equalTo(true));
+		assertExpectedNonChangingFields(sentRequest);
+
+		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.3852));
+		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.3815));
 	}
 
 	@Test
@@ -68,8 +72,8 @@ public class HueMessagerTest {
 		assertExpectedNonChangingFields(sentRequest);
 
 		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
-		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.435));
-		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.4036));
+		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.3852));
+		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.3815));
 	}
 
 	@Test
@@ -99,9 +103,9 @@ public class HueMessagerTest {
 	private void assertExpectedNonChangingFields(final JsonNode sentRequest) {
 		assertThat(sentRequest.get("on").asBoolean(), equalTo(true));
 		assertThat(sentRequest.get("bri").asInt(), equalTo(254));
-		assertThat(sentRequest.get("hue").asInt(), equalTo(15630));
-		assertThat(sentRequest.get("sat").asInt(), equalTo(105));
-		assertThat(sentRequest.get("ct").asInt(), equalTo(330));
+		assertThat(sentRequest.get("hue").asInt(), equalTo(19228));
+		assertThat(sentRequest.get("sat").asInt(), equalTo(13));
+		assertThat(sentRequest.get("ct").asInt(), equalTo(257));
 		assertThat(sentRequest.get("effect").asText(), equalTo("none"));
 		assertThat(sentRequest.get("alert").asText(), equalTo("none"));
 		assertThat(sentRequest.get("colormode").asText(), equalTo("ct"));
