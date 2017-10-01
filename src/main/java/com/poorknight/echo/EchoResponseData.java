@@ -4,15 +4,15 @@ public class EchoResponseData {
 
 	private EchoResponseOutputSpeech outputSpeech = new EchoResponseOutputSpeech();
 	private Boolean shouldEndSession = true;
-//	private List<EchoDirective> directives = Arrays.asList(new EchoDirective());
-//
-//	public List<EchoDirective> getDirectives() {
-//		return directives;
-//	}
-//
-//	public void setDirectives(final List<EchoDirective> directives) {
-//		this.directives = directives;
-//	}
+	private List<EchoDirective> directives = Arrays.asList(new EchoDirective());
+
+	public List<EchoDirective> getDirectives() {
+		return directives;
+	}
+
+	public void setDirectives(final List<EchoDirective> directives) {
+		this.directives = directives;
+	}
 
 	public EchoResponseOutputSpeech getOutputSpeech() {
 		return outputSpeech;
