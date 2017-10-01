@@ -1,5 +1,8 @@
 package com.poorknight.echo;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class EchoResponseData {
 
 	private EchoResponseOutputSpeech outputSpeech = new EchoResponseOutputSpeech();
