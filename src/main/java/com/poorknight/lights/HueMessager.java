@@ -41,7 +41,6 @@ public class HueMessager {
 		data.set("ct", nodeFactory.numberNode(257));
 		data.set("effect", nodeFactory.textNode("none"));
 		data.set("alert", nodeFactory.textNode("none"));
-		data.set("colormode", nodeFactory.textNode("ct"));
 		data.set("xy", buildArrayNodeForColor(lightColor));
 
 		final ClientResponse response = prepareJsonRequest().put(ClientResponse.class, data);

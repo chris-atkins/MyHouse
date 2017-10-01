@@ -16,6 +16,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
@@ -108,7 +109,7 @@ public class HueMessagerTest {
 		assertThat(sentRequest.get("ct").asInt(), equalTo(257));
 		assertThat(sentRequest.get("effect").asText(), equalTo("none"));
 		assertThat(sentRequest.get("alert").asText(), equalTo("none"));
-		assertThat(sentRequest.get("colormode").asText(), equalTo("ct"));
+		assertThat(sentRequest.get("colormode"), nullValue());
 	}
 
 	private JsonNode captureSentHueArgument() {
