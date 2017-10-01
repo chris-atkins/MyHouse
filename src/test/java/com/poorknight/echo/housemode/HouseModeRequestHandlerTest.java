@@ -1,7 +1,5 @@
 package com.poorknight.echo.housemode;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.ObjectWriter;
 import com.poorknight.echo.EchoResponse;
 import com.poorknight.echo.EchoResponseData;
 import org.junit.Before;
@@ -38,16 +36,5 @@ public class HouseModeRequestHandlerTest {
 		assertThat(response.getOutputSpeech().getText()).isEqualTo("Have a good day.");
 		assertThat(response.getOutputSpeech().getType()).isEqualTo("PlainText");
 		assertThat(response.getShouldEndSession()).isTrue();
-	}
-
-	@Test
-	public void name() throws Exception {
-
-		final EchoResponse echoResponse = EchoResponse.responseWithSpeech("Have a good day.");
-
-		ObjectWriter ow = new ObjectMapper().writer().withDefaultPrettyPrinter();
-		String json = ow.writeValueAsString(echoResponse);
-		System.out.println(json);
-
 	}
 }
