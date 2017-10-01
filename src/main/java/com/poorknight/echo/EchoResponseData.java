@@ -1,17 +1,13 @@
 package com.poorknight.echo;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class EchoResponseData {
 
 	private EchoResponseOutputSpeech outputSpeech = new EchoResponseOutputSpeech();
 	private Boolean shouldEndSession = true;
-	private List<EchoDirective> directives = new ArrayList<EchoDirective>();
-
-	public EchoResponseData() {
-		directives.add(new EchoDirective());
-	}
+	private List<EchoDirective> directives = Arrays.asList(new EchoDirective());
 
 	public List<EchoDirective> getDirectives() {
 		return directives;
