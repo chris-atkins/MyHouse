@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
 import com.poorknight.echo.housemode.HouseModeMessager;
 import com.poorknight.echo.housemode.HouseModeRequestHandler;
+import com.poorknight.echo.housemode.HouseModeResponseBuilder;
 import com.poorknight.echo.lights.color.DesiredColorTranslator;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
@@ -56,7 +57,7 @@ public class EchoRequestHandlerFactory {
 		}
 
 		if(intentName.equals("AtWorkMode")) {
-			return new HouseModeRequestHandler(AT_WORK, new HouseModeMessager());
+			return new HouseModeRequestHandler(AT_WORK, new HouseModeMessager(), new HouseModeResponseBuilder());
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);

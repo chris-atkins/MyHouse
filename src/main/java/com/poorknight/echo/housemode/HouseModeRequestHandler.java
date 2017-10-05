@@ -7,10 +7,12 @@ public class HouseModeRequestHandler implements EchoRequestHandler {
 
 	private HouseMode requestedMode;
 	private final HouseModeMessager houseModeMessager;
+	private final HouseModeResponseBuilder houseModeResponseBuilder;
 
-	public HouseModeRequestHandler(final HouseMode requestedMode, final HouseModeMessager houseModeMessager) {
+	public HouseModeRequestHandler(final HouseMode requestedMode, final HouseModeMessager houseModeMessager, final HouseModeResponseBuilder houseModeResponseBuilder) {
 		this.requestedMode = requestedMode;
 		this.houseModeMessager = houseModeMessager;
+		this.houseModeResponseBuilder = houseModeResponseBuilder;
 	}
 
 	public HouseMode getRequestedMode() {
@@ -20,6 +22,7 @@ public class HouseModeRequestHandler implements EchoRequestHandler {
 	@Override
 	public EchoResponse handle() {
 		houseModeMessager.requestHouseMode(requestedMode);
-		return EchoResponse.responseWithSpeech("Have a good day.");
+		String response = houseModeResponseBuilder.buildHouseModeAlexaResponse();
+		return EchoResponse.responseWithSpeech(response);
 	}
 }

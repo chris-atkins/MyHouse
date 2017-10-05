@@ -4,7 +4,7 @@ public class EchoResponseData {
 
 	private EchoResponseOutputSpeech outputSpeech = new EchoResponseOutputSpeech();
 	private Boolean shouldEndSession = true;
-	
+
 	public EchoResponseOutputSpeech getOutputSpeech() {
 		return outputSpeech;
 	}
