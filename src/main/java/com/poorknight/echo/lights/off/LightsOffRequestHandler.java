@@ -2,19 +2,21 @@ package com.poorknight.echo.lights.off;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.lights.HueMessager;
+import com.poorknight.echo.housecommand.HouseCommandMessager;
+
+import static com.poorknight.echo.housecommand.HouseCommand.LIGHTS_OFF;
 
 public class LightsOffRequestHandler implements EchoRequestHandler {
 
-	private final HueMessager hueMessager;
+	private final HouseCommandMessager houseCommandMessager;
 
-	public LightsOffRequestHandler(final HueMessager hueMessager) {
-		this.hueMessager = hueMessager;
+	public LightsOffRequestHandler(final HouseCommandMessager houseCommandMessager) {
+		this.houseCommandMessager = houseCommandMessager;
 	}
 
 	@Override
 	public EchoResponse handle() {
-		hueMessager.sendLightsOffRequest();
+		houseCommandMessager.requestHouseCommand(LIGHTS_OFF);
 		return EchoResponse.noOutputSpeechResponse();
 	}
 }

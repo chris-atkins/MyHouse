@@ -29,11 +29,11 @@ public class EchoRequestHandlerFactory {
 		}
 
 		if (intentName.equals("LightsOff")) {
-			return new LightsOffRequestHandler(new HueMessager());
+			return new LightsOffRequestHandler(new HouseCommandMessager());
 		}
 
 		if (intentName.equals("LightsOn")) {
-			return new LightsOnRequestHandler(new HueMessager());
+			return new LightsOnRequestHandler(new HouseCommandMessager());
 		}
 
 		if (intentName.equals("LightColor")) {

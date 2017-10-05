@@ -1,7 +1,8 @@
 package com.poorknight.echo.lights.off;
 
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.lights.HueMessager;
+import com.poorknight.echo.housecommand.HouseCommand;
+import com.poorknight.echo.housecommand.HouseCommandMessager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,12 +20,12 @@ public class LightsOffRequestHandlerTest {
 	private LightsOffRequestHandler handler;
 
 	@Mock
-	private HueMessager hueMessager;
+	private HouseCommandMessager houseCommandMessager;
 
 	@Test
 	public void sendsOffRequestWhenCalled() throws Exception {
 		handler.handle();
-		verify(hueMessager).sendLightsOffRequest();
+		verify(houseCommandMessager).requestHouseCommand(HouseCommand.LIGHTS_OFF);
 	}
 
 	@Test
