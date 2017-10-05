@@ -1,4 +1,4 @@
-package com.poorknight.echo.housemode;
+package com.poorknight.echo.housecommand;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,10 +14,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.powermock.api.mockito.PowerMockito.when;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({Random.class, HouseModeResponseBuilder.class})
-public class HouseModeResponseBuilderTest {
+@PrepareForTest({Random.class, HouseCommandResponseBuilder.class})
+public class HouseCommandResponseBuilderTest {
 
-	private HouseModeResponseBuilder houseModeResponseBuilder = new HouseModeResponseBuilder();;
+	private HouseCommandResponseBuilder houseCommandResponseBuilder = new HouseCommandResponseBuilder();;
 
 	@Mock
 	private Random random;
@@ -32,43 +32,43 @@ public class HouseModeResponseBuilderTest {
 	@Test
 	public void threeTenthsOfTheTime_ResponsdsWith_HaveAGoodDay() throws Exception {
 		when(random.nextInt(10)).thenReturn(0);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("Have a good day.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a good day.");
 
 		when(random.nextInt(10)).thenReturn(1);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("Have a good day.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a good day.");
 
 		when(random.nextInt(10)).thenReturn(2);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("Have a good day.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a good day.");
 	}
 
 	@Test
 	public void threeTenthsOfTheTime_ResponsdsWith_HaveANiceDay() throws Exception {
 		when(random.nextInt(10)).thenReturn(3);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("Have a nice day.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a nice day.");
 
 		when(random.nextInt(10)).thenReturn(4);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("Have a nice day.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a nice day.");
 
 		when(random.nextInt(10)).thenReturn(5);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("Have a nice day.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a nice day.");
 	}
 
 	@Test
 	public void threeTenthsOfTheTime_ResponsdsWith_SeeYa() throws Exception {
 		when(random.nextInt(10)).thenReturn(6);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("See ya.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("See ya.");
 
 		when(random.nextInt(10)).thenReturn(7);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("See ya.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("See ya.");
 
 		when(random.nextInt(10)).thenReturn(8);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("See ya.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("See ya.");
 	}
 
 	@Test
 	public void oneTenthsOfTheTime_ResponsdsWith_FuckYou() throws Exception {
 		when(random.nextInt(10)).thenReturn(9);
-		assertThat(houseModeResponseBuilder.buildHouseModeAlexaResponse()).isEqualTo("Fuck you.");
+		assertThat(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Fuck you.");
 
 	}
 }

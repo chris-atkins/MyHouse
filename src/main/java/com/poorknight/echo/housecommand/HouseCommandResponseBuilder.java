@@ -1,11 +1,11 @@
-package com.poorknight.echo.housemode;
+package com.poorknight.echo.housecommand;
 
 import java.util.Random;
 
-public class HouseModeResponseBuilder {
+public class HouseCommandResponseBuilder {
 
 
-	/*package*/ String buildHouseModeAlexaResponse() {
+	/*package*/ String buildHouseCommandAlexaResponse() {
 		int randomOfTen = new Random().nextInt(10);
 
 		if (randomOfTen < 3) {

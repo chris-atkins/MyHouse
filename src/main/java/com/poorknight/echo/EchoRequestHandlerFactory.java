@@ -2,9 +2,9 @@ package com.poorknight.echo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
-import com.poorknight.echo.housemode.HouseModeMessager;
-import com.poorknight.echo.housemode.HouseModeRequestHandler;
-import com.poorknight.echo.housemode.HouseModeResponseBuilder;
+import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.echo.housecommand.HouseCommandRequestHandler;
+import com.poorknight.echo.housecommand.HouseCommandResponseBuilder;
 import com.poorknight.echo.lights.color.DesiredColorTranslator;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
@@ -17,7 +17,7 @@ import com.poorknight.lights.HueMessager;
 import com.poorknight.pi.PiMessager;
 import com.poorknight.thermostat.ThermostatMessager;
 
-import static com.poorknight.echo.housemode.HouseMode.AT_WORK;
+import static com.poorknight.echo.housecommand.HouseCommand.AT_WORK_MODE;
 
 public class EchoRequestHandlerFactory {
 
@@ -57,7 +57,7 @@ public class EchoRequestHandlerFactory {
 		}
 
 		if(intentName.equals("AtWorkMode")) {
-			return new HouseModeRequestHandler(AT_WORK, new HouseModeMessager(), new HouseModeResponseBuilder());
+			return new HouseCommandRequestHandler(AT_WORK_MODE, new HouseCommandMessager(), new HouseCommandResponseBuilder());
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);

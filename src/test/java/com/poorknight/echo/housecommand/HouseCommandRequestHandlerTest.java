@@ -1,4 +1,4 @@
-package com.poorknight.echo.housemode;
+package com.poorknight.echo.housecommand;
 
 import com.poorknight.echo.EchoResponse;
 import com.poorknight.echo.EchoResponseData;
@@ -9,37 +9,37 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import static com.poorknight.echo.housemode.HouseMode.AT_WORK;
+import static com.poorknight.echo.housecommand.HouseCommand.AT_WORK_MODE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HouseModeRequestHandlerTest {
+public class HouseCommandRequestHandlerTest {
 
-	private HouseModeRequestHandler handler;
-
-	@Mock
-	private HouseModeMessager houseModeMessager;
+	private HouseCommandRequestHandler handler;
 
 	@Mock
-	private HouseModeResponseBuilder houseModeResponseBuilder;
+	private HouseCommandMessager houseCommandMessager;
 
-	private HouseMode houseMode = AT_WORK;
+	@Mock
+	private HouseCommandResponseBuilder houseCommandResponseBuilder;
+
+	private HouseCommand houseCommand = AT_WORK_MODE;
 
 	@Before
 	public void setUp() throws Exception {
-		handler = new HouseModeRequestHandler(houseMode, houseModeMessager, houseModeResponseBuilder);
+		handler = new HouseCommandRequestHandler(houseCommand, houseCommandMessager, houseCommandResponseBuilder);
 	}
 
 	@Test
-	public void whenARequestIsHandled_TheHouseModeMessagerIsCalled_AndTheCorrectResponseIsReturned() throws Exception {
+	public void whenARequestIsHandled_TheHouseCommandMessagerIsCalled_AndTheCorrectResponseIsReturned() throws Exception {
 		final String speechResponse = RandomStringUtils.random(20);
-		when(houseModeResponseBuilder.buildHouseModeAlexaResponse()).thenReturn(speechResponse);
+		when(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).thenReturn(speechResponse);
 
 		final EchoResponse echoResponse = handler.handle();
 
-		verify(houseModeMessager).requestHouseMode(houseMode);
+		verify(houseCommandMessager).requestHouseCommand(houseCommand);
 
 		final EchoResponseData response = echoResponse.getResponse();
 		assertThat(response.getOutputSpeech().getText()).isEqualTo(speechResponse);

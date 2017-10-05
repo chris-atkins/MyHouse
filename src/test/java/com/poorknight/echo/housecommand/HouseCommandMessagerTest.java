@@ -1,4 +1,4 @@
-package com.poorknight.echo.housemode;
+package com.poorknight.echo.housecommand;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
@@ -17,7 +17,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.ws.rs.core.MediaType;
 
-import static com.poorknight.echo.housemode.HouseMode.AT_WORK;
+import static com.poorknight.echo.housecommand.HouseCommand.AT_WORK_MODE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
@@ -25,9 +25,9 @@ import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(WebResourceFactory.class)
-public class HouseModeMessagerTest {
+public class HouseCommandMessagerTest {
 
-	private final static String houseStatusPath = "/house";
+	private final static String houseCommandPath = "/house/command";
 
 	@Mock
 	private Client client;
@@ -41,26 +41,26 @@ public class HouseModeMessagerTest {
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;
 
-	private HouseModeMessager messager;
+	private HouseCommandMessager messager;
 
 	@Before
 	public void setup() {
 		PowerMockito.mockStatic(WebResourceFactory.class);
-		PowerMockito.when(WebResourceFactory.buildSecuredHomeWebResource(houseStatusPath)).thenReturn(webResource);
-		messager = new HouseModeMessager();
+		PowerMockito.when(WebResourceFactory.buildSecuredHomeWebResource(houseCommandPath)).thenReturn(webResource);
+		messager = new HouseCommandMessager();
 	}
 
 	@Test
-	public void putsDesiredMode() throws Exception {
+	public void putsDesiredCommand() throws Exception {
 		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
 		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
 
-		messager.requestHouseMode(AT_WORK);
+		messager.requestHouseCommand(AT_WORK_MODE);
 		verify(builder).put(eq(JsonNode.class), captor.capture());
 
 		JsonNode sentRequest = captor.getValue();
 
-		final JsonNode expectedRequest = JsonNodeFactory.instance.objectNode().put("mode", AT_WORK.getModeAsString());
+		final JsonNode expectedRequest = JsonNodeFactory.instance.objectNode().put("command", AT_WORK_MODE.getCommandAsString());
 		assertThat(sentRequest).isEqualTo(expectedRequest);
 	}
 }
