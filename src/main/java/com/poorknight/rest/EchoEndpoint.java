@@ -21,6 +21,6 @@ public class EchoEndpoint {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getEchoRequest(final JsonNode request) {
-		return "you have hit the endpoint";
+		return "you have hit the endpoint.\n\n\n\nLocal sunset/sunrise timings provided, with much thanks, by: https://sunrise-sunset.org/api";
 	}
 }
