@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
 import com.poorknight.echo.housecommand.HouseCommandRequestHandler;
+import com.poorknight.echo.housecommand.OutsideLightsOffRequestHandler;
+import com.poorknight.echo.housecommand.OutsideLightsOnRequestHandler;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
@@ -43,6 +45,20 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("LightsOn");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightsOnRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsOutsideLightsOffRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("OutsideLightsOff");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(OutsideLightsOffRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsOutsideLightsOnRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("OutsideLightsOn");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(OutsideLightsOnRequestHandler.class)));
 	}
 
 	@Test

@@ -2,9 +2,7 @@ package com.poorknight.echo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
-import com.poorknight.echo.housecommand.HouseCommandMessager;
-import com.poorknight.echo.housecommand.HouseCommandRequestHandler;
-import com.poorknight.echo.housecommand.HouseCommandResponseBuilder;
+import com.poorknight.echo.housecommand.*;
 import com.poorknight.echo.lights.color.DesiredColorTranslator;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
@@ -34,6 +32,14 @@ public class EchoRequestHandlerFactory {
 
 		if (intentName.equals("LightsOn")) {
 			return new LightsOnRequestHandler(new HouseCommandMessager());
+		}
+
+		if (intentName.equals("OutsideLightsOff")) {
+			return new OutsideLightsOffRequestHandler(new HouseCommandMessager());
+		}
+
+		if (intentName.equals("OutsideLightsOn")) {
+			return new OutsideLightsOnRequestHandler(new HouseCommandMessager());
 		}
 
 		if (intentName.equals("LightColor")) {
