@@ -55,7 +55,7 @@ public class MyHouseServer {
 			server.join();
 			fixedScheduleTaskManager.startAllTasks();
 
-			Logger.getLogger(this.getClass()).info("SERVER STARTED.");
+			Logger.getLogger(MyHouseServer.class).info("SERVER STARTED.");
 
 
 		} catch (final Exception e) {
