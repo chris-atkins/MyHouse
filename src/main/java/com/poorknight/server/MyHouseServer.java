@@ -54,7 +54,6 @@ public class MyHouseServer {
 
 			server.start();
 			server.join();
-			System.out.println("SERVER STARTED.");
 
 		} catch (final Exception e) {
 			e.printStackTrace();

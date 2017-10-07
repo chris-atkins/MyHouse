@@ -18,19 +18,15 @@ public class OutsideLightsController {
 	}
 
 	public void putLightsToCorrectStateForTimeOfDay() {
-		System.out.println("STARTING TO SET LIGHTS TO CORRECT STATE");
 
 		final DesiredState desiredState = decider.findDesiredState();
 
 		if (desiredState == OFF) {
-			System.out.println("TURNING OUTSIDE LIGHTS OFF");
 			houseCommandMessager.requestHouseCommand(OUTSIDE_LIGHTS_OFF);
 		}
 
 		if (desiredState == ON) {
-			System.out.println("TURNING OUTSIDE LIGHTS ON");
 			houseCommandMessager.requestHouseCommand(OUTSIDE_LIGHTS_ON);
 		}
-		System.out.println("DONE SETTING LIGHTS TO CORRECT STATE");
 	}
 }

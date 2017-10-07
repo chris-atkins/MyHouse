@@ -15,12 +15,7 @@ public class OutsideLightDesiredStateDecider {
 	private String sunUrl = "http://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
 
 	public DesiredState findDesiredState() {
-
-		System.out.println("ABOUT TO CALL SUNRISE/SUNSET TIME INFO");
-
 		final JsonNode sunTimeInfo = retrieveSunTimeInfo();
-
-		System.out.println(sunTimeInfo.toString());
 
 		if (isDaytime(sunTimeInfo)) {
 			return OFF;
