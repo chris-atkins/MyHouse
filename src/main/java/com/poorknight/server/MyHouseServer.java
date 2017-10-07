@@ -1,7 +1,11 @@
 package com.poorknight.server;
 
+import com.poorknight.echo.housecommand.HouseCommandMessager;
 import com.poorknight.rest.EchoEndpoint;
 import com.poorknight.rest.HouseEndpoint;
+import com.poorknight.server.FixedScheduleTaskManager.OutsideLightControllerRunnable;
+import com.poorknight.timedlights.OutsideLightDesiredStateDecider;
+import com.poorknight.timedlights.OutsideLightsController;
 import com.poorknight.web.HelloWorldWebPageHandler;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -10,6 +14,8 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
+
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 
 public class MyHouseServer {
 
@@ -41,15 +47,29 @@ public class MyHouseServer {
 		contexts.setHandlers(new Handler[] { webContext, echoContextHandler, houseContextHandler });
 		server.setHandler(contexts);
 
+		FixedScheduleTaskManager fixedScheduleTaskManager = prepareFixedScheduleTasks();
+
 		try {
 			server.start();
 			server.join();
+			fixedScheduleTaskManager.startAllTasks();
+
 		} catch (final Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		} finally {
+
+			fixedScheduleTaskManager.stopAllTasks();
 			server.destroy();
 		}
+	}
+
+	private static FixedScheduleTaskManager prepareFixedScheduleTasks() {
+		final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
+		final HouseCommandMessager houseCommandMessager = new HouseCommandMessager();
+		final OutsideLightDesiredStateDecider decider = new OutsideLightDesiredStateDecider();
+		final OutsideLightsController controller = new OutsideLightsController(decider, houseCommandMessager);
+		return new FixedScheduleTaskManager(executor, new OutsideLightControllerRunnable(controller));
 	}
 
 	private static void setupLogging() {
