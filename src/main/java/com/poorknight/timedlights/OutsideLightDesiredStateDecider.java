@@ -2,7 +2,6 @@ package com.poorknight.timedlights;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.Client;
-import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 
 import javax.ws.rs.core.MediaType;
@@ -17,11 +16,11 @@ public class OutsideLightDesiredStateDecider {
 
 	public DesiredState findDesiredState() {
 
-		Logger.getLogger(this.getClass()).info("ABOUT TO CALL SUNRISE/SUNSET TIME INFO");
+		System.out.println("ABOUT TO CALL SUNRISE/SUNSET TIME INFO");
 
 		final JsonNode sunTimeInfo = retrieveSunTimeInfo();
 
-		Logger.getLogger(this.getClass()).info(sunTimeInfo.toString());
+		System.out.println(sunTimeInfo.toString());
 
 		if (isDaytime(sunTimeInfo)) {
 			return OFF;

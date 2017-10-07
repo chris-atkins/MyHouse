@@ -7,7 +7,6 @@ import com.poorknight.server.FixedScheduleTaskManager.OutsideLightControllerRunn
 import com.poorknight.timedlights.OutsideLightDesiredStateDecider;
 import com.poorknight.timedlights.OutsideLightsController;
 import com.poorknight.web.HelloWorldWebPageHandler;
-import org.apache.log4j.Logger;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -55,7 +54,7 @@ public class MyHouseServer {
 			server.join();
 			fixedScheduleTaskManager.startAllTasks();
 
-			Logger.getLogger(MyHouseServer.class).info("SERVER STARTED.");
+			System.out.println("SERVER STARTED.");
 
 
 		} catch (final Exception e) {
