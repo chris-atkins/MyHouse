@@ -50,12 +50,11 @@ public class MyHouseServer {
 		FixedScheduleTaskManager fixedScheduleTaskManager = prepareFixedScheduleTasks();
 
 		try {
-			server.start();
-			server.join();
 			fixedScheduleTaskManager.startAllTasks();
 
+			server.start();
+			server.join();
 			System.out.println("SERVER STARTED.");
-
 
 		} catch (final Exception e) {
 			e.printStackTrace();

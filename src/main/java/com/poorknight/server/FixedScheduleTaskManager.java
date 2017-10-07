@@ -16,7 +16,8 @@ public class FixedScheduleTaskManager {
 	}
 
 	public void startAllTasks() {
-		executor.scheduleAtFixedRate(controller, 5, 5, TimeUnit.MINUTES);
+		System.out.println("STARTING TASKS");
+		executor.scheduleAtFixedRate(controller, 1, 5, TimeUnit.MINUTES);
 	}
 
 	public void stopAllTasks() {

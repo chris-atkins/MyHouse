@@ -27,7 +27,7 @@ public class FixedScheduleTaskManagerTest {
 	@Test
 	public void startCallsOutsideLightController() throws Exception {
 		fixedScheduleTaskManager.startAllTasks();
-		verify(executor).scheduleAtFixedRate(outsideLightsController, 5L, 5L, TimeUnit.MINUTES);
+		verify(executor).scheduleAtFixedRate(outsideLightsController, 1L, 5L, TimeUnit.MINUTES);
 	}
 
 	@Test

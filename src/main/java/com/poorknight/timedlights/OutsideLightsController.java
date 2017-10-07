@@ -12,20 +12,25 @@ public class OutsideLightsController {
 	private OutsideLightDesiredStateDecider decider;
 	private HouseCommandMessager houseCommandMessager;
 
-	public OutsideLightsController(final OutsideLightDesiredStateDecider decider,
-								   final HouseCommandMessager houseCommandMessager) {
+	public OutsideLightsController(final OutsideLightDesiredStateDecider decider, final HouseCommandMessager houseCommandMessager) {
 		this.decider = decider;
 		this.houseCommandMessager = houseCommandMessager;
 	}
 
 	public void putLightsToCorrectStateForTimeOfDay() {
+		System.out.println("STARTING TO SET LIGHTS TO CORRECT STATE");
 
-		if (decider.findDesiredState() == OFF) {
+		final DesiredState desiredState = decider.findDesiredState();
+
+		if (desiredState == OFF) {
+			System.out.println("TURNING OUTSIDE LIGHTS OFF");
 			houseCommandMessager.requestHouseCommand(OUTSIDE_LIGHTS_OFF);
 		}
 
-		if (decider.findDesiredState() == ON) {
+		if (desiredState == ON) {
+			System.out.println("TURNING OUTSIDE LIGHTS ON");
 			houseCommandMessager.requestHouseCommand(OUTSIDE_LIGHTS_ON);
 		}
+		System.out.println("DONE SETTING LIGHTS TO CORRECT STATE");
 	}
 }

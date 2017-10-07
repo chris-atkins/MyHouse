@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({Client.class, DateTime.class})
 public class OutsideLightDesiredStateDeciderTest {
 
-	private final static String url =  "https://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
+	private final static String url =  "http://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
 
 	@Mock
 	private Client client;
