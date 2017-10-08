@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
-import com.poorknight.echo.housecommand.HouseCommandRequestHandler;
+import com.poorknight.echo.housecommand.GoingToWorkRequestHandler;
 import com.poorknight.echo.housecommand.OutsideLightsOffRequestHandler;
 import com.poorknight.echo.housecommand.OutsideLightsOnRequestHandler;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
@@ -18,7 +18,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static com.poorknight.echo.housecommand.HouseCommand.AT_WORK_MODE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
@@ -100,9 +99,7 @@ public class EchoRequestHandlerFactoryTest {
 	public void returnsHouseCommandRequestHandlerWhenAppropriate() throws Exception {
 		final JsonNode request = buildRequest("AtWorkMode");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
-		assertThat(handler, is(instanceOf(HouseCommandRequestHandler.class)));
-		final HouseCommandRequestHandler houseCommandRequestHandler = (HouseCommandRequestHandler)handler;
-		assertThat(houseCommandRequestHandler.getRequestedCommand(), is(AT_WORK_MODE));
+		assertThat(handler, is(instanceOf(GoingToWorkRequestHandler.class)));
 	}
 
 	@Test(expected = RuntimeException.class)

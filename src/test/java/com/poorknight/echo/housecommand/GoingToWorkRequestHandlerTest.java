@@ -15,9 +15,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HouseCommandRequestHandlerTest {
+public class GoingToWorkRequestHandlerTest {
 
-	private HouseCommandRequestHandler handler;
+	private GoingToWorkRequestHandler handler;
 
 	@Mock
 	private HouseCommandMessager houseCommandMessager;
@@ -29,7 +29,7 @@ public class HouseCommandRequestHandlerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		handler = new HouseCommandRequestHandler(houseCommand, houseCommandMessager, houseCommandResponseBuilder);
+		handler = new GoingToWorkRequestHandler(houseCommandMessager, houseCommandResponseBuilder);
 	}
 
 	@Test

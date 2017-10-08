@@ -15,8 +15,6 @@ import com.poorknight.lights.HueMessager;
 import com.poorknight.pi.PiMessager;
 import com.poorknight.thermostat.ThermostatMessager;
 
-import static com.poorknight.echo.housecommand.HouseCommand.AT_WORK_MODE;
-
 public class EchoRequestHandlerFactory {
 
 	public static EchoRequestHandler handlerFor(final JsonNode request) {
@@ -63,7 +61,7 @@ public class EchoRequestHandlerFactory {
 		}
 
 		if(intentName.equals("AtWorkMode")) {
-			return new HouseCommandRequestHandler(AT_WORK_MODE, new HouseCommandMessager(), new HouseCommandResponseBuilder());
+			return new GoingToWorkRequestHandler(new HouseCommandMessager(), new HouseCommandResponseBuilder());
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);
