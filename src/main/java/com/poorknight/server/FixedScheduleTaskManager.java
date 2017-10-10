@@ -35,7 +35,11 @@ public class FixedScheduleTaskManager {
 
 		@Override
 		public void run() {
-			controller.putLightsToCorrectStateForTimeOfDay();
+			try {
+				controller.putLightsToCorrectStateForTimeOfDay();
+			} catch (RuntimeException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }

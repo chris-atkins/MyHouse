@@ -5,6 +5,7 @@ import com.poorknight.timedlights.OutsideLightsController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import static org.mockito.Mockito.verify;
@@ -22,5 +23,14 @@ public class OutsideLightControllerRunnableTest {
 		task.run();
 
 		verify(outsideLightsController).putLightsToCorrectStateForTimeOfDay();
+	}
+
+	@Test(expected = Test.None.class)
+	public void doesNotThrowException() throws Exception {
+		final OutsideLightControllerRunnable task = new OutsideLightControllerRunnable(outsideLightsController);
+
+		Mockito.doThrow(new RuntimeException()).when(outsideLightsController).putLightsToCorrectStateForTimeOfDay();
+
+		task.run();
 	}
 }
