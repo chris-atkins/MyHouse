@@ -3,6 +3,7 @@ package com.poorknight.timedlights;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.Client;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 
 import javax.ws.rs.core.MediaType;
 
@@ -33,7 +34,8 @@ public class OutsideLightDesiredStateDecider {
 	private boolean isDaytime(JsonNode sunTimeInfo) {
 		final DateTime sunrise = findSunrise(sunTimeInfo);
 		final DateTime sunset = findSunset(sunTimeInfo);
-		final DateTime now = DateTime.now(UTC);
+		final DateTime now = findCurrentUTCTimeAdjustedForDetroitDaylightSavings();
+
 		return sunrise.isBefore(now) && now.isBefore(sunset);
 	}
 
@@ -47,5 +49,14 @@ public class OutsideLightDesiredStateDecider {
 		final JsonNode resultsNode = response.get("results");
 		final String sunriseString = resultsNode.get("sunrise").asText();
 		return new DateTime(sunriseString);
+	}
+
+	private DateTime findCurrentUTCTimeAdjustedForDetroitDaylightSavings() {
+		DateTimeZone zone = DateTimeZone.forID("America/Detroit");
+		DateTime utcNow = DateTime.now(UTC);
+
+		int fiveHours = 18000000;
+		int offset = zone.getOffset(utcNow) + fiveHours;
+		return utcNow.plus(offset);
 	}
 }
