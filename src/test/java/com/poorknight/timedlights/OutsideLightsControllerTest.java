@@ -24,7 +24,6 @@ public class OutsideLightsControllerTest {
 	@Mock
 	private HouseCommandMessager houseCommandMessager;
 
-
 	@Test
 	public void delegatesCorrectly_ForOffState() throws Exception {
 		Mockito.when(decider.findDesiredState()).thenReturn(DesiredState.OFF);

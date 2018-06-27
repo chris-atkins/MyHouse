@@ -78,7 +78,7 @@ public class OutsideLightDesiredStateDeciderTest {
 		DesiredState desiredState = decider.findDesiredState();
 		assertThat(desiredState).isEqualTo(DesiredState.ON);
 
-		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-03-11T12:35:01+00:00"));
+		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-03-11T10:35:01+00:00"));
 		desiredState = decider.findDesiredState();
 		assertThat(desiredState).isEqualTo(DesiredState.OFF);
 
@@ -90,7 +90,7 @@ public class OutsideLightDesiredStateDeciderTest {
 		desiredState = decider.findDesiredState();
 		assertThat(desiredState).isEqualTo(DesiredState.OFF);
 
-		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-11-05T12:35:01+00:00"));
+		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-11-05T10:35:01+00:00"));
 		desiredState = decider.findDesiredState();
 		assertThat(desiredState).isEqualTo(DesiredState.ON);
 
