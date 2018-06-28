@@ -23,11 +23,7 @@ public class OutsideLightsController {
 	}
 
 	public void putLightsToCorrectStateForTimeOfDay() {
-
 		final DesiredState desiredState = decider.findDesiredState();
-
-		DateTime time = DateTime.now(DateTimeZone.forID("America/Detroit"));
-		System.out.println("Time: " + time.toString() + " | " + desiredState);
 
 		if (desiredState == OFF) {
 			houseCommandMessager.requestHouseCommand(OUTSIDE_LIGHTS_OFF);

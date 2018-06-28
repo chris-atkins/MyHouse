@@ -34,12 +34,7 @@ public class OutsideLightDesiredStateDecider {
 	private boolean isDaytime(JsonNode sunTimeInfo) {
 		final DateTime sunrise = findSunrise(sunTimeInfo);
 		final DateTime sunset = findSunset(sunTimeInfo);
-		final DateTime now = findCurrentUTCTimeAdjustedForDetroitDaylightSavings();
-
-		System.out.println("\nSunrise: " + sunrise);
-		System.out.println("Sunset: " + sunset);
-		System.out.println("Current Time: " + now);
-		System.out.println("");
+		final DateTime now = findCurrentUTCTime();
 
 		return sunrise.isBefore(now) && now.isBefore(sunset);
 	}
@@ -56,12 +51,7 @@ public class OutsideLightDesiredStateDecider {
 		return new DateTime(sunriseString);
 	}
 
-	private DateTime findCurrentUTCTimeAdjustedForDetroitDaylightSavings() {
-		DateTimeZone zone = DateTimeZone.forID("America/Detroit");
-		DateTime utcNow = DateTime.now(UTC);
-
-		int fiveHours = 18000000;
-		int offset = zone.getOffset(utcNow) + fiveHours;
-		return utcNow;
+	private DateTime findCurrentUTCTime() {
+		return DateTime.now(UTC);
 	}
 }
