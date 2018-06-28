@@ -62,6 +62,6 @@ public class OutsideLightDesiredStateDecider {
 
 		int fiveHours = 18000000;
 		int offset = zone.getOffset(utcNow) + fiveHours;
-		return utcNow.plus(offset);
+		return utcNow;
 	}
 }
