@@ -36,6 +36,12 @@ public class OutsideLightDesiredStateDecider {
 		final DateTime sunset = findSunset(sunTimeInfo);
 		final DateTime now = findCurrentUTCTime();
 
+		System.out.println();
+		System.out.println("Sunrise: " + sunrise);
+		System.out.println("Sunset: " + sunset);
+		System.out.println("Reported Current Time: " + now);
+		System.out.println();
+
 		return sunrise.isBefore(now) && now.isBefore(sunset);
 	}
 
