@@ -19,8 +19,10 @@ public class OutsideLightDesiredStateDecider {
 		final JsonNode sunTimeInfo = retrieveSunTimeInfo();
 
 		if (isDaytime(sunTimeInfo)) {
+			System.out.println("**************** OFF\n");
 			return OFF;
 		}
+		System.out.println("**************** ON\n");
 		return ON;
 	}
 
@@ -40,7 +42,6 @@ public class OutsideLightDesiredStateDecider {
 		System.out.println("Sunrise: " + sunrise);
 		System.out.println("Sunset: " + sunset);
 		System.out.println("Reported Current Time: " + now);
-		System.out.println();
 
 		return sunrise.isBefore(now) && now.isBefore(sunset);
 	}
