@@ -69,6 +69,34 @@ public class OutsideLightDesiredStateDeciderTest {
 		assertThat(desiredState).isEqualTo(DesiredState.OFF);
 	}
 
+	@Test
+	public void handlesResultsFromSunsetWebsite_ThatArePrematureNextDayTimes() throws Exception {
+		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
+
+		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T00:21:09.240Z"));
+		DesiredState desiredState = decider.findDesiredState();
+		assertThat(desiredState).isEqualTo(DesiredState.OFF);
+
+
+
+		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
+
+		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:11:09.195Z"));
+		desiredState = decider.findDesiredState();
+		assertThat(desiredState).isEqualTo(DesiredState.OFF);
+
+
+
+		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
+
+		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:16:09.328Z"));
+		desiredState = decider.findDesiredState();
+		assertThat(desiredState).isEqualTo(DesiredState.ON);
+	}
+
 	private JsonNode buildResponse(final String sunrise, final String sunset) throws Exception {
 		final ObjectMapper mapper = new ObjectMapper();
 		final String response =

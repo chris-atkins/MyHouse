@@ -3,7 +3,7 @@ package com.poorknight.timedlights;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.sun.jersey.api.client.Client;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import org.joda.time.Days;
 
 import javax.ws.rs.core.MediaType;
 
@@ -13,16 +13,14 @@ import static org.joda.time.DateTimeZone.UTC;
 
 public class OutsideLightDesiredStateDecider {
 
-	private String sunUrl = "http://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
+	private static final String sunUrl = "http://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
 
-	public DesiredState findDesiredState() {
+	DesiredState findDesiredState() {
 		final JsonNode sunTimeInfo = retrieveSunTimeInfo();
 
 		if (isDaytime(sunTimeInfo)) {
-			System.out.println("**************** OFF\n");
 			return OFF;
 		}
-		System.out.println("**************** ON\n");
 		return ON;
 	}
 
@@ -34,14 +32,14 @@ public class OutsideLightDesiredStateDecider {
 	}
 
 	private boolean isDaytime(JsonNode sunTimeInfo) {
-		final DateTime sunrise = findSunrise(sunTimeInfo);
-		final DateTime sunset = findSunset(sunTimeInfo);
+		DateTime sunrise = findSunrise(sunTimeInfo);
+		DateTime sunset = findSunset(sunTimeInfo);
 		final DateTime now = findCurrentUTCTime();
 
-		System.out.println();
-		System.out.println("Sunrise: " + sunrise);
-		System.out.println("Sunset: " + sunset);
-		System.out.println("Reported Current Time: " + now);
+		if (sunDataIsForTomorrow(now, sunset)) {
+			sunrise = sunrise.minus(Days.ONE);
+			sunset = sunset.minus(Days.ONE);
+		}
 
 		return sunrise.isBefore(now) && now.isBefore(sunset);
 	}
@@ -60,5 +58,9 @@ public class OutsideLightDesiredStateDecider {
 
 	private DateTime findCurrentUTCTime() {
 		return DateTime.now(UTC);
+	}
+
+	private boolean sunDataIsForTomorrow(DateTime now, DateTime sunset) {
+		return now.plus(Days.ONE).isBefore(sunset);
 	}
 }
