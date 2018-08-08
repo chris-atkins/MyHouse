@@ -1,8 +1,11 @@
 package com.poorknight.rest;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
+import com.poorknight.rest.houseip.HouseIpRequest;
+import com.poorknight.rest.houseip.HouseIpResponse;
 import com.poorknight.rest.notification.NotifyRequest;
 import com.poorknight.rest.notification.NotifyResponse;
+import com.poorknight.server.WebResourceFactory;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -20,5 +23,14 @@ public class HouseEndpoint {
 	public NotifyResponse notifyMe(final NotifyRequest notifyRequest) {
 		TextMessageAlerter.instance().sendTextMessage(notifyRequest.getMessageContent());
 		return new NotifyResponse("Message sent.");
+	}
+
+	@POST
+	@Path("/ip")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public HouseIpResponse updateHouseUrl(HouseIpRequest houseIpRequest) {
+		WebResourceFactory.setHouseIp(houseIpRequest.getHouseIp());
+		return new HouseIpResponse("Successfully updated house ip to " + houseIpRequest.getHouseIp());
 	}
 }

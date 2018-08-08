@@ -2,10 +2,15 @@ package com.poorknight.rest;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.poorknight.rest.houseip.HouseIpRequest;
+import com.poorknight.rest.houseip.HouseIpResponse;
+import com.poorknight.server.WebResourceFactory;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +25,7 @@ import com.poorknight.rest.notification.NotifyRequest;
 import com.poorknight.rest.notification.NotifyResponse;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(TextMessageAlerter.class)
+@PrepareForTest({TextMessageAlerter.class, WebResourceFactory.class})
 public class HouseEndpointTest {
 
 	private final NotifyRequest notifyRequest = new NotifyRequest(RandomStringUtils.random(50));
@@ -34,6 +39,7 @@ public class HouseEndpointTest {
 	@Before
 	public void setup() {
 		PowerMockito.mockStatic(TextMessageAlerter.class);
+		PowerMockito.mockStatic(WebResourceFactory.class);
 		when(TextMessageAlerter.instance()).thenReturn(textMessageAlerter);
 	}
 
@@ -49,5 +55,22 @@ public class HouseEndpointTest {
 	public void notifyMe_returnsSuccessMessage() throws Exception {
 		final NotifyResponse response = houseEndpoint.notifyMe(notifyRequest);
 		assertThat(response.getMessage(), equalTo("Message sent."));
+	}
+
+	@Test
+	public void updateHouseIp_UpdatesTheHouseIp() {
+		HouseIpRequest houseIpRequest = new HouseIpRequest("1.2.3.4");
+		houseEndpoint.updateHouseUrl(houseIpRequest);
+
+		PowerMockito.verifyStatic();
+		WebResourceFactory.setHouseIp(eq("1.2.3.4"));
+	}
+
+	@Test
+	public void updateHouseIp_ReturnsSuccessMessage() {
+		HouseIpRequest houseIpRequest = new HouseIpRequest("1.2.3.4");
+		HouseIpResponse response = houseEndpoint.updateHouseUrl(houseIpRequest);
+
+		Assertions.assertThat(response.getMessage()).isEqualTo("Successfully updated house ip to 1.2.3.4");
 	}
 }

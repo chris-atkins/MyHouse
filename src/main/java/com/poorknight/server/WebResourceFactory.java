@@ -14,8 +14,17 @@ import javax.net.ssl.SSLContext;
 
 public class WebResourceFactory {
 
+	private static String houseIp = null;
+
+	public static void setHouseIp(String newIp) {
+		if(newIp != null && !newIp.equals(houseIp)) {
+			System.out.println("New House IP address received: " + newIp);
+		}
+		houseIp = newIp;
+	}
+
 	public static WebResource.Builder buildSecuredHomeWebResource(final String path) {
-		final String url = Environment.getEnvironmentVariable("HOUSE_URL") + path;
+		final String url = findHouseUrl() + path;
 		final String authSecret = Environment.getEnvironmentVariable("AUTHENTICATION_SECRET");
 
 		final HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
@@ -24,6 +33,13 @@ public class WebResourceFactory {
 		final Client client = Client.create(config);
 
 		return client.resource(url).header("auth-secret", authSecret);
+	}
+
+	private static String findHouseUrl() {
+		if (houseIp != null) {
+			return houseIp;
+		}
+		return Environment.getEnvironmentVariable("HOUSE_URL");
 	}
 
 	private static SSLContext buildSSLContext() {
