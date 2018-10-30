@@ -1,10 +1,14 @@
 package com.poorknight.server;
 
+import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.sun.jersey.api.client.WebResource;
 import jersey.repackaged.com.google.common.collect.ImmutableMap;
 import org.glassfish.jersey.SslConfigurator;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -16,12 +20,25 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(SslConfigurator.class)
+@PrepareForTest({SslConfigurator.class, TextMessageAlerter.class})
 public class WebResourceFactoryTest {
+
+	@Mock
+	private TextMessageAlerter textMessageAlerter;
+
+	@Before
+	public void setUp() {
+		PowerMockito.mockStatic(TextMessageAlerter.class);
+		when(TextMessageAlerter.instance()).thenReturn(textMessageAlerter);
+	}
+
+	@After
+	public void tearDown() {
+		WebResourceFactory.setHouseIp(null);
+	}
 
 	@Test
 	public void overridesIpFromEnvironmentVariable_WithAMethod() throws Exception {
@@ -38,6 +55,39 @@ public class WebResourceFactoryTest {
 		webResourceBuilder = WebResourceFactory.buildSecuredHomeWebResource("/theBestPath");
 		url = getUrl(webResourceBuilder);
 		assertThat(url).isEqualTo("5.5.5.5/theBestPath");
+	}
+
+	@Test
+	public void whenOverridingIp_AndItDoesNotMatchEnv_SendsATextMessage() throws Exception {
+		Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
+		setEnv(env);
+
+		WebResourceFactory.setHouseIp("5.5.5.5");
+		verify(textMessageAlerter).sendTextMessage("House IP address changed: 5.5.5.5");
+	}
+
+	@Test
+	public void whenOverridingIpMultipleTimes_AndItDoesNotMatchEnv_OnlySendsOneTextMessage() throws Exception {
+		Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
+		setEnv(env);
+
+		WebResourceFactory.setHouseIp("5.5.5.5");
+		WebResourceFactory.setHouseIp("5.5.5.5");
+		WebResourceFactory.setHouseIp("5.5.5.5");
+		WebResourceFactory.setHouseIp("5.5.5.5");
+		verify(textMessageAlerter, times(1)).sendTextMessage("House IP address changed: 5.5.5.5");
+	}
+
+	@Test
+	public void whenOverridingIpMultipleTimes_AndItDoesNotMatchPrevious_SendsOneTextMessage() throws Exception {
+		Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
+		setEnv(env);
+
+		WebResourceFactory.setHouseIp("1.2.3.4");
+		WebResourceFactory.setHouseIp("1.2.3.4");
+		WebResourceFactory.setHouseIp("3.3.3.3");
+		WebResourceFactory.setHouseIp("3.3.3.3");
+		verify(textMessageAlerter, times(1)).sendTextMessage("House IP address changed: 3.3.3.3");
 	}
 
 	private void setUpMocksForSslConfig() {
