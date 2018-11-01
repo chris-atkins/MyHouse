@@ -10,6 +10,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
+import static com.poorknight.server.FixedScheduleTaskManager.*;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -22,12 +23,21 @@ public class FixedScheduleTaskManagerTest {
 	private OutsideLightControllerRunnable outsideLightsController;
 
 	@Mock
+	private AutomatedHouseTemperatureControllerRunnable automatedHouseTemperatureController;
+
+	@Mock
 	private ScheduledThreadPoolExecutor executor;
 
 	@Test
 	public void startCallsOutsideLightController() throws Exception {
 		fixedScheduleTaskManager.startAllTasks();
 		verify(executor).scheduleAtFixedRate(outsideLightsController, 1L, 5L, TimeUnit.MINUTES);
+	}
+
+	@Test
+	public void startCallsAutomatedTemperatureController() throws Exception {
+		fixedScheduleTaskManager.startAllTasks();
+		verify(executor).scheduleAtFixedRate(automatedHouseTemperatureController, 2L, 10L, TimeUnit.MINUTES);
 	}
 
 	@Test

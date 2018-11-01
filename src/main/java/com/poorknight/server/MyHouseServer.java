@@ -4,8 +4,11 @@ import com.poorknight.echo.housecommand.HouseCommandMessager;
 import com.poorknight.rest.EchoEndpoint;
 import com.poorknight.rest.HouseEndpoint;
 import com.poorknight.server.FixedScheduleTaskManager.OutsideLightControllerRunnable;
+import com.poorknight.thermostat.ThermostatMessager;
 import com.poorknight.timedlights.OutsideLightDesiredStateDecider;
 import com.poorknight.timedlights.OutsideLightsController;
+import com.poorknight.timedtemp.AutomatedHouseTemperatureController;
+import com.poorknight.timedtemp.CurrentLocalTimeFinder;
 import com.poorknight.web.HelloWorldWebPageHandler;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -16,6 +19,8 @@ import org.glassfish.jersey.jackson.JacksonFeature;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+
+import static com.poorknight.server.FixedScheduleTaskManager.*;
 
 public class MyHouseServer {
 
@@ -69,8 +74,11 @@ public class MyHouseServer {
 		final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(1);
 		final HouseCommandMessager houseCommandMessager = new HouseCommandMessager();
 		final OutsideLightDesiredStateDecider decider = new OutsideLightDesiredStateDecider();
-		final OutsideLightsController controller = new OutsideLightsController(decider, houseCommandMessager);
-		return new FixedScheduleTaskManager(executor, new OutsideLightControllerRunnable(controller));
+		final OutsideLightsController outsideLightsController = new OutsideLightsController(decider, houseCommandMessager);
+		final OutsideLightControllerRunnable outsideLightscontrollerRunnable = new OutsideLightControllerRunnable(outsideLightsController);
+		final AutomatedHouseTemperatureController automatedTempController = new AutomatedHouseTemperatureController(new CurrentLocalTimeFinder(), new ThermostatMessager());
+		final AutomatedHouseTemperatureControllerRunnable automatedTempControllerRunnable = new AutomatedHouseTemperatureControllerRunnable(automatedTempController);
+		return new FixedScheduleTaskManager(executor, outsideLightscontrollerRunnable, automatedTempControllerRunnable);
 	}
 
 	private static void setupLogging() {
