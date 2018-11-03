@@ -18,17 +18,13 @@ public class AutomatedHouseTemperatureController {
 		this.thermostatMessager = thermostatMessager;
 	}
 
-
 	public void setTempAtTimeTriggers() {
 		DateTime currentLocalTime = currentLocalTimeFinder.getCurrentLocalTime();
 
 		if (itIsAWeekday(currentLocalTime)) {
-			if (itIsWithin10MinutesFromMidnight(currentLocalTime)) {
-				thermostatMessager.postHeatTargetTemperature(new BigDecimal(64));
-			}
-			if (itIsWithin10MinutesFrom7am(currentLocalTime)) {
-				thermostatMessager.postHeatTargetTemperature(new BigDecimal(69));
-			}
+			lowerHeatBetweenMidnightAnd7am(currentLocalTime);
+		} else {
+			lowerHeatBetween3amAnd11am(currentLocalTime);
 		}
 	}
 
@@ -40,19 +36,44 @@ public class AutomatedHouseTemperatureController {
 		return true;
 	}
 
-	private boolean itIsWithin10MinutesFromMidnight(DateTime currentLocalTime) {
-		int hourOfDay = currentLocalTime.getHourOfDay();
-		int minuteOfDay = currentLocalTime.getMinuteOfHour();
-		if (hourOfDay == 0 && minuteOfDay < 10) {
-			return true;
+	private void lowerHeatBetweenMidnightAnd7am(DateTime currentLocalTime) {
+		if (itIsWithin10MinutesFromMidnight(currentLocalTime)) {
+			thermostatMessager.postHeatTargetTemperature(new BigDecimal(64));
 		}
-		return false;
+		if (itIsWithin10MinutesFrom7am(currentLocalTime)) {
+			thermostatMessager.postHeatTargetTemperature(new BigDecimal(69));
+		}
+	}
+
+	private void lowerHeatBetween3amAnd11am(DateTime currentLocalTime) {
+		if (itIsWithin10MinutesFrom3am(currentLocalTime)) {
+			thermostatMessager.postHeatTargetTemperature(new BigDecimal(64));
+		}
+		if (itIsWithin10MinutesFrom11am(currentLocalTime)) {
+			thermostatMessager.postHeatTargetTemperature(new BigDecimal(69));
+		}
+	}
+
+	private boolean itIsWithin10MinutesFromMidnight(DateTime currentLocalTime) {
+		return isWithin10MinutesOfHour(currentLocalTime, 0);
 	}
 
 	private boolean itIsWithin10MinutesFrom7am(DateTime currentLocalTime) {
+		return isWithin10MinutesOfHour(currentLocalTime, 7);
+	}
+
+	private boolean itIsWithin10MinutesFrom3am(DateTime currentLocalTime) {
+		return isWithin10MinutesOfHour(currentLocalTime, 3);
+	}
+
+	private boolean itIsWithin10MinutesFrom11am(DateTime currentLocalTime) {
+		return isWithin10MinutesOfHour(currentLocalTime, 11);
+	}
+
+	private boolean isWithin10MinutesOfHour(DateTime currentLocalTime, int i) {
 		int hourOfDay = currentLocalTime.getHourOfDay();
-		int minuteOfDay = currentLocalTime.getMinuteOfHour();
-		if (hourOfDay == 7 && minuteOfDay < 10) {
+		int minuteOfHour = currentLocalTime.getMinuteOfHour();
+		if (hourOfDay == i && minuteOfHour < 10) {
 			return true;
 		}
 		return false;

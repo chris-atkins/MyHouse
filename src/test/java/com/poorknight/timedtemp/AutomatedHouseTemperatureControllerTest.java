@@ -4,6 +4,7 @@ import com.poorknight.thermostat.ThermostatMessager;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -163,4 +164,149 @@ public class AutomatedHouseTemperatureControllerTest {
 		verifyZeroInteractions(thermostatMessager);
 	}
 
+//
+//
+//
+
+	@Test
+	public void setsHouseTempTo64IfItIs3amOnWeekends() {
+		DateTime saturday3am = new DateTime(2018, 11, 3, 3, 0, 0, DateTimeZone.forID("America/Detroit"));
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday3am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday3am = saturday3am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday3am);
+		controller.setTempAtTimeTriggers();
+
+		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(64));
+	}
+
+	@Test
+	public void doesNotSetHouseTempAt3amOnWeekdays() {
+		DateTime monday3am = new DateTime(2018, 11, 5, 3, 0, 0, DateTimeZone.forID("America/Detroit"));
+
+		for (int i = 0; i < 5; i++) {
+			DateTime weekday3am = monday3am.plusDays(i);
+			when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(weekday3am);
+			controller.setTempAtTimeTriggers();
+		}
+		verifyZeroInteractions(thermostatMessager);
+	}
+
+	@Test
+	public void doesNotSetHouseTempTo64IfItIs259OnWeekends() {
+		DateTime saturday3am = new DateTime(2018, 11, 3, 3, 0, 0, DateTimeZone.forID("America/Detroit"));
+		DateTime saturday259am = saturday3am.minusMillis(1);
+
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday259am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday259am = saturday259am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday259am);
+		controller.setTempAtTimeTriggers();
+
+		verifyZeroInteractions(thermostatMessager);
+	}
+
+	@Test
+	public void setsHouseTempTo64IfItIs309OnWeekends() {
+		DateTime saturday310am = new DateTime(2018, 11, 3, 3, 10, 0, DateTimeZone.forID("America/Detroit"));
+		DateTime saturdayNight309am = saturday310am.minusMillis(1);
+
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturdayNight309am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday309am = saturdayNight309am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday309am);
+		controller.setTempAtTimeTriggers();
+
+		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(64));
+	}
+
+	@Test
+	public void doesNotSetHouseTempTo64IfItIs310OnWeekends() {
+		DateTime saturday310am = new DateTime(2018, 11, 3, 3, 10, 0, DateTimeZone.forID("America/Detroit"));
+
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday310am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday310am = saturday310am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday310am);
+		controller.setTempAtTimeTriggers();
+
+		verifyZeroInteractions(thermostatMessager);
+	}
+
+//
+//
+//
+
+	@Test
+	public void setsHouseTempTo69IfItIs11amOnWeekends() {
+		DateTime saturday11am = new DateTime(2018, 11, 3, 11, 0, 0, DateTimeZone.forID("America/Detroit"));
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday11am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday11am = saturday11am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday11am);
+		controller.setTempAtTimeTriggers();
+
+		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(69));
+	}
+
+	@Test
+	public void doesNotSetHouseTempAt11amOnWeekdays() {
+		DateTime monday11am = new DateTime(2018, 11, 5, 11, 0, 0, DateTimeZone.forID("America/Detroit"));
+
+		for (int i = 0; i < 5; i++) {
+			DateTime weekday11am = monday11am.plusDays(i);
+			when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(weekday11am);
+			controller.setTempAtTimeTriggers();
+		}
+		verifyZeroInteractions(thermostatMessager);
+	}
+
+	@Test
+	public void doesNotSetHouseTempIfItIs1059OnWeekends() {
+		DateTime saturday11am = new DateTime(2018, 11, 3, 11, 0, 0, DateTimeZone.forID("America/Detroit"));
+		DateTime saturday1059am = saturday11am.minusMillis(1);
+
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday1059am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday1059am = saturday1059am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday1059am);
+		controller.setTempAtTimeTriggers();
+
+		verifyZeroInteractions(thermostatMessager);
+	}
+
+	@Test
+	public void setsHouseTempTo69IfItIs1109OnWeekends() {
+		DateTime saturday1110am = new DateTime(2018, 11, 3, 11, 10, 0, DateTimeZone.forID("America/Detroit"));
+		DateTime saturday1109am = saturday1110am.minusMillis(1);
+
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday1109am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday1109am = saturday1109am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday1109am);
+		controller.setTempAtTimeTriggers();
+
+		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(69));
+	}
+
+	@Test
+	public void doesNotSetHouseTempTo69IfItIs1110OnWeekends() {
+		DateTime saturday1110am = new DateTime(2018, 11, 3, 11, 10, 0, DateTimeZone.forID("America/Detroit"));
+
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday1110am);
+		controller.setTempAtTimeTriggers();
+
+		DateTime sunday1110am = saturday1110am.plusDays(1);
+		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday1110am);
+		controller.setTempAtTimeTriggers();
+
+		verifyZeroInteractions(thermostatMessager);
+	}
 }
