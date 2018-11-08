@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions;
 import org.flywaydb.core.Flyway;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -18,6 +19,7 @@ import java.util.Properties;
 import static org.assertj.core.api.Assertions.*;
 
 @RunWith(JUnit4.class)
+@Ignore
 public class TemperatureRepositoryTest {
 
 
