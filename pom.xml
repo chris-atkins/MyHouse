@@ -245,6 +245,18 @@
 
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-surefire-plugin</artifactId>
+					<version>2.12.4</version>
+					<configuration>
+						<forkMode>always</forkMode>
+						<environmentVariables>
+							<PATH>${env.PATH}</PATH>
+						</environmentVariables>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-shade-plugin</artifactId>
 					<version>${maven-shade-plugin.version}</version>
 					<executions>

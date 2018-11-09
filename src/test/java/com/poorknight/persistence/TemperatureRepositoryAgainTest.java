@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(JUnit4.class)
+//@Ignore
 public class TemperatureRepositoryAgainTest {
 
 	@Test

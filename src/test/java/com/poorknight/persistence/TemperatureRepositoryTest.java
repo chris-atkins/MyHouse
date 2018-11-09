@@ -25,7 +25,10 @@ public class TemperatureRepositoryTest {
 
 
 	@ClassRule
-	public static MySQLContainer mySQLContainer = ((MySQLContainer)new MySQLContainer("mysql:5.7.24").withEnv("PATH", System.getenv("PATH") == null ? "/usr": System.getenv("PATH"))).withDatabaseName("myhouse").withUsername("Chris").withPassword("theBestPassword");
+	public static MySQLContainer mySQLContainer = new MySQLContainer("mysql:5.7.24")
+			.withDatabaseName("myhouse")
+			.withUsername("Chris")
+			.withPassword("theBestPassword");
 
 	@BeforeClass
 	public static void setUp() throws Exception {
