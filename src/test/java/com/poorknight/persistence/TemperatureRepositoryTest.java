@@ -20,7 +20,7 @@ import static org.assertj.core.api.Assertions.*;
 
 
 @RunWith(JUnit4.class)
-@Ignore
+//@Ignore
 public class TemperatureRepositoryTest {
 
 
