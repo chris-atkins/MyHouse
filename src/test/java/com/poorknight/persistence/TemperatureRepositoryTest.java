@@ -2,10 +2,7 @@ package com.poorknight.persistence;
 
 import org.assertj.core.api.Assertions;
 import org.flywaydb.core.Flyway;
-import org.junit.BeforeClass;
-import org.junit.ClassRule;
-import org.junit.Ignore;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.testcontainers.containers.MySQLContainer;
@@ -24,7 +21,6 @@ import static org.assertj.core.api.Assertions.*;
 public class TemperatureRepositoryTest {
 
 
-	@ClassRule
 	public static MySQLContainer mySQLContainer = new MySQLContainer("mysql:5.7.24")
 			.withDatabaseName("myhouse")
 			.withUsername("Chris")
@@ -32,8 +28,18 @@ public class TemperatureRepositoryTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
+		mySQLContainer.start();
+
+		Thread.sleep(5000);
+
 		Flyway flyway = Flyway.configure().dataSource(mySQLContainer.getJdbcUrl(), "Chris", "theBestPassword").load();
 		flyway.migrate();
+	}
+
+	@AfterClass
+	public static void tearDown() throws Exception {
+		mySQLContainer.stop();
+		mySQLContainer.close();
 	}
 
 	@Test
