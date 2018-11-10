@@ -6,6 +6,8 @@ import org.junit.*;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.wait.strategy.WaitStrategy;
+import org.testcontainers.shaded.io.netty.util.internal.shaded.org.jctools.queues.MessagePassingQueue;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,9 +30,12 @@ public class TemperatureRepositoryTest {
 
 	@BeforeClass
 	public static void setUp() throws Exception {
+		mySQLContainer.setStartupAttempts(100);
+//		WaitStrategy waitStrategy;
+//		mySQLContainer.setWaitStrategy(waitStrategy);
 		mySQLContainer.start();
 
-		Thread.sleep(5000);
+//		Thread.sleep(5000);
 
 		Flyway flyway = Flyway.configure().dataSource(mySQLContainer.getJdbcUrl(), "Chris", "theBestPassword").load();
 		flyway.migrate();
