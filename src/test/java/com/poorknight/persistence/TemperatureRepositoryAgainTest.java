@@ -46,4 +46,9 @@ public class TemperatureRepositoryAgainTest {
 			System.out.println("pathPiece: " + s);
 		}
 	}
+
+	@Test
+	public void fail() {
+		assertThat(true).isFalse();
+	}
 }
