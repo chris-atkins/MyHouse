@@ -24,7 +24,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class TemperatureRepositoryAgainTest {
 
 	@Test
-	public void name() {
+	public void print_environment_variables_for_jenkins() {
 		String path = System.getenv("PATH");
 		assertThat(path).isNotNull();
 		System.out.println("path: " + path);
@@ -45,10 +45,5 @@ public class TemperatureRepositoryAgainTest {
 		for (String s : split) {
 			System.out.println("pathPiece: " + s);
 		}
-	}
-
-	@Test
-	public void fail() {
-		assertThat(true).isFalse();
 	}
 }
