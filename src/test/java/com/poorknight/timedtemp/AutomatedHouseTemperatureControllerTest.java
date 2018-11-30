@@ -101,7 +101,7 @@ public class AutomatedHouseTemperatureControllerTest {
 //
 
 	@Test
-	public void setsHouseTempTo69IfItIs7amOnWeekdays() {
+	public void setsHouseTempTo67IfItIs7amOnWeekdays() {
 		DateTime monday7am = new DateTime(2018, 11, 5, 7, 0, 0, DateTimeZone.forID("America/Detroit"));
 
 		for (int i = 0; i < 5; i++) {
@@ -109,7 +109,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnight);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(69));
+		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(67));
 	}
 
 	@Test
@@ -127,7 +127,7 @@ public class AutomatedHouseTemperatureControllerTest {
 
 
 	@Test
-	public void doesNotSetHouseTempTo69IfItIsSixFiftyNineOnWeekdays() {
+	public void doesNotSetHouseTempIfItIsSixFiftyNineOnWeekdays() {
 		DateTime monday7am = new DateTime(2018, 11, 5, 7, 0, 0, DateTimeZone.forID("America/Detroit"));
 		DateTime monday659 = monday7am.minusMillis(1);
 
@@ -140,7 +140,7 @@ public class AutomatedHouseTemperatureControllerTest {
 	}
 
 	@Test
-	public void setsHouseTempTo69IfItIsSevenOhNineOnWeekdays() {
+	public void setsHouseTempTo67IfItIsSevenOhNineOnWeekdays() {
 		DateTime monday710 = new DateTime(2018, 11, 5, 7, 10, 0, DateTimeZone.forID("America/Detroit"));
 		DateTime monday709 = monday710.minusMillis(1);
 
@@ -149,11 +149,11 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(weekday709);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(69));
+		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(67));
 	}
 
 	@Test
-	public void doesNotSetHouseTempTo69IfItIsSevenTenOnWeekdays() {
+	public void doesNotSetHouseTempIfItIsSevenTenOnWeekdays() {
 		DateTime monday710 = new DateTime(2018, 11, 5, 7, 10, 0, DateTimeZone.forID("America/Detroit"));
 
 		for (int i = 0; i < 5; i++) {

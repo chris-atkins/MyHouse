@@ -41,7 +41,7 @@ public class AutomatedHouseTemperatureController {
 			thermostatMessager.postHeatTargetTemperature(new BigDecimal(64));
 		}
 		if (itIsWithin10MinutesFrom7am(currentLocalTime)) {
-			thermostatMessager.postHeatTargetTemperature(new BigDecimal(69));
+			thermostatMessager.postHeatTargetTemperature(new BigDecimal(67));
 		}
 	}
 
