@@ -242,7 +242,7 @@ public class AutomatedHouseTemperatureControllerTest {
 //
 
 	@Test
-	public void setsHouseTempTo69IfItIs11amOnWeekends() {
+	public void setsHouseTempTo67IfItIs11amOnWeekends() {
 		DateTime saturday11am = new DateTime(2018, 11, 3, 11, 0, 0, DateTimeZone.forID("America/Detroit"));
 		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(saturday11am);
 		controller.setTempAtTimeTriggers();
@@ -251,7 +251,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday11am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(69));
+		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(67));
 	}
 
 	@Test
@@ -282,7 +282,7 @@ public class AutomatedHouseTemperatureControllerTest {
 	}
 
 	@Test
-	public void setsHouseTempTo69IfItIs1109OnWeekends() {
+	public void setsHouseTempTo67IfItIs1109OnWeekends() {
 		DateTime saturday1110am = new DateTime(2018, 11, 3, 11, 10, 0, DateTimeZone.forID("America/Detroit"));
 		DateTime saturday1109am = saturday1110am.minusMillis(1);
 
@@ -293,7 +293,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(currentLocalTimeFinder.getCurrentLocalTime()).thenReturn(sunday1109am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(69));
+		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(67));
 	}
 
 	@Test
