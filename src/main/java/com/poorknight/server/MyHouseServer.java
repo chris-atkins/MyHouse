@@ -8,7 +8,7 @@ import com.poorknight.thermostat.ThermostatMessager;
 import com.poorknight.timedlights.OutsideLightDesiredStateDecider;
 import com.poorknight.timedlights.OutsideLightsController;
 import com.poorknight.timedtemp.AutomatedHouseTemperatureController;
-import com.poorknight.timedtemp.CurrentLocalTimeFinder;
+import com.poorknight.time.TimeFinder;
 import com.poorknight.web.HelloWorldWebPageHandler;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
@@ -76,7 +76,7 @@ public class MyHouseServer {
 		final OutsideLightDesiredStateDecider decider = new OutsideLightDesiredStateDecider();
 		final OutsideLightsController outsideLightsController = new OutsideLightsController(decider, houseCommandMessager);
 		final OutsideLightControllerRunnable outsideLightscontrollerRunnable = new OutsideLightControllerRunnable(outsideLightsController);
-		final AutomatedHouseTemperatureController automatedTempController = new AutomatedHouseTemperatureController(new CurrentLocalTimeFinder(), new ThermostatMessager());
+		final AutomatedHouseTemperatureController automatedTempController = new AutomatedHouseTemperatureController(new TimeFinder(), new ThermostatMessager());
 		final AutomatedHouseTemperatureControllerRunnable automatedTempControllerRunnable = new AutomatedHouseTemperatureControllerRunnable(automatedTempController);
 		return new FixedScheduleTaskManager(executor, outsideLightscontrollerRunnable, automatedTempControllerRunnable);
 	}

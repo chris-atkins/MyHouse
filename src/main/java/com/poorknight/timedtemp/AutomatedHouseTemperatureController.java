@@ -2,6 +2,7 @@ package com.poorknight.timedtemp;
 
 
 import com.poorknight.thermostat.ThermostatMessager;
+import com.poorknight.time.TimeFinder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
@@ -9,17 +10,17 @@ import java.math.BigDecimal;
 
 public class AutomatedHouseTemperatureController {
 
-	private final CurrentLocalTimeFinder currentLocalTimeFinder;
+	private final TimeFinder timeFinder;
 
 	private ThermostatMessager thermostatMessager;
 
-	public AutomatedHouseTemperatureController(CurrentLocalTimeFinder currentLocalTimeFinder, ThermostatMessager thermostatMessager) {
-		this.currentLocalTimeFinder = currentLocalTimeFinder;
+	public AutomatedHouseTemperatureController(TimeFinder timeFinder, ThermostatMessager thermostatMessager) {
+		this.timeFinder = timeFinder;
 		this.thermostatMessager = thermostatMessager;
 	}
 
 	public void setTempAtTimeTriggers() {
-		DateTime currentLocalTime = currentLocalTimeFinder.getCurrentLocalTime();
+		DateTime currentLocalTime = timeFinder.getCurrentLocalTime();
 
 		if (itIsAWeekday(currentLocalTime)) {
 			lowerHeatBetweenMidnightAnd7am(currentLocalTime);
