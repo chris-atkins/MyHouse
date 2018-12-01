@@ -41,6 +41,9 @@ public class HouseStatusRepository {
 		String utcTime = houseStatus.getUtcTime().toString("yyyy-MM-dd HH:mm:ss");
 		String localTime = houseStatus.getLocalTime().toString("yyyy-MM-dd HH:mm:ss");
 		double temp = houseStatus.getHouseTemp();
-		return String.format("INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP) values (\"%s\", \"%s\", %5.2f)", utcTime, localTime, temp);
+		double tempSetting = houseStatus.getTempSetting();
+		String furnaceState = houseStatus.getFurnaceState();
+		String formatString = "INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP, TEMP_SETTING, FURNACE_STATE) values (\"%s\", \"%s\", %5.2f, %5.2f, \"%s\")";
+		return String.format(formatString, utcTime, localTime, temp, tempSetting, furnaceState);
 	}
 }

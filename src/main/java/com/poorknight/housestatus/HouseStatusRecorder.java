@@ -1,10 +1,9 @@
 package com.poorknight.housestatus;
 
 import com.poorknight.thermostat.ThermostatMessager;
+import com.poorknight.thermostat.ThermostatStatus;
 import com.poorknight.time.TimeFinder;
 import org.joda.time.DateTime;
-
-import java.math.BigDecimal;
 
 public class HouseStatusRecorder {
 
@@ -21,9 +20,9 @@ public class HouseStatusRecorder {
 	public void recordCurrentHouseStatus() {
 		DateTime currentLocalTime = timeFinder.getCurrentLocalTime();
 		DateTime currentUtcTime = timeFinder.getUtcTimeFromLocalTime(currentLocalTime);
-		BigDecimal currentTemp = thermostatMessager.requestCurrentTemp();
+		ThermostatStatus status = thermostatMessager.requestThermostatStatus();
 
-		HouseStatus houseStatus = new HouseStatus(currentUtcTime, currentLocalTime, currentTemp.doubleValue());
+		HouseStatus houseStatus = new HouseStatus(currentUtcTime, currentLocalTime, status.getCurrentTemp(), status.getTempSetting(), status.getFurnaceState().toString());
 		repository.addHouseStatus(houseStatus);
 	}
 }

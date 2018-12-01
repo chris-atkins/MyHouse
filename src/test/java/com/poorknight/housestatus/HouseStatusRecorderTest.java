@@ -1,6 +1,7 @@
 package com.poorknight.housestatus;
 
 import com.poorknight.thermostat.ThermostatMessager;
+import com.poorknight.thermostat.ThermostatStatus;
 import com.poorknight.time.TimeFinder;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -31,13 +32,14 @@ public class HouseStatusRecorderTest {
 
 	@Test
 	public void recordsHouseStatus() {
-		when(thermostatMessager.requestCurrentTemp()).thenReturn(new BigDecimal(55.53));
+		ThermostatStatus thermostatStatus = new ThermostatStatus(55.53, 26.75, ThermostatStatus.FurnaceState.HEAT_ON);
+		when(thermostatMessager.requestThermostatStatus()).thenReturn(thermostatStatus);
 
 		DateTime utcTime = DateTime.parse("2018-03-04T22:55:53");
 		DateTime localTime = DateTime.parse("2019-01-02T09:30");
 		when(currentTimeFinder.getCurrentLocalTime()).thenReturn(localTime);
 		when(currentTimeFinder.getUtcTimeFromLocalTime(localTime)).thenReturn(utcTime);
-		HouseStatus expectedHouseStatus = new HouseStatus(utcTime, localTime, 55.53);
+		HouseStatus expectedHouseStatus = new HouseStatus(utcTime, localTime, 55.53, 26.75, "HEAT_ON");
 
 		houseStatusRecorder.recordCurrentHouseStatus();
 

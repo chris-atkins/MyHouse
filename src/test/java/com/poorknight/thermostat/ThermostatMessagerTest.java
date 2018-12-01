@@ -81,6 +81,32 @@ public class ThermostatMessagerTest {
 		assertThat(requestBody.get("hold").asInt()).isEqualTo(1);
 	}
 
+	@Test
+	public void returnsHouseStatusWhenHeaterIsOn() {
+		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(55.5, 1, 73));
+
+		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+
+		assertThat(thermostatStatus.getCurrentTemp()).isEqualTo(55.5);
+		assertThat(thermostatStatus.getTempSetting()).isEqualTo(73);
+		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.HEAT_ON);
+	}
+
+	@Test
+	public void returnsHouseStatusWhenHeaterIsOff() {
+		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, 0, 173));
+
+		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+
+		assertThat(thermostatStatus.getCurrentTemp()).isEqualTo(155.5);
+		assertThat(thermostatStatus.getTempSetting()).isEqualTo(173);
+		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.OFF);
+	}
+
 	private JsonNode buildJsonResponseFromThermostat(final Double temperature) {
 		final ObjectNode response = JsonNodeFactory.instance.objectNode();
 
@@ -91,6 +117,30 @@ public class ThermostatMessagerTest {
 		response.put("hold", 1);
 		response.put("t_heat", 67);
 		response.put("tstate", 0);
+		response.put("fstate", 0);
+
+		final ObjectNode timeNode = JsonNodeFactory.instance.objectNode();
+		timeNode.put("day", 0);
+		timeNode.put("hour", 13);
+		timeNode.put("minute", 53);
+		response.set("time", timeNode);
+
+		response.put("t_type_post", 0);
+
+		return response;
+	}
+
+
+	private JsonNode buildJsonResponseFromThermostat(double temperature, int tstate, double tempSetting) {
+		final ObjectNode response = JsonNodeFactory.instance.objectNode();
+
+		response.put("temp", temperature);
+		response.put("tmode", 1);
+		response.put("fmode", 0);
+		response.put("override", 1);
+		response.put("hold", 1);
+		response.put("t_heat", tempSetting);
+		response.put("tstate", tstate);
 		response.put("fstate", 0);
 
 		final ObjectNode timeNode = JsonNodeFactory.instance.objectNode();

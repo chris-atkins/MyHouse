@@ -1,5 +1,6 @@
 package com.poorknight.housestatus;
 
+import com.poorknight.thermostat.ThermostatStatus;
 import org.flywaydb.core.Flyway;
 import org.joda.time.DateTime;
 import org.junit.After;
@@ -118,7 +119,9 @@ public class HouseStatusRepositoryTest {
 			DateTime utcTime = DateTime.parse("2018-03-03T12:30:00");
 			DateTime localTime = DateTime.parse("2018-04-04T04:30:00");
 			double houseTemp = 70.75;
-			HouseStatus houseStatus = new HouseStatus(utcTime, localTime, houseTemp);
+			double tempSetting = 27.6;
+			ThermostatStatus.FurnaceState furnaceState = ThermostatStatus.FurnaceState.HEAT_ON;
+			HouseStatus houseStatus = new HouseStatus(utcTime, localTime, houseTemp, tempSetting, furnaceState.toString());
 
 			repository.addHouseStatus(houseStatus);
 
@@ -132,10 +135,14 @@ public class HouseStatusRepositoryTest {
 			String utcTimeString = resultSet.getString("TIME_UTC");
 			String localTimeString = resultSet.getString("TIME_LOCAL");
 			double temp = resultSet.getDouble("HOUSE_TEMP");
-			System.out.println("Row: " + id + " | " + utcTimeString + " | " + localTimeString + " | " + temp);
+			double setTemp = resultSet.getDouble("TEMP_SETTING");
+			String stateOfFurnace = resultSet.getString("FURNACE_STATE");
+
 			assertThat(utcTimeString).isEqualTo("2018-03-03 12:30:00");
 			assertThat(localTimeString).isEqualTo("2018-04-04 04:30:00");
 			assertThat(temp).isEqualTo(70.75);
+			assertThat(setTemp).isEqualTo(27.6);
+			assertThat(stateOfFurnace).isEqualTo("HEAT_ON");
 
 			statement.close();
 			connection.close();
@@ -160,7 +167,9 @@ public class HouseStatusRepositoryTest {
 		private DateTime utcTime = DateTime.parse("2018-03-03T12:30:00");
 		private DateTime localTime = DateTime.parse("2018-04-04T04:30:00");
 		private double houseTemp = 70.75;
-		private HouseStatus houseStatus = new HouseStatus(utcTime, localTime, houseTemp);
+		private double tempSetting = 27.6;
+		private String furnaceState = "HEAT_ON";
+		private HouseStatus houseStatus = new HouseStatus(utcTime, localTime, houseTemp, tempSetting, furnaceState);
 
 		@Test
 		public void closesStatementAndConnectionOnExecutionError() throws Exception {

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.server.WebResourceFactory;
+import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
 import com.sun.jersey.api.client.WebResource;
 
 import javax.ws.rs.core.MediaType;
@@ -46,5 +47,15 @@ public class ThermostatMessager {
 		return WebResourceFactory.buildSecuredHomeWebResource("/tstat")
 				.type(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE);
+	}
+
+	public ThermostatStatus requestThermostatStatus() {
+		final JsonNode response = requestThermostatState();
+		double currentTemp = response.get("temp").asDouble();
+		double tempSetting = response.get("t_heat").asDouble();
+		double tstate = response.get("tstate").asDouble();
+		FurnaceState furnaceState = tstate == 0 ? FurnaceState.OFF : FurnaceState.HEAT_ON;
+
+		return new ThermostatStatus(currentTemp, tempSetting, furnaceState);
 	}
 }
