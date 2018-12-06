@@ -1,6 +1,7 @@
 package com.poorknight.server;
 
 import com.poorknight.server.FixedScheduleTaskManager.OutsideLightControllerRunnable;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -43,6 +44,7 @@ public class FixedScheduleTaskManagerTest {
 		verify(executor).scheduleAtFixedRate(automatedHouseTemperatureController, 2L, 10L, TimeUnit.MINUTES);
 	}
 
+	@Ignore
 	@Test
 	public void startCallsHouseStatusReportController() throws Exception {
 		fixedScheduleTaskManager.startAllTasks();
