@@ -10,8 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
-
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -30,6 +28,9 @@ public class HouseStatusRecorderTest {
 	@Mock
 	private TimeFinder currentTimeFinder;
 
+	@Mock
+	private WeatherRetriever weatherRetriever;
+
 	@Test
 	public void recordsHouseStatus() {
 		ThermostatStatus thermostatStatus = new ThermostatStatus(55.53, 26.75, ThermostatStatus.FurnaceState.HEAT_ON);
@@ -41,8 +42,11 @@ public class HouseStatusRecorderTest {
 		when(currentTimeFinder.getUtcTimeFromLocalTime(localTime)).thenReturn(utcTime);
 		HouseStatus expectedHouseStatus = new HouseStatus(utcTime, localTime, 55.53, 26.75, "HEAT_ON");
 
+		WeatherStatus weatherStatus = new WeatherStatus(23.2, 4.23, 1.34, 234.5);
+		when(weatherRetriever.findCurrentWeather()).thenReturn(weatherStatus);
+
 		houseStatusRecorder.recordCurrentHouseStatus();
 
-		verify(repository).addHouseStatus(expectedHouseStatus);
+		verify(repository).addHouseStatus(expectedHouseStatus, weatherStatus);
 	}
 }

@@ -9,20 +9,25 @@ public class HouseStatusRecorder {
 
 	private final TimeFinder timeFinder;
 	private final ThermostatMessager thermostatMessager;
+	private final WeatherRetriever weatherRetriever;
 	private final HouseStatusRepository repository;
 
-	public HouseStatusRecorder(TimeFinder timeFinder, ThermostatMessager thermostatMessager, HouseStatusRepository repository) {
+	public HouseStatusRecorder(TimeFinder timeFinder, ThermostatMessager thermostatMessager, WeatherRetriever weatherRetriever, HouseStatusRepository repository) {
 		this.timeFinder = timeFinder;
 		this.thermostatMessager = thermostatMessager;
+		this.weatherRetriever = weatherRetriever;
 		this.repository = repository;
 	}
 
 	public void recordCurrentHouseStatus() {
 		DateTime currentLocalTime = timeFinder.getCurrentLocalTime();
 		DateTime currentUtcTime = timeFinder.getUtcTimeFromLocalTime(currentLocalTime);
-		ThermostatStatus status = thermostatMessager.requestThermostatStatus();
 
+		WeatherStatus weatherStatus = weatherRetriever.findCurrentWeather();
+
+		ThermostatStatus status = thermostatMessager.requestThermostatStatus();
 		HouseStatus houseStatus = new HouseStatus(currentUtcTime, currentLocalTime, status.getCurrentTemp(), status.getTempSetting(), status.getFurnaceState().toString());
-		repository.addHouseStatus(houseStatus);
+
+		repository.addHouseStatus(houseStatus, weatherStatus);
 	}
 }

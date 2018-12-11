@@ -2,10 +2,7 @@ package com.poorknight.server;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.echo.housecommand.HouseCommandMessager;
-import com.poorknight.housestatus.DatabaseConnector;
-import com.poorknight.housestatus.HouseStatusRecorder;
-import com.poorknight.housestatus.HouseStatusRepository;
-import com.poorknight.housestatus.MySqlConnectionParameters;
+import com.poorknight.housestatus.*;
 import com.poorknight.rest.EchoEndpoint;
 import com.poorknight.rest.HouseEndpoint;
 import com.poorknight.server.FixedScheduleTaskManager.OutsideLightControllerRunnable;
@@ -117,7 +114,8 @@ public class MyHouseServer {
 		final ThermostatMessager thermostatMessager = new ThermostatMessager();
 		final DatabaseConnector databaseConnector = new DatabaseConnector();
 		final HouseStatusRepository houseStatusRepository = new HouseStatusRepository(databaseConnector);
-		final HouseStatusRecorder houseStatusRecorder = new HouseStatusRecorder(timeFinder, thermostatMessager, houseStatusRepository);
+		final WeatherRetriever weatherRetriever = new WeatherRetriever();
+		final HouseStatusRecorder houseStatusRecorder = new HouseStatusRecorder(timeFinder, thermostatMessager, weatherRetriever, houseStatusRepository);
 		final TextMessageAlerter textMessageAlerter = TextMessageAlerter.instance();
 		return new HouseStatusRecorderRunnable(houseStatusRecorder, textMessageAlerter);
 	}
