@@ -22,12 +22,9 @@ public class HouseStatusRecorder {
 	public void recordCurrentHouseStatus() {
 		DateTime currentLocalTime = timeFinder.getCurrentLocalTime();
 		DateTime currentUtcTime = timeFinder.getUtcTimeFromLocalTime(currentLocalTime);
-
 		WeatherStatus weatherStatus = weatherRetriever.findCurrentWeather();
+		ThermostatStatus thermostatStatus = thermostatMessager.requestThermostatStatus();
 
-		ThermostatStatus status = thermostatMessager.requestThermostatStatus();
-		HouseStatus houseStatus = new HouseStatus(currentUtcTime, currentLocalTime, status.getCurrentTemp(), status.getTempSetting(), status.getFurnaceState().toString());
-
-		repository.addHouseStatus(houseStatus, weatherStatus);
+		repository.addHouseStatus(currentUtcTime, currentLocalTime, thermostatStatus, weatherStatus);
 	}
 }

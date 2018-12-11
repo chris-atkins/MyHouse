@@ -40,13 +40,12 @@ public class HouseStatusRecorderTest {
 		DateTime localTime = DateTime.parse("2019-01-02T09:30");
 		when(currentTimeFinder.getCurrentLocalTime()).thenReturn(localTime);
 		when(currentTimeFinder.getUtcTimeFromLocalTime(localTime)).thenReturn(utcTime);
-		HouseStatus expectedHouseStatus = new HouseStatus(utcTime, localTime, 55.53, 26.75, "HEAT_ON");
 
 		WeatherStatus weatherStatus = new WeatherStatus(23.2, 4.23, 1.34, 234.5);
 		when(weatherRetriever.findCurrentWeather()).thenReturn(weatherStatus);
 
 		houseStatusRecorder.recordCurrentHouseStatus();
 
-		verify(repository).addHouseStatus(expectedHouseStatus, weatherStatus);
+		verify(repository).addHouseStatus(utcTime, localTime, thermostatStatus, weatherStatus);
 	}
 }

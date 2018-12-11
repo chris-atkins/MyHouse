@@ -116,14 +116,14 @@ public class HouseStatusRepositoryTest {
 			double tempSetting = 27.6;
 			ThermostatStatus.FurnaceState furnaceState = ThermostatStatus.FurnaceState.HEAT_ON;
 
-			HouseStatus houseStatus = new HouseStatus(utcTime, localTime, houseTemp, tempSetting, furnaceState.toString());
+			ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState);
 			Double tempFahrenheit = 27.12;
 			Double windSpeedMph = 9.17;
 			Double humidityPercent = 81d;
 			Double pressureHPa = 1017.12;
 			WeatherStatus weatherStatus = new WeatherStatus(tempFahrenheit, windSpeedMph, humidityPercent, pressureHPa);
 
-			repository.addHouseStatus(houseStatus, weatherStatus);
+			repository.addHouseStatus(utcTime, localTime, thermostatStatus, weatherStatus);
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			Statement statement = connection.createStatement();
@@ -156,12 +156,12 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesTempWith2DecimalPlacesOver100() throws Exception {
-			HouseStatus houseStatus = new HouseStatus(new DateTime(), new DateTime(), 1d, 1d, ThermostatStatus.FurnaceState.OFF.toString());
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
 
 			Double tempFahrenheit = 101.01;
 			WeatherStatus weatherStatus = new WeatherStatus(tempFahrenheit, 1d, 1d, 1d);
 
-			repository.addHouseStatus(houseStatus, weatherStatus);
+			repository.addHouseStatus(new DateTime(), new DateTime(), thermostatStatus, weatherStatus);
 
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
@@ -179,12 +179,12 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesNegativeTempWith2DecimalPlaces() throws Exception {
-			HouseStatus houseStatus = new HouseStatus(new DateTime(), new DateTime(), 1d, 1d, ThermostatStatus.FurnaceState.OFF.toString());
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
 
 			Double tempFahrenheit = -13.55;
 			WeatherStatus weatherStatus = new WeatherStatus(tempFahrenheit, 1d, 1d, 1d);
 
-			repository.addHouseStatus(houseStatus, weatherStatus);
+			repository.addHouseStatus(new DateTime(), new DateTime(), thermostatStatus, weatherStatus);
 
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
@@ -202,12 +202,12 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handles100PercentHumidity() throws Exception {
-			HouseStatus houseStatus = new HouseStatus(new DateTime(), new DateTime(), 1d, 1d, ThermostatStatus.FurnaceState.OFF.toString());
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
 
 			Double humidity = 100d;
 			WeatherStatus weatherStatus = new WeatherStatus(1d, 1d, humidity, 1d);
 
-			repository.addHouseStatus(houseStatus, weatherStatus);
+			repository.addHouseStatus(new DateTime(), new DateTime(), thermostatStatus, weatherStatus);
 
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
@@ -225,12 +225,12 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesTwoDecimalPlaceHumidity() throws Exception {
-			HouseStatus houseStatus = new HouseStatus(new DateTime(), new DateTime(), 1d, 1d, ThermostatStatus.FurnaceState.OFF.toString());
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
 
 			Double humidity = 55.55;
 			WeatherStatus weatherStatus = new WeatherStatus(1d, 1d, humidity, 1d);
 
-			repository.addHouseStatus(houseStatus, weatherStatus);
+			repository.addHouseStatus(new DateTime(), new DateTime(), thermostatStatus, weatherStatus);
 
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
@@ -248,12 +248,12 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesHurricaneForceWinds() throws Exception {
-			HouseStatus houseStatus = new HouseStatus(new DateTime(), new DateTime(), 1d, 1d, ThermostatStatus.FurnaceState.OFF.toString());
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
 
 			Double wind = 155.55;
 			WeatherStatus weatherStatus = new WeatherStatus(1d, wind, 1d, 1d);
 
-			repository.addHouseStatus(houseStatus, weatherStatus);
+			repository.addHouseStatus(new DateTime(), new DateTime(), thermostatStatus, weatherStatus);
 
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
@@ -291,8 +291,8 @@ public class HouseStatusRepositoryTest {
 		private DateTime localTime = DateTime.parse("2018-04-04T04:30:00");
 		private double houseTemp = 70.75;
 		private double tempSetting = 27.6;
-		private String furnaceState = "HEAT_ON";
-		private HouseStatus houseStatus = new HouseStatus(utcTime, localTime, houseTemp, tempSetting, furnaceState);
+		private ThermostatStatus.FurnaceState furnaceState = ThermostatStatus.FurnaceState.HEAT_ON;
+		private ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState);
 		private Double tempFahrenheit = 27.12;
 		private Double windSpeedMph = 9.17;
 		private Double humidityPercent = 81d;
@@ -308,7 +308,7 @@ public class HouseStatusRepositoryTest {
 			when(statement.execute(anyString())).thenThrow(sqlException);
 
 			try {
-				repository.addHouseStatus(houseStatus, weatherStatus);
+				repository.addHouseStatus(utcTime, localTime, thermostatStatus, weatherStatus);
 				fail("Expecting exception");
 			} catch(RuntimeException e) {
 				assertThat(e.getCause()).isEqualTo(sqlException);
@@ -327,7 +327,7 @@ public class HouseStatusRepositoryTest {
 			doThrow(sqlException).when(statement).close();
 
 			try {
-				repository.addHouseStatus(houseStatus, weatherStatus);
+				repository.addHouseStatus(utcTime, localTime, thermostatStatus, weatherStatus);
 				fail("Expecting exception");
 			} catch(RuntimeException e) {
 				assertThat(e.getCause()).isEqualTo(sqlException);
@@ -345,7 +345,7 @@ public class HouseStatusRepositoryTest {
 			doThrow(sqlException).when(connection).close();
 
 			try {
-				repository.addHouseStatus(houseStatus, weatherStatus);
+				repository.addHouseStatus(utcTime, localTime, thermostatStatus, weatherStatus);
 				fail("Expecting exception");
 			} catch(RuntimeException e) {
 				assertThat(e.getCause()).isEqualTo(sqlException);

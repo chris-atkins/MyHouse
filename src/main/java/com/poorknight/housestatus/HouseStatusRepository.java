@@ -1,5 +1,8 @@
 package com.poorknight.housestatus;
 
+import com.poorknight.thermostat.ThermostatStatus;
+import org.joda.time.DateTime;
+
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -12,13 +15,13 @@ public class HouseStatusRepository {
 		this.databaseConnector = databaseConnector;
 	}
 
-	public void addHouseStatus(HouseStatus houseStatus, WeatherStatus weatherStatus) {
+	public void addHouseStatus(DateTime currentUtcTime, DateTime currentLocalTime, ThermostatStatus thermostatStatus, WeatherStatus weatherStatus) {
 		Connection connection = null;
 		Statement statement = null;
 		try {
 			connection = databaseConnector.getConnection();
 			statement = connection.createStatement();
-			statement.execute(buildInsertStatement(houseStatus, weatherStatus));
+			statement.execute(buildInsertStatement(currentUtcTime, currentLocalTime, thermostatStatus, weatherStatus));
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -37,12 +40,12 @@ public class HouseStatusRepository {
 		}
 	}
 
-	private String buildInsertStatement(HouseStatus houseStatus, WeatherStatus weatherStatus) {
-		String utcTime = houseStatus.getUtcTime().toString("yyyy-MM-dd HH:mm:ss");
-		String localTime = houseStatus.getLocalTime().toString("yyyy-MM-dd HH:mm:ss");
-		double temp = houseStatus.getHouseTemp();
-		double tempSetting = houseStatus.getTempSetting();
-		String furnaceState = houseStatus.getFurnaceState();
+	private String buildInsertStatement(DateTime currentUtcTime, DateTime currentLocalTime, ThermostatStatus thermostatStatus, WeatherStatus weatherStatus) {
+		String utcTime = currentUtcTime.toString("yyyy-MM-dd HH:mm:ss");
+		String localTime = currentLocalTime.toString("yyyy-MM-dd HH:mm:ss");
+		double temp = thermostatStatus.getCurrentTemp();
+		double tempSetting = thermostatStatus.getTempSetting();
+		String furnaceState = thermostatStatus.getFurnaceState().toString();
 
 		Double externalTemp = weatherStatus.getTempFahrenheit();
 		Double windSpeed = weatherStatus.getWindSpeedMph();
