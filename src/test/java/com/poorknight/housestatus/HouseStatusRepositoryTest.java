@@ -1,5 +1,10 @@
 package com.poorknight.housestatus;
 
+import com.poorknight.housestatus.repository.DatabaseConnector;
+import com.poorknight.housestatus.repository.HouseDataPoint;
+import com.poorknight.housestatus.repository.HouseStatusRepository;
+import com.poorknight.housestatus.repository.MySqlConnectionParameters;
+import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatStatus;
 import org.flywaydb.core.Flyway;
 import org.joda.time.DateTime;
@@ -9,10 +14,12 @@ import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.testcontainers.containers.MySQLContainer;
 
 import java.sql.*;
+import java.util.List;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.*;
@@ -154,6 +161,50 @@ public class HouseStatusRepositoryTest {
 			connection.close();
 		}
 
+
+		@Test
+		public void reportsCorrectly() {
+			WeatherStatus weatherStatus = new WeatherStatus(27.12, 9.17, 81d, 1017.12);
+
+
+			DateTime utcTime1 = DateTime.parse("2018-03-03T12:30:00");
+			DateTime localTime1 = DateTime.parse("2018-04-04T04:30:00");
+			double houseTemp1 = 70.75;
+			double tempSetting1 = 27.6;
+			ThermostatStatus thermostatStatus1 = new ThermostatStatus(houseTemp1, tempSetting1, ThermostatStatus.FurnaceState.HEAT_ON);
+
+
+			DateTime utcTime2 = DateTime.parse("2018-03-03T12:31:00");
+			DateTime localTime2 = DateTime.parse("2018-04-04T04:31:00");
+			double houseTemp2 = 70.75;
+			double tempSetting2 = 27.6;
+			ThermostatStatus thermostatStatus2 = new ThermostatStatus(houseTemp2, tempSetting2, ThermostatStatus.FurnaceState.HEAT_ON);
+
+
+			DateTime utcTime3 = DateTime.parse("2018-03-03T12:29:00");
+			DateTime localTime3 = DateTime.parse("2018-04-04T04:29:00");
+			ThermostatStatus thermostatStatus3 = new ThermostatStatus(-1, -1, ThermostatStatus.FurnaceState.HEAT_ON);
+
+			DateTime utcTime4 = DateTime.parse("2018-03-03T12:32:00");
+			DateTime localTime4 = DateTime.parse("2018-04-04T04:32:00");
+			ThermostatStatus thermostatStatus4 = new ThermostatStatus(-1, -1, ThermostatStatus.FurnaceState.HEAT_ON);
+
+
+			repository.addHouseStatus(utcTime1, localTime1, thermostatStatus1, weatherStatus);
+			repository.addHouseStatus(utcTime2, localTime2, thermostatStatus2, weatherStatus);
+
+			repository.addHouseStatus(utcTime3, localTime3, thermostatStatus3, weatherStatus);
+			repository.addHouseStatus(utcTime4, localTime4, thermostatStatus4, weatherStatus);
+
+
+			List<HouseDataPoint> houseDataPoints = repository.retrieveHouseStatusFrom(DateTime.parse("2018-03-03T12:30:00"), DateTime.parse("2018-03-03T12:31:00"));
+
+			HouseDataPoint dataPoint1 = new HouseDataPoint(localTime1, houseTemp1, tempSetting1);
+			HouseDataPoint dataPoint2 = new HouseDataPoint(localTime2, houseTemp2, tempSetting2);
+
+			assertThat(houseDataPoints).containsExactly(dataPoint1, dataPoint2);
+		}
+
 		@Test
 		public void handlesTempWith2DecimalPlacesOver100() throws Exception {
 			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
@@ -270,8 +321,6 @@ public class HouseStatusRepositoryTest {
 		}
 	}
 
-
-
 	@RunWith(MockitoJUnitRunner.class)
 	public static class HouseStatusRepositoryMockTest {
 
@@ -340,6 +389,65 @@ public class HouseStatusRepositoryTest {
 		public void wrapsExceptionWhenClosingConnectionThrows() throws Exception {
 			when(databaseConnector.getConnection()).thenReturn(connection);
 			when(connection.createStatement()).thenReturn(statement);
+
+			SQLException sqlException = new SQLException();
+			doThrow(sqlException).when(connection).close();
+
+			try {
+				repository.addHouseStatus(utcTime, localTime, thermostatStatus, weatherStatus);
+				fail("Expecting exception");
+			} catch(RuntimeException e) {
+				assertThat(e.getCause()).isEqualTo(sqlException);
+			}
+		}
+
+		@Test
+		public void queryClosesStatementAndConnectionOnExecutionError() throws Exception {
+			when(databaseConnector.getConnection()).thenReturn(connection);
+			when(connection.createStatement()).thenReturn(statement);
+
+			SQLException sqlException = new SQLException();
+			when(statement.executeQuery(anyString())).thenThrow(sqlException);
+
+			try {
+				repository.retrieveHouseStatusFrom(utcTime, localTime);
+				fail("Expecting exception");
+			} catch(RuntimeException e) {
+				assertThat(e.getCause()).isEqualTo(sqlException);
+			}
+
+			verify(statement).close();
+			verify(connection).close();
+		}
+
+		@Test
+		public void queryClosesConnectionEvenOnErrorClosingStatement() throws Exception {
+			when(databaseConnector.getConnection()).thenReturn(connection);
+			when(connection.createStatement()).thenReturn(statement);
+			ResultSet resultSet = Mockito.mock(ResultSet.class);
+			when(resultSet.next()).thenReturn(false);
+			when(statement.executeQuery(anyString())).thenReturn(resultSet);
+
+			SQLException sqlException = new SQLException();
+			doThrow(sqlException).when(statement).close();
+
+			try {
+				repository.retrieveHouseStatusFrom(utcTime, localTime);
+				fail("Expecting exception");
+			} catch(RuntimeException e) {
+				assertThat(e.getCause()).isEqualTo(sqlException);
+			}
+
+			verify(connection).close();
+		}
+
+		@Test
+		public void queryWrapsExceptionWhenClosingConnectionThrows() throws Exception {
+			when(databaseConnector.getConnection()).thenReturn(connection);
+			when(connection.createStatement()).thenReturn(statement);
+			ResultSet resultSet = Mockito.mock(ResultSet.class);
+			when(resultSet.next()).thenReturn(false);
+			when(statement.executeQuery(anyString())).thenReturn(resultSet);
 
 			SQLException sqlException = new SQLException();
 			doThrow(sqlException).when(connection).close();

@@ -1,4 +1,4 @@
-package com.poorknight.housestatus;
+package com.poorknight.housestatus.weather;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.settings.Environment;

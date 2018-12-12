@@ -1,10 +1,10 @@
 package com.poorknight.housestatus;
 
-import com.poorknight.alerting.email.Emailer;
+import com.poorknight.housestatus.repository.DatabaseConnector;
+import com.poorknight.housestatus.repository.MySqlConnectionParameters;
 import com.poorknight.settings.Environment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;

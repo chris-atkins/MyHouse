@@ -1,5 +1,8 @@
 package com.poorknight.housestatus;
 
+import com.poorknight.housestatus.repository.HouseStatusRepository;
+import com.poorknight.housestatus.weather.WeatherRetriever;
+import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatMessager;
 import com.poorknight.thermostat.ThermostatStatus;
 import com.poorknight.time.TimeFinder;

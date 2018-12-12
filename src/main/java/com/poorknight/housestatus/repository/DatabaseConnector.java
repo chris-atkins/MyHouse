@@ -1,4 +1,4 @@
-package com.poorknight.housestatus;
+package com.poorknight.housestatus.repository;
 
 import com.poorknight.settings.Environment;
 

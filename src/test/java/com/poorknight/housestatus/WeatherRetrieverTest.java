@@ -2,15 +2,14 @@ package com.poorknight.housestatus;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.poorknight.housestatus.weather.WeatherRetriever;
+import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.settings.Environment;
-import com.poorknight.timedlights.OutsideLightDesiredStateDecider;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import org.joda.time.DateTime;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;

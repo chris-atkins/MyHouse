@@ -1,4 +1,4 @@
-package com.poorknight.housestatus;
+package com.poorknight.housestatus.weather;
 
 import java.util.Objects;
 
