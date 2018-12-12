@@ -1,6 +1,5 @@
 package com.poorknight.housestatus.reports;
 
-import org.joda.time.DateTime;
 
 import java.util.Collections;
 import java.util.List;
@@ -24,27 +23,15 @@ public class HouseStatusReport {
 	}
 
 	public List<String> getLocalTimes() {
-		return localTimes;
-	}
-
-	public void setLocalTimes(List<String> localTimes) {
-		this.localTimes = localTimes;
+		return Collections.unmodifiableList(localTimes);
 	}
 
 	public List<Double> getHouseTemperatures() {
-		return houseTemperatures;
-	}
-
-	public void setHouseTemperatures(List<Double> houseTemperatures) {
-		this.houseTemperatures = houseTemperatures;
+		return Collections.unmodifiableList(houseTemperatures);
 	}
 
 	public List<Double> getThermostatSettings() {
-		return thermostatSettings;
-	}
-
-	public void setThermostatSettings(List<Double> thermostatSettings) {
-		this.thermostatSettings = thermostatSettings;
+		return Collections.unmodifiableList(thermostatSettings);
 	}
 
 	@Override
