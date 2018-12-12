@@ -1,10 +1,10 @@
-package com.poorknight.rest;
+package com.poorknight.endpoints;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
-import com.poorknight.rest.houseip.HouseIpRequest;
-import com.poorknight.rest.houseip.HouseIpResponse;
-import com.poorknight.rest.notification.NotifyRequest;
-import com.poorknight.rest.notification.NotifyResponse;
+import com.poorknight.endpoints.houseip.HouseIpRequest;
+import com.poorknight.endpoints.houseip.HouseIpResponse;
+import com.poorknight.endpoints.notification.NotifyRequest;
+import com.poorknight.endpoints.notification.NotifyResponse;
 import com.poorknight.server.WebResourceFactory;
 
 import javax.ws.rs.Consumes;

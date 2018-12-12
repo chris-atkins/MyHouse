@@ -1,4 +1,4 @@
-package com.poorknight.rest.notification;
+package com.poorknight.endpoints.notification;
 
 public class NotifyRequest {
 

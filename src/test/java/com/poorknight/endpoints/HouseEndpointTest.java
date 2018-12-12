@@ -1,4 +1,4 @@
-package com.poorknight.rest;
+package com.poorknight.endpoints;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -6,8 +6,8 @@ import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.poorknight.rest.houseip.HouseIpRequest;
-import com.poorknight.rest.houseip.HouseIpResponse;
+import com.poorknight.endpoints.houseip.HouseIpRequest;
+import com.poorknight.endpoints.houseip.HouseIpResponse;
 import com.poorknight.server.WebResourceFactory;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.assertj.core.api.Assertions;
@@ -21,8 +21,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
-import com.poorknight.rest.notification.NotifyRequest;
-import com.poorknight.rest.notification.NotifyResponse;
+import com.poorknight.endpoints.notification.NotifyRequest;
+import com.poorknight.endpoints.notification.NotifyResponse;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({TextMessageAlerter.class, WebResourceFactory.class})

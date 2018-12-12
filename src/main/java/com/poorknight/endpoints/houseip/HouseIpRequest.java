@@ -1,4 +1,4 @@
-package com.poorknight.rest.houseip;
+package com.poorknight.endpoints.houseip;
 
 public class HouseIpRequest {
 

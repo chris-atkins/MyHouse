@@ -1,4 +1,4 @@
-package com.poorknight.rest;
+package com.poorknight.endpoints;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.EchoRequestHandlerFactory;

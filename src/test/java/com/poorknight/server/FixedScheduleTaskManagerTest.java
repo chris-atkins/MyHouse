@@ -44,7 +44,6 @@ public class FixedScheduleTaskManagerTest {
 		verify(executor).scheduleAtFixedRate(automatedHouseTemperatureController, 2L, 10L, TimeUnit.MINUTES);
 	}
 
-	@Ignore
 	@Test
 	public void startCallsHouseStatusReportController() throws Exception {
 		fixedScheduleTaskManager.startAllTasks();
