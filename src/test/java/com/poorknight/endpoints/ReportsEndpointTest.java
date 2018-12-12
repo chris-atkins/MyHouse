@@ -1,5 +1,6 @@
 package com.poorknight.endpoints;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.endpoints.houseip.HouseIpRequest;
 import com.poorknight.endpoints.houseip.HouseIpResponse;
@@ -32,8 +33,6 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ReportsEndpointTest {
 
-	private final NotifyRequest notifyRequest = new NotifyRequest(RandomStringUtils.random(50));
-
 	@InjectMocks
 	private ReportsEndpoint reportsEndpoint;
 
@@ -48,7 +47,8 @@ public class ReportsEndpointTest {
 		HouseStatusReport report = new HouseStatusReport(localTimes, houseTemperatures, thermostatSettings);
 		when(houseStatusReporter.reportForLast24Hours()).thenReturn(report);
 
-		HouseStatusReport houseStatusReport = reportsEndpoint.reportLast24Hours();
+		String results = reportsEndpoint.reportLast24Hours();
+		HouseStatusReport houseStatusReport = new ObjectMapper().readValue(results, HouseStatusReport.class);
 
 		assertThat(houseStatusReport).isEqualTo(report);
 	}

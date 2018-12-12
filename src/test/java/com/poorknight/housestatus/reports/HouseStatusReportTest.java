@@ -35,7 +35,6 @@ public class HouseStatusReportTest {
 	}
 
 	@Test
-	@Ignore
 	public void isImmutable() {
 		List<String> localTimes = new ArrayList<>();
 		List<Double> houseTemperatures = new ArrayList<>();
