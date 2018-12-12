@@ -6,6 +6,7 @@ import com.poorknight.endpoints.ReportsEndpoint;
 import com.poorknight.housestatus.*;
 import com.poorknight.endpoints.EchoEndpoint;
 import com.poorknight.endpoints.HouseEndpoint;
+import com.poorknight.housestatus.reports.HouseStatusReporter;
 import com.poorknight.housestatus.repository.DatabaseConnector;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.housestatus.repository.MySqlConnectionParameters;
@@ -24,6 +25,7 @@ import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.flywaydb.core.Flyway;
 import org.glassfish.jersey.jackson.JacksonFeature;
+import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.servlet.ServletContainer;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -160,11 +162,20 @@ public class MyHouseServer {
 	}
 
 	private static ServletContextHandler buildReportsContextHandler(final String rootPath) {
+		final DatabaseConnector databaseConnector = new DatabaseConnector();
+		HouseStatusRepository repository = new HouseStatusRepository(databaseConnector);
+		HouseStatusReporter reporter = new HouseStatusReporter(repository);
+		ResourceConfig resourceConfig = new ResourceConfig().register(new ReportsEndpoint(reporter));
+
+		ServletContainer container = new ServletContainer(resourceConfig);
+		ServletHolder servletHolder = new ServletHolder(container);
+
 		final ServletContextHandler reportsApiContext = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
 		reportsApiContext.setContextPath(rootPath);
-		final ServletHolder reportsHolder = reportsApiContext.addServlet(ServletContainer.class, "/*");
-		reportsHolder.setInitParameter("jersey.config.server.provider.classnames", "" + ReportsEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
+		reportsApiContext.addServlet(servletHolder, "/*");
+
 		return reportsApiContext;
+
 	}
 
 	@SuppressWarnings("unused")
