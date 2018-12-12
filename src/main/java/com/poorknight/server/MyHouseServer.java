@@ -2,6 +2,7 @@ package com.poorknight.server;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.endpoints.ReportsEndpoint;
 import com.poorknight.housestatus.*;
 import com.poorknight.endpoints.EchoEndpoint;
 import com.poorknight.endpoints.HouseEndpoint;
@@ -54,9 +55,10 @@ public class MyHouseServer {
 
 		final ServletContextHandler echoContextHandler = buildEchoContextHandler("/");
 		final ServletContextHandler houseContextHandler = buildHouseContextHandler("/house");
+		final ServletContextHandler reportsContextHandler = buildReportsContextHandler("/reports");
 
 		final ContextHandlerCollection contexts = new ContextHandlerCollection();
-		contexts.setHandlers(new Handler[] { webContext, echoContextHandler, houseContextHandler });
+		contexts.setHandlers(new Handler[] { webContext, echoContextHandler, houseContextHandler, reportsContextHandler });
 		server.setHandler(contexts);
 
 		prepareDatabase();
@@ -155,6 +157,14 @@ public class MyHouseServer {
 		final ServletHolder houseHolder = houseApiContext.addServlet(ServletContainer.class, "/*");
 		houseHolder.setInitParameter("jersey.config.server.provider.classnames", "" + HouseEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
 		return houseApiContext;
+	}
+
+	private static ServletContextHandler buildReportsContextHandler(final String rootPath) {
+		final ServletContextHandler reportsApiContext = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+		reportsApiContext.setContextPath(rootPath);
+		final ServletHolder reportsHolder = reportsApiContext.addServlet(ServletContainer.class, "/*");
+		reportsHolder.setInitParameter("jersey.config.server.provider.classnames", "" + ReportsEndpoint.class.getCanonicalName() + "," + JacksonFeature.class.getCanonicalName());
+		return reportsApiContext;
 	}
 
 	@SuppressWarnings("unused")

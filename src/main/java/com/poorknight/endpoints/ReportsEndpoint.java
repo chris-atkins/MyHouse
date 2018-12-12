@@ -9,6 +9,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+@Path("/reports")
 public class ReportsEndpoint {
 
 	private HouseStatusReporter reporter;
@@ -18,7 +19,7 @@ public class ReportsEndpoint {
 	}
 
 	@GET
-	@Path("/reports/last24Hours")
+	@Path("/last24Hours")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public HouseStatusReport reportLast24Hours() {
