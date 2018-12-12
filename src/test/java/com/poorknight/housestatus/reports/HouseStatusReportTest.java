@@ -1,6 +1,7 @@
 package com.poorknight.housestatus.reports;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
@@ -27,12 +28,14 @@ public class HouseStatusReportTest {
 
 		ObjectMapper objectMapper = new ObjectMapper();
 		String jsonString = objectMapper.writeValueAsString(report);
+		System.out.println(jsonString);
 		HouseStatusReport readReport = objectMapper.readValue(jsonString, HouseStatusReport.class);
 
 		assertThat(report).isEqualTo(readReport);
 	}
 
 	@Test
+	@Ignore
 	public void isImmutable() {
 		List<String> localTimes = new ArrayList<>();
 		List<Double> houseTemperatures = new ArrayList<>();

@@ -24,15 +24,27 @@ public class HouseStatusReport {
 	}
 
 	public List<String> getLocalTimes() {
-		return Collections.unmodifiableList(localTimes);
+		return localTimes;
+	}
+
+	public void setLocalTimes(List<String> localTimes) {
+		this.localTimes = localTimes;
 	}
 
 	public List<Double> getHouseTemperatures() {
-		return Collections.unmodifiableList(houseTemperatures);
+		return houseTemperatures;
+	}
+
+	public void setHouseTemperatures(List<Double> houseTemperatures) {
+		this.houseTemperatures = houseTemperatures;
 	}
 
 	public List<Double> getThermostatSettings() {
-		return Collections.unmodifiableList(thermostatSettings);
+		return thermostatSettings;
+	}
+
+	public void setThermostatSettings(List<Double> thermostatSettings) {
+		this.thermostatSettings = thermostatSettings;
 	}
 
 	@Override

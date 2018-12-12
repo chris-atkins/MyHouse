@@ -165,8 +165,8 @@ public class MyHouseServer {
 		final DatabaseConnector databaseConnector = new DatabaseConnector();
 		HouseStatusRepository repository = new HouseStatusRepository(databaseConnector);
 		HouseStatusReporter reporter = new HouseStatusReporter(repository);
-		ResourceConfig resourceConfig = new ResourceConfig().register(new ReportsEndpoint(reporter));
 
+		ResourceConfig resourceConfig = new ResourceConfig().register(new ReportsEndpoint(reporter));
 		ServletContainer container = new ServletContainer(resourceConfig);
 		ServletHolder servletHolder = new ServletHolder(container);
 
