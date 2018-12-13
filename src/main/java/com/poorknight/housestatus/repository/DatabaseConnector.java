@@ -3,6 +3,7 @@ package com.poorknight.housestatus.repository;
 import com.poorknight.settings.Environment;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -27,6 +28,7 @@ public class DatabaseConnector {
 	}
 
 	public Connection getConnection() throws SQLException {
+		System.out.println("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout();
 		return DriverManager.getConnection(mysqlConnectionParameters.getJdbcUrl(), mysqlConnectionParameters.getConnectionProps());
 	}
 
