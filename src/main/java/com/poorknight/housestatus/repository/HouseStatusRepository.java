@@ -22,10 +22,6 @@ public class HouseStatusRepository {
 	}
 
 	public void addHouseStatus(DateTime currentUtcTime, DateTime currentLocalTime, ThermostatStatus thermostatStatus, WeatherStatus weatherStatus) {
-		TextMessageAlerter.instance().sendTextMessage("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
-		System.out.println("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
-		System.err.println("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
-
 		Connection connection = null;
 		Statement statement = null;
 		try {
