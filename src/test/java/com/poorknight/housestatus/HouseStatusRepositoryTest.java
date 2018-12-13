@@ -33,6 +33,7 @@ import static org.mockito.Mockito.when;
 public class HouseStatusRepositoryTest {
 
 	@RunWith(JUnit4.class)
+	@Ignore
 	public static class HouseStatusRepositoryIntegrationTest {
 
 		private static Properties connectionProps;
