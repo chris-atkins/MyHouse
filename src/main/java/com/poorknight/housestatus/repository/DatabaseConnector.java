@@ -1,7 +1,9 @@
 package com.poorknight.housestatus.repository;
 
+import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.settings.Environment;
 
+import javax.xml.soap.Text;
 import java.sql.Connection;
 import java.sql.Driver;
 import java.sql.DriverManager;
@@ -28,7 +30,7 @@ public class DatabaseConnector {
 	}
 
 	public Connection getConnection() throws SQLException {
-		System.err.println("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
+		TextMessageAlerter.instance().sendTextMessage("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
 		return DriverManager.getConnection(mysqlConnectionParameters.getJdbcUrl(), mysqlConnectionParameters.getConnectionProps());
 	}
 
