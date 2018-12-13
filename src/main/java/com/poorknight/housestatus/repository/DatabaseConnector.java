@@ -30,7 +30,6 @@ public class DatabaseConnector {
 	}
 
 	public Connection getConnection() throws SQLException {
-		TextMessageAlerter.instance().sendTextMessage("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
 		return DriverManager.getConnection(mysqlConnectionParameters.getJdbcUrl(), mysqlConnectionParameters.getConnectionProps());
 	}
 

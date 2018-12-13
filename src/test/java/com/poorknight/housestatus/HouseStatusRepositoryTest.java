@@ -28,12 +28,11 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-
+@Ignore
 @RunWith(Enclosed.class)
 public class HouseStatusRepositoryTest {
 
 	@RunWith(JUnit4.class)
-	@Ignore
 	public static class HouseStatusRepositoryIntegrationTest {
 
 		private static Properties connectionProps;

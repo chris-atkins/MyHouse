@@ -1,15 +1,13 @@
 package com.poorknight.housestatus.repository;
 
+import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatStatus;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -24,6 +22,10 @@ public class HouseStatusRepository {
 	}
 
 	public void addHouseStatus(DateTime currentUtcTime, DateTime currentLocalTime, ThermostatStatus thermostatStatus, WeatherStatus weatherStatus) {
+		TextMessageAlerter.instance().sendTextMessage("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
+		System.out.println("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
+		System.err.println("DriverManager.getLoginTimeout(): " + DriverManager.getLoginTimeout());
+
 		Connection connection = null;
 		Statement statement = null;
 		try {
