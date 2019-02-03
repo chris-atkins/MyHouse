@@ -40,7 +40,6 @@ public class HouseDataPoint {
 
 	@Override
 	public int hashCode() {
-
 		return Objects.hash(localTime, internalTemp, thermostatTempSetting);
 	}
 

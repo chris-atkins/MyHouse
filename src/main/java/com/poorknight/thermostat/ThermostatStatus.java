@@ -27,7 +27,7 @@ public class ThermostatStatus {
 		return furnaceState;
 	}
 
-	public static enum FurnaceState {
+	public enum FurnaceState {
 		HEAT_ON, OFF
 	}
 

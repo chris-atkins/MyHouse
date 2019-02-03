@@ -68,7 +68,7 @@ public class Emailer {
 		return props;
 	}
 
-	private class SMTPAuthenticator extends javax.mail.Authenticator {
+	private static class SMTPAuthenticator extends Authenticator {
 		@Override
 		public PasswordAuthentication getPasswordAuthentication() {
 			final String username = SMTP_AUTH_USER;

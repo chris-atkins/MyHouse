@@ -1,11 +1,8 @@
 package com.poorknight.housestatus.repository;
 
-import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.settings.Environment;
 
-import javax.xml.soap.Text;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;

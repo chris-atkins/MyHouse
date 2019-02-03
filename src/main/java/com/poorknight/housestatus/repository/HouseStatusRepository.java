@@ -1,6 +1,5 @@
 package com.poorknight.housestatus.repository;
 
-import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatStatus;
 import org.joda.time.DateTime;
@@ -33,12 +32,16 @@ public class HouseStatusRepository {
 			throw new RuntimeException(e);
 		} finally {
 			try {
-				statement.close();
+				if (statement != null) {
+					statement.close();
+				}
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			} finally {
 				try {
-					connection.close();
+					if (connection != null) {
+						connection.close();
+					}
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
@@ -85,18 +88,23 @@ public class HouseStatusRepository {
 				Double tempSetting = resultSet.getDouble("TEMP_SETTING");
 				dataPoints.add(new HouseDataPoint(localTime, houseTemp, tempSetting));
 			}
+			resultSet.close();
 			return dataPoints;
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		} finally {
 			try {
-				statement.close();
+				if (statement != null) {
+					statement.close();
+				}
 			} catch (SQLException e) {
 				throw new RuntimeException(e);
 			} finally {
 				try {
-					connection.close();
+					if (connection != null) {
+						connection.close();
+					}
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
