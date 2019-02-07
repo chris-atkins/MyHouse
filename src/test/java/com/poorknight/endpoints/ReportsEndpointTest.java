@@ -1,33 +1,21 @@
 package com.poorknight.endpoints;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.poorknight.alerting.textmessage.TextMessageAlerter;
-import com.poorknight.endpoints.houseip.HouseIpRequest;
-import com.poorknight.endpoints.houseip.HouseIpResponse;
-import com.poorknight.endpoints.notification.NotifyRequest;
-import com.poorknight.endpoints.notification.NotifyResponse;
+import com.poorknight.housestatus.reports.HouseDailySummary;
+import com.poorknight.housestatus.reports.HouseDailySummaryReporter;
 import com.poorknight.housestatus.reports.HouseStatusReport;
 import com.poorknight.housestatus.reports.HouseStatusReporter;
-import com.poorknight.server.WebResourceFactory;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.assertj.core.api.Assertions;
-import org.hamcrest.MatcherAssert;
-import org.junit.Before;
+import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.powermock.api.mockito.PowerMockito;
 
 import java.util.Arrays;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -38,6 +26,9 @@ public class ReportsEndpointTest {
 
 	@Mock
 	private HouseStatusReporter houseStatusReporter;
+
+	@Mock
+	private HouseDailySummaryReporter houseDailySummaryReporter;
 
 	@Test
 	public void reportLast24HoursDelegatesCorrectly() throws Exception {
@@ -51,5 +42,23 @@ public class ReportsEndpointTest {
 		HouseStatusReport houseStatusReport = new ObjectMapper().readValue(results, HouseStatusReport.class);
 
 		assertThat(houseStatusReport).isEqualTo(report);
+	}
+
+	@Test
+	public void reportsDailySummaries() throws Exception {
+		LocalDate date = LocalDate.parse("2019-02-06");
+		Integer numberOfMinutesHeaterIsOn = 2;
+		Double averageHouseTemperature = 3d;
+		Double averageExternalTemperature = 4d;
+		Double averageInternalExternalTemperatureDifference = 5d;
+		Double averageWindSpeed = 6d;
+		Integer averateTimeBetweenHeaterCyclesAtOneTemp = 7;
+		HouseDailySummary expectedSummary = new HouseDailySummary(numberOfMinutesHeaterIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageWindSpeed, averateTimeBetweenHeaterCyclesAtOneTemp);
+		when(houseDailySummaryReporter.summaryForDay(date)).thenReturn(expectedSummary);
+
+		String results = reportsEndpoint.singleDaySummary("2019-02-06");
+		HouseDailySummary houseDailySummary = new ObjectMapper().readValue(results, HouseDailySummary.class);
+
+		assertThat(houseDailySummary).isEqualTo(expectedSummary);
 	}
 }

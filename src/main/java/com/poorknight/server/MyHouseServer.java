@@ -6,6 +6,7 @@ import com.poorknight.endpoints.ReportsEndpoint;
 import com.poorknight.housestatus.*;
 import com.poorknight.endpoints.EchoEndpoint;
 import com.poorknight.endpoints.HouseEndpoint;
+import com.poorknight.housestatus.reports.HouseDailySummaryReporter;
 import com.poorknight.housestatus.reports.HouseStatusReporter;
 import com.poorknight.housestatus.repository.DatabaseConnector;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
@@ -166,9 +167,10 @@ public class MyHouseServer {
 	private static ServletContextHandler buildReportsContextHandler(final String rootPath) {
 		final DatabaseConnector databaseConnector = new DatabaseConnector();
 		HouseStatusRepository repository = new HouseStatusRepository(databaseConnector);
-		HouseStatusReporter reporter = new HouseStatusReporter(repository);
+		HouseStatusReporter houseStatusReporter = new HouseStatusReporter(repository);
+		HouseDailySummaryReporter houseDailySummaryReporter = new HouseDailySummaryReporter(repository);
 
-		ResourceConfig resourceConfig = new ResourceConfig().register(new ReportsEndpoint(reporter));
+		ResourceConfig resourceConfig = new ResourceConfig().register(new ReportsEndpoint(houseStatusReporter, houseDailySummaryReporter));
 		ServletContainer container = new ServletContainer(resourceConfig);
 		ServletHolder servletHolder = new ServletHolder(container);
 
