@@ -1,5 +1,7 @@
 package com.poorknight.housestatus.repository;
 
+import com.poorknight.housestatus.weather.WeatherStatus;
+import com.poorknight.thermostat.ThermostatStatus;
 import org.joda.time.DateTime;
 
 import java.util.Objects;
@@ -7,48 +9,58 @@ import java.util.Objects;
 public class HouseDataPoint {
 
 	private DateTime localTime;
-	private Double internalTemp;
-	private Double thermostatTempSetting;
+	private DateTime utcTime;
 
-	public HouseDataPoint(DateTime localTime, Double internalTemp, Double thermostatTempSetting) {
+	private ThermostatStatus thermostatStatus;
+	private WeatherStatus weatherStatus;
+
+	public HouseDataPoint(DateTime localTime, DateTime utcTime, ThermostatStatus thermostatStatus, WeatherStatus weatherStatus) {
 		this.localTime = localTime;
-		this.internalTemp = internalTemp;
-		this.thermostatTempSetting = thermostatTempSetting;
+		this.utcTime = utcTime;
+		this.thermostatStatus = thermostatStatus;
+		this.weatherStatus = weatherStatus;
 	}
 
 	public DateTime getLocalTime() {
 		return localTime;
 	}
 
-	public Double getInternalTemp() {
-		return internalTemp;
+	public DateTime getUtcTime() {
+		return utcTime;
 	}
 
-	public Double getThermostatTempSetting() {
-		return thermostatTempSetting;
+	public ThermostatStatus getThermostatStatus() {
+		return thermostatStatus;
+	}
+
+	public WeatherStatus getWeatherStatus() {
+		return weatherStatus;
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		HouseDataPoint that = (HouseDataPoint) o;
-		return Objects.equals(localTime, that.localTime) &&
-				Objects.equals(internalTemp, that.internalTemp) &&
-				Objects.equals(thermostatTempSetting, that.thermostatTempSetting);
+		HouseDataPoint dataPoint = (HouseDataPoint) o;
+		return Objects.equals(localTime, dataPoint.localTime) &&
+				Objects.equals(utcTime, dataPoint.utcTime) &&
+				Objects.equals(thermostatStatus, dataPoint.thermostatStatus) &&
+				Objects.equals(weatherStatus, dataPoint.weatherStatus);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(localTime, internalTemp, thermostatTempSetting);
+
+		return Objects.hash(localTime, utcTime, thermostatStatus, weatherStatus);
 	}
 
 	@Override
 	public String toString() {
 		return "HouseDataPoint{" +
 				"localTime=" + localTime +
-				", internalTemp=" + internalTemp +
-				", thermostatTempSetting=" + thermostatTempSetting +
+				", utcTime=" + utcTime +
+				", thermostatStatus=" + thermostatStatus +
+				", weatherStatus=" + weatherStatus +
 				'}';
 	}
 }

@@ -2,10 +2,8 @@ package com.poorknight.housestatus.reports;
 
 import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
+import com.poorknight.thermostat.ThermostatStatus;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.Days;
-import org.joda.time.ReadableDuration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,13 +43,16 @@ public class HouseStatusReporterTest {
 		List<HouseDataPoint> repositoryResponse = new ArrayList<>();
 
 		DateTime time1 = new DateTime("2017-12-01T11:35:01");
-		repositoryResponse.add(new HouseDataPoint(time1, 1.2, 3.4));
+		ThermostatStatus thermostatStatus1 = new ThermostatStatus(1.2, 3.4, null);
+		repositoryResponse.add(new HouseDataPoint(time1, null, thermostatStatus1, null));
 
 		DateTime time2 = new DateTime("2017-12-02T21:35:02");
-		repositoryResponse.add(new HouseDataPoint(time2, 5.6, 7.8));
+		ThermostatStatus thermostatStatus2 = new ThermostatStatus(5.6, 7.8, null);
+		repositoryResponse.add(new HouseDataPoint(time2, null, thermostatStatus2, null));
 
 		DateTime time3 = new DateTime("2017-12-03T11:35:03");
-		repositoryResponse.add(new HouseDataPoint(time3, 9.10, 11.12));
+		ThermostatStatus thermostatStatus3 = new ThermostatStatus(9.10, 11.12, null);
+		repositoryResponse.add(new HouseDataPoint(time3, null, thermostatStatus3, null));
 
 		when(houseStatusRepository.retrieveHouseStatusFrom(oneDayAgo, currentTime)).thenReturn(repositoryResponse);
 

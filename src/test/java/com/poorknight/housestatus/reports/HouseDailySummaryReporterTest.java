@@ -2,6 +2,8 @@ package com.poorknight.housestatus.reports;
 
 import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
+import com.poorknight.housestatus.weather.WeatherStatus;
+import com.poorknight.thermostat.ThermostatStatus;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;
@@ -40,7 +42,14 @@ public class HouseDailySummaryReporterTest {
 		assertThat(houseDailySummary.getAverageHouseTemperature()).isEqualTo(55.5);
 	}
 
+	@Test
+	public void calculatesNumberOfMinutesHeaterIsOn() {
+
+	}
+
 	private HouseDataPoint buildDataPointWithTemp(Double temp) {
-		return new HouseDataPoint(DateTime.now(), temp, 0.0);
+		WeatherStatus weatherStatus = new WeatherStatus(null, null, null, null);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(temp, 0.0, null);
+		return new HouseDataPoint(DateTime.now(), null, thermostatStatus, weatherStatus);
 	}
 }

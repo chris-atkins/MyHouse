@@ -89,7 +89,7 @@ public class ThermostatMessagerTest {
 
 		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
 
-		assertThat(thermostatStatus.getCurrentTemp()).isEqualTo(55.5);
+		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(55.5);
 		assertThat(thermostatStatus.getTempSetting()).isEqualTo(73);
 		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.HEAT_ON);
 	}
@@ -102,7 +102,7 @@ public class ThermostatMessagerTest {
 
 		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
 
-		assertThat(thermostatStatus.getCurrentTemp()).isEqualTo(155.5);
+		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(155.5);
 		assertThat(thermostatStatus.getTempSetting()).isEqualTo(173);
 		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.OFF);
 	}

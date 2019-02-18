@@ -31,7 +31,7 @@ public class HouseDailySummaryReporter {
 	private Double findAverageHouseTemperature(List<HouseDataPoint> dataPoints) {
 		double sum = 0;
 		for (HouseDataPoint dataPoint : dataPoints) {
-			sum += dataPoint.getInternalTemp();
+			sum += dataPoint.getThermostatStatus().getHouseTemp();
 		}
 		return sum / dataPoints.size();
 	}

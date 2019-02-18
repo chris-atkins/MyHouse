@@ -160,46 +160,40 @@ public class HouseStatusRepositoryTest {
 			connection.close();
 		}
 
-
 		@Test
 		public void reportsCorrectly() {
-			WeatherStatus weatherStatus = new WeatherStatus(27.12, 9.17, 81d, 1017.12);
-
-
 			DateTime utcTime1 = DateTime.parse("2018-03-03T12:30:00");
 			DateTime localTime1 = DateTime.parse("2018-04-04T04:30:00");
-			double houseTemp1 = 70.75;
-			double tempSetting1 = 27.6;
-			ThermostatStatus thermostatStatus1 = new ThermostatStatus(houseTemp1, tempSetting1, ThermostatStatus.FurnaceState.HEAT_ON);
-
+			ThermostatStatus thermostatStatus1 = new ThermostatStatus(70.75, 27.6, ThermostatStatus.FurnaceState.HEAT_ON);
+			WeatherStatus weatherStatus1 = new WeatherStatus(27.1, 9.17, 21d, 1017.2);
 
 			DateTime utcTime2 = DateTime.parse("2018-03-03T12:31:00");
 			DateTime localTime2 = DateTime.parse("2018-04-04T04:31:00");
-			double houseTemp2 = 70.75;
-			double tempSetting2 = 27.6;
-			ThermostatStatus thermostatStatus2 = new ThermostatStatus(houseTemp2, tempSetting2, ThermostatStatus.FurnaceState.HEAT_ON);
-
+			ThermostatStatus thermostatStatus2 = new ThermostatStatus(70.75, 27.6, ThermostatStatus.FurnaceState.HEAT_ON);
+			WeatherStatus weatherStatus2 = new WeatherStatus(27.2, 19.17, 1d, 101.12);
 
 			DateTime utcTime3 = DateTime.parse("2018-03-03T12:29:00");
 			DateTime localTime3 = DateTime.parse("2018-04-04T04:29:00");
 			ThermostatStatus thermostatStatus3 = new ThermostatStatus(-1, -1, ThermostatStatus.FurnaceState.HEAT_ON);
+			WeatherStatus weatherStatus3 = new WeatherStatus(27.3, 9.1, 84d, 117.12);
 
 			DateTime utcTime4 = DateTime.parse("2018-03-03T12:32:00");
 			DateTime localTime4 = DateTime.parse("2018-04-04T04:32:00");
 			ThermostatStatus thermostatStatus4 = new ThermostatStatus(-1, -1, ThermostatStatus.FurnaceState.HEAT_ON);
+			WeatherStatus weatherStatus4 = new WeatherStatus(27.45, 9.3, 82d, 17.12);
 
 
-			repository.addHouseStatus(utcTime1, localTime1, thermostatStatus1, weatherStatus);
-			repository.addHouseStatus(utcTime2, localTime2, thermostatStatus2, weatherStatus);
+			repository.addHouseStatus(utcTime1, localTime1, thermostatStatus1, weatherStatus1);
+			repository.addHouseStatus(utcTime2, localTime2, thermostatStatus2, weatherStatus2);
 
-			repository.addHouseStatus(utcTime3, localTime3, thermostatStatus3, weatherStatus);
-			repository.addHouseStatus(utcTime4, localTime4, thermostatStatus4, weatherStatus);
+			repository.addHouseStatus(utcTime3, localTime3, thermostatStatus3, weatherStatus3);
+			repository.addHouseStatus(utcTime4, localTime4, thermostatStatus4, weatherStatus4);
 
 
 			List<HouseDataPoint> houseDataPoints = repository.retrieveHouseStatusFrom(DateTime.parse("2018-03-03T12:30:00"), DateTime.parse("2018-03-03T12:31:00"));
 
-			HouseDataPoint dataPoint1 = new HouseDataPoint(localTime1, houseTemp1, tempSetting1);
-			HouseDataPoint dataPoint2 = new HouseDataPoint(localTime2, houseTemp2, tempSetting2);
+			HouseDataPoint dataPoint1 = new HouseDataPoint(localTime1, utcTime1, thermostatStatus1, weatherStatus1);
+			HouseDataPoint dataPoint2 = new HouseDataPoint(localTime2, utcTime2, thermostatStatus2, weatherStatus2);
 
 			assertThat(houseDataPoints).containsExactly(dataPoint1, dataPoint2);
 		}

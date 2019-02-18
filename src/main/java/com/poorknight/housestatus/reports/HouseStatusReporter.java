@@ -25,8 +25,8 @@ public class HouseStatusReporter {
 		List<Double> thermostatSettings = new LinkedList<>();
 		for (HouseDataPoint dataPoint : houseDataPoints) {
 			localTimes.add(dataPoint.getLocalTime().toString("MM-dd hh:mm a"));
-			houseTemperatures.add(dataPoint.getInternalTemp());
-			thermostatSettings.add(dataPoint.getThermostatTempSetting());
+			houseTemperatures.add(dataPoint.getThermostatStatus().getHouseTemp());
+			thermostatSettings.add(dataPoint.getThermostatStatus().getTempSetting());
 		}
 
 		return new HouseStatusReport(localTimes, houseTemperatures, thermostatSettings);

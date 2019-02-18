@@ -5,18 +5,18 @@ import java.util.Objects;
 public class ThermostatStatus {
 
 
-	private double currentTemp;
+	private double houseTemp;
 	private double tempSetting;
 	private FurnaceState furnaceState;
 
-	public ThermostatStatus(double currentTemp, double tempSetting, FurnaceState furnaceState) {
-		this.currentTemp = currentTemp;
+	public ThermostatStatus(double houseTemp, double tempSetting, FurnaceState furnaceState) {
+		this.houseTemp = houseTemp;
 		this.tempSetting = tempSetting;
 		this.furnaceState = furnaceState;
 	}
 
-	public double getCurrentTemp() {
-		return currentTemp;
+	public double getHouseTemp() {
+		return houseTemp;
 	}
 
 	public double getTempSetting() {
@@ -36,7 +36,7 @@ public class ThermostatStatus {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
 		ThermostatStatus that = (ThermostatStatus) o;
-		return Double.compare(that.currentTemp, currentTemp) == 0 &&
+		return Double.compare(that.houseTemp, houseTemp) == 0 &&
 				Double.compare(that.tempSetting, tempSetting) == 0 &&
 				furnaceState == that.furnaceState;
 	}
@@ -44,13 +44,13 @@ public class ThermostatStatus {
 	@Override
 	public int hashCode() {
 
-		return Objects.hash(currentTemp, tempSetting, furnaceState);
+		return Objects.hash(houseTemp, tempSetting, furnaceState);
 	}
 
 	@Override
 	public String toString() {
 		return "ThermostatStatus{" +
-				"currentTemp=" + currentTemp +
+				"houseTemp=" + houseTemp +
 				", tempSetting=" + tempSetting +
 				", furnaceState=" + furnaceState +
 				'}';
