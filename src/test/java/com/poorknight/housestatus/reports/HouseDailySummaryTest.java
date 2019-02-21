@@ -13,7 +13,7 @@ public class HouseDailySummaryTest {
 
 	@Test
 	public void canBeSerializedAndDeserializedAndRemainEqual() throws Exception {
-		HouseDailySummary houseDailySummary = new HouseDailySummary(RandomUtils.nextInt(0, 100), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 10), RandomUtils.nextInt(0, 100));
+		HouseDailySummary houseDailySummary = new HouseDailySummary(RandomUtils.nextInt(0, 100), RandomUtils.nextInt(0, 100), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 10), RandomUtils.nextDouble(0, 100));
 
 		String serializedSummary = new ObjectMapper().writeValueAsString(houseDailySummary);
 		HouseDailySummary deserializedSummary = new ObjectMapper().readValue(serializedSummary, HouseDailySummary.class);

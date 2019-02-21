@@ -9,19 +9,25 @@ public class HouseDailySummary  {
 	private Double averageHouseTemperature;
 	private Double averageExternalTemperature;
 	private Double averageInternalExternalTemperatureDifference;
+	private Double averageHouseTempSetting;
+
 	private Double averageWindSpeed;
 
-	private Integer averageTimeBetweenHeaterCyclesAtOneTemp;
+	private Double averageTimeBetweenHeaterCyclesAtOneTemp;
+
+	private Integer numberOfMinutesDataExistsFor;
 
 	public HouseDailySummary() {
 
 	}
 
-	public HouseDailySummary(Integer numberOfMinutesHeaterIsOn, Double averageHouseTemperature, Double averageExternalTemperature, Double averageInternalExternalTemperatureDifference, Double averageWindSpeed, Integer averageTimeBetweenHeaterCyclesAtOneTemp) {
+	public HouseDailySummary(Integer numberOfMinutesDataExistsFor, Integer numberOfMinutesHeaterIsOn, Double averageHouseTemperature, Double averageExternalTemperature, Double averageInternalExternalTemperatureDifference, Double averageHouseTempSetting, Double averageWindSpeed, Double averageTimeBetweenHeaterCyclesAtOneTemp) {
+		this.numberOfMinutesDataExistsFor = numberOfMinutesDataExistsFor;
 		this.numberOfMinutesHeaterIsOn = numberOfMinutesHeaterIsOn;
 		this.averageHouseTemperature = averageHouseTemperature;
 		this.averageExternalTemperature = averageExternalTemperature;
 		this.averageInternalExternalTemperatureDifference = averageInternalExternalTemperatureDifference;
+		this.averageHouseTempSetting = averageHouseTempSetting;
 		this.averageWindSpeed = averageWindSpeed;
 		this.averageTimeBetweenHeaterCyclesAtOneTemp = averageTimeBetweenHeaterCyclesAtOneTemp;
 	}
@@ -46,8 +52,16 @@ public class HouseDailySummary  {
 		return averageWindSpeed;
 	}
 
-	public Integer getAverageTimeBetweenHeaterCyclesAtOneTemp() {
+	public Double getAverageTimeBetweenHeaterCyclesAtOneTemp() {
 		return averageTimeBetweenHeaterCyclesAtOneTemp;
+	}
+
+	public Integer getNumberOfMinutesDataExistsFor() {
+		return numberOfMinutesDataExistsFor;
+	}
+
+	public Double getAverageHouseTempSetting() {
+		return averageHouseTempSetting;
 	}
 
 	@Override
@@ -59,13 +73,16 @@ public class HouseDailySummary  {
 				Objects.equals(averageHouseTemperature, that.averageHouseTemperature) &&
 				Objects.equals(averageExternalTemperature, that.averageExternalTemperature) &&
 				Objects.equals(averageInternalExternalTemperatureDifference, that.averageInternalExternalTemperatureDifference) &&
+				Objects.equals(averageHouseTempSetting, that.averageHouseTempSetting) &&
 				Objects.equals(averageWindSpeed, that.averageWindSpeed) &&
-				Objects.equals(averageTimeBetweenHeaterCyclesAtOneTemp, that.averageTimeBetweenHeaterCyclesAtOneTemp);
+				Objects.equals(averageTimeBetweenHeaterCyclesAtOneTemp, that.averageTimeBetweenHeaterCyclesAtOneTemp) &&
+				Objects.equals(numberOfMinutesDataExistsFor, that.numberOfMinutesDataExistsFor);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(numberOfMinutesHeaterIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageWindSpeed, averageTimeBetweenHeaterCyclesAtOneTemp);
+
+		return Objects.hash(numberOfMinutesHeaterIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageHouseTempSetting, averageWindSpeed, averageTimeBetweenHeaterCyclesAtOneTemp, numberOfMinutesDataExistsFor);
 	}
 
 	@Override
@@ -75,8 +92,10 @@ public class HouseDailySummary  {
 				", averageHouseTemperature=" + averageHouseTemperature +
 				", averageExternalTemperature=" + averageExternalTemperature +
 				", averageInternalExternalTemperatureDifference=" + averageInternalExternalTemperatureDifference +
+				", averageHouseTempSetting=" + averageHouseTempSetting +
 				", averageWindSpeed=" + averageWindSpeed +
 				", averageTimeBetweenHeaterCyclesAtOneTemp=" + averageTimeBetweenHeaterCyclesAtOneTemp +
+				", numberOfMinutesDataExistsFor=" + numberOfMinutesDataExistsFor +
 				'}';
 	}
 }
