@@ -4,6 +4,7 @@ import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 
 import java.util.List;
@@ -17,7 +18,10 @@ public class HouseDailySummaryReporter {
 	}
 
 	public HouseDailySummary summaryForDay(LocalDate date) {
-		List<HouseDataPoint> dataPoints = houseStatusRepository.retrieveHouseStatusFrom(DateTime.now(), DateTime.now());
+
+		DateTime startTimeUtc = date.toDateTimeAtStartOfDay().toDateTime(DateTimeZone.UTC);
+		DateTime endTimeUtc = startTimeUtc.plusDays(1).minusMillis(1);
+		List<HouseDataPoint> dataPoints = houseStatusRepository.retrieveHouseStatusFrom(startTimeUtc, endTimeUtc);
 		if (dataPoints.size() == 0) {
 			return new HouseDailySummary(0, null, null, null, null, null, null, null);
 		}
@@ -88,6 +92,7 @@ public class HouseDailySummaryReporter {
 
 		FurnaceState lastFurnaceState = null;
 		Double lastTempSetting = dataPoints.get(0).getThermostatStatus().getTempSetting();
+		DateTime lastUtcTime = dataPoints.get(0).getUtcTime();
 		boolean firstCycleStarted = false;
 		Double currentCycleTime = 0d;
 		boolean badCycle = false;
@@ -95,8 +100,13 @@ public class HouseDailySummaryReporter {
 		for (HouseDataPoint dataPoint : dataPoints) {
 			FurnaceState furnaceState = dataPoint.getThermostatStatus().getFurnaceState();
 			Double tempSetting = dataPoint.getThermostatStatus().getTempSetting();
+			DateTime currentUtcTime = dataPoint.getUtcTime();
 
-			if (! lastTempSetting.equals(tempSetting)) {
+			if (! lastTempSetting.equals(tempSetting) && (furnaceState == FurnaceState.OFF || lastFurnaceState == FurnaceState.OFF)) {
+				badCycle = true;
+			}
+
+			if (lastUtcTime.plusSeconds(90).isBefore(currentUtcTime)) {
 				badCycle = true;
 			}
 
@@ -119,6 +129,7 @@ public class HouseDailySummaryReporter {
 
 			lastTempSetting = tempSetting;
 			lastFurnaceState = furnaceState;
+			lastUtcTime = currentUtcTime;
 		}
 
 

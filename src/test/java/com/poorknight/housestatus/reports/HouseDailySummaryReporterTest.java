@@ -6,12 +6,17 @@ import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatStatus;
 import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
 import org.assertj.core.data.Offset;
+import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
+import org.joda.time.Instant;
 import org.joda.time.LocalDate;
+import org.joda.time.ReadableDuration;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.Arrays;
@@ -20,6 +25,7 @@ import java.util.Collections;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,6 +36,25 @@ public class HouseDailySummaryReporterTest {
 
 	@Mock
 	private HouseStatusRepository houseStatusRepository;
+
+
+	DateTime startingTime;
+	int minutesCounter;
+
+	@Before
+	public void setUp() throws Exception {
+		startingTime = DateTime.now();
+		minutesCounter = 0;
+	}
+
+	@Test
+	public void callsRepositoryForFullDayAroundPassedTime() {
+		houseDailySummaryReporter.summaryForDay(LocalDate.parse("2018-02-25"));
+		verify(houseStatusRepository).retrieveHouseStatusFrom(DateTime.parse("2018-02-25T05:00:00.000Z"), DateTime.parse("2018-02-26T04:59:59.999Z"));
+
+		houseDailySummaryReporter.summaryForDay(LocalDate.parse("2018-06-25"));
+		verify(houseStatusRepository).retrieveHouseStatusFrom(DateTime.parse("2018-06-25T04:00:00.000Z"), DateTime.parse("2018-06-26T03:59:59.999Z"));
+	}
 
 	@Test
 	public void returnsNullsOnEmptyList() {
@@ -225,47 +250,131 @@ public class HouseDailySummaryReporterTest {
 	}
 
 	@Test
-	public void name() {
-		fail("see TODOs below");
-//		TODO: test for temp changes at the start and end of a cycle invalidate the cycle
-//		TODO: test for multiple cycles but at different temps for each full off cycle still counts
-//		TODO: if minutes have been skipped in the OFF part, do not count the whole cycle
-//		TODO: make sure we are calling the repository with the correct DATE fields!!!
+	public void calculatesTimeBetweenTemps_TempSettingChangesAtTheEndOfACycleInvalideTheCycle() {
+		HouseDataPoint dp1 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp2 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp3 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp4 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp5 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp6 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp7 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp8 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp9 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp10 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 55.0);
+		HouseDataPoint dp11 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		when(houseStatusRepository.retrieveHouseStatusFrom(any(DateTime.class), any(DateTime.class))).thenReturn(Arrays.asList(dp1, dp2, dp3, dp4, dp5, dp6, dp7, dp8, dp9, dp10, dp11));
+
+		HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(LocalDate.now());
+
+		assertThat(houseDailySummary.getAverageTimeBetweenHeaterCyclesAtOneTemp()).isEqualTo(1);
+	}
+
+	@Test
+	public void calculatesTimeBetweenTemps_TempSettingChangesAtTheBeginningOfACycleInvalideTheCycle() {
+		HouseDataPoint dp1 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp2 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp3 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp4 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp5 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp6 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp7 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp8 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp9 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp10 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp11 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		when(houseStatusRepository.retrieveHouseStatusFrom(any(DateTime.class), any(DateTime.class))).thenReturn(Arrays.asList(dp1, dp2, dp3, dp4, dp5, dp6, dp7, dp8, dp9, dp10, dp11));
+
+		HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(LocalDate.now());
+
+		assertThat(houseDailySummary.getAverageTimeBetweenHeaterCyclesAtOneTemp()).isEqualTo(1);
+	}
+
+	@Test
+	public void calculatesTimeBetweenTemps_FullCyclesAtDifferentTempsAreAllCounted() {
+		HouseDataPoint dp1 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp2 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp3 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 55.0);
+		HouseDataPoint dp4 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 55.0);
+		HouseDataPoint dp5 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 55.0);
+		HouseDataPoint dp6 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp7 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp8 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp9 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp10 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp11 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		when(houseStatusRepository.retrieveHouseStatusFrom(any(DateTime.class), any(DateTime.class))).thenReturn(Arrays.asList(dp1, dp2, dp3, dp4, dp5, dp6, dp7, dp8, dp9, dp10, dp11));
+
+		HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(LocalDate.now());
+
+		assertThat(houseDailySummary.getAverageTimeBetweenHeaterCyclesAtOneTemp()).isEqualTo(2);
+	}
+
+	@Test
+	public void calculatesTimeBetweenTemps_SkipsCyclesWithMissingMinutesInOffCycle() {
+		HouseDataPoint dp1 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp2 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp3 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 55.0);
+		HouseDataPoint dp4 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 55.0, true);
+		HouseDataPoint dp5 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 55.0);
+		HouseDataPoint dp6 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp7 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 55.0);
+		HouseDataPoint dp8 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp9 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		HouseDataPoint dp10 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.OFF, 158.0);
+		HouseDataPoint dp11 = buildDataPointWithFurnaceStateAndTempSetting(FurnaceState.HEAT_ON, 158.0);
+		when(houseStatusRepository.retrieveHouseStatusFrom(any(DateTime.class), any(DateTime.class))).thenReturn(Arrays.asList(dp1, dp2, dp3, dp4, dp5, dp6, dp7, dp8, dp9, dp10, dp11));
+
+		HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(LocalDate.now());
+
+		assertThat(houseDailySummary.getAverageTimeBetweenHeaterCyclesAtOneTemp()).isEqualTo(1);
 	}
 
 	private HouseDataPoint buildEmptyDataSet() {
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), nullThermostatStatus(), nullWeatherStatus());
+		return new HouseDataPoint(getDateTime(), getDateTime(), nullThermostatStatus(), nullWeatherStatus());
+	}
+
+	@NotNull
+	private DateTime getDateTime() {
+		DateTime newTime = startingTime.plusMinutes(minutesCounter);
+		minutesCounter++;
+		return newTime;
 	}
 
 	private HouseDataPoint buildDataPointWithHouseTemp(Double temp) {
 		ThermostatStatus thermostatStatus = new ThermostatStatus(temp, 0.0, null);
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), thermostatStatus, nullWeatherStatus());
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
 	}
 
 	private HouseDataPoint buildDataPointWitTempSetting(Double tempSetting) {
 		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, null);
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), thermostatStatus, nullWeatherStatus());
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
 	}
 
 	private HouseDataPoint buildDataPointWithFurnaceState(FurnaceState furnaceState) {
 		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, 0.0, furnaceState);
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), thermostatStatus, nullWeatherStatus());
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
 	}
 
 	private HouseDataPoint buildDataPointWitExternalTemp(Double externalTemp) {
 		WeatherStatus weatherStatus = new WeatherStatus(externalTemp, 0.0, 0.0, 0.0);
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), nullThermostatStatus(), weatherStatus);
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, nullThermostatStatus(), weatherStatus);
 	}
 
 	private HouseDataPoint buildDataPointWithInternalAndExternalTemp(double internalTemp, double externalTemp) {
 		ThermostatStatus thermostatStatus = new ThermostatStatus(internalTemp, 0.0, null);
 		WeatherStatus weatherStatus = new WeatherStatus(externalTemp, 0.0, 0.0, 0.0);
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), thermostatStatus, weatherStatus);
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, weatherStatus);
 	}
 
 	private HouseDataPoint buildDataPointWithWindSpeed(double windSpeed) {
 		WeatherStatus weatherStatus = new WeatherStatus(0.0, windSpeed, 0.0, 0.0);
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), nullThermostatStatus(), weatherStatus);
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, nullThermostatStatus(), weatherStatus);
 	}
 
 	private ThermostatStatus nullThermostatStatus() {
@@ -277,8 +386,18 @@ public class HouseDailySummaryReporterTest {
 	}
 
 	private HouseDataPoint buildDataPointWithFurnaceStateAndTempSetting(FurnaceState furnaceState, double tempSetting) {
-
 		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, furnaceState);
-		return new HouseDataPoint(DateTime.now(), DateTime.now(), thermostatStatus, nullWeatherStatus());
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
+	}
+
+	private HouseDataPoint buildDataPointWithFurnaceStateAndTempSetting(FurnaceState furnaceState, double tempSetting, Boolean skipMinute) {
+		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, furnaceState);
+		DateTime time = getDateTime();
+		if (skipMinute) {
+			time = getDateTime();
+		}
+
+		return new HouseDataPoint(time, time, thermostatStatus, nullWeatherStatus());
 	}
 }
