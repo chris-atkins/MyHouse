@@ -6,6 +6,7 @@ import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 
 import java.util.List;
 
@@ -18,9 +19,10 @@ public class HouseDailySummaryReporter {
 	}
 
 	public HouseDailySummary summaryForDay(LocalDate date) {
-
-		DateTime startTimeUtc = date.toDateTimeAtStartOfDay().toDateTime(DateTimeZone.UTC);
+		DateTime houseLocalMidnight = date.toDateTime(LocalTime.MIDNIGHT, DateTimeZone.forID("America/Detroit"));
+		DateTime startTimeUtc = houseLocalMidnight.toDateTime(DateTimeZone.UTC);
 		DateTime endTimeUtc = startTimeUtc.plusDays(1).minusMillis(1);
+
 		List<HouseDataPoint> dataPoints = houseStatusRepository.retrieveHouseStatusFrom(startTimeUtc, endTimeUtc);
 		if (dataPoints.size() == 0) {
 			return new HouseDailySummary(0, null, null, null, null, null, null, null);
