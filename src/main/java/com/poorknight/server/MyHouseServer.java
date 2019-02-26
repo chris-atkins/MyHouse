@@ -169,8 +169,9 @@ public class MyHouseServer {
 		HouseStatusRepository repository = new HouseStatusRepository(databaseConnector);
 		HouseStatusReporter houseStatusReporter = new HouseStatusReporter(repository);
 		HouseDailySummaryReporter houseDailySummaryReporter = new HouseDailySummaryReporter(repository);
+		TimeFinder timeFinder = new TimeFinder();
 
-		ResourceConfig resourceConfig = new ResourceConfig().register(new ReportsEndpoint(houseStatusReporter, houseDailySummaryReporter));
+		ResourceConfig resourceConfig = new ResourceConfig().register(new ReportsEndpoint(houseStatusReporter, houseDailySummaryReporter, timeFinder));
 		ServletContainer container = new ServletContainer(resourceConfig);
 		ServletHolder servletHolder = new ServletHolder(container);
 

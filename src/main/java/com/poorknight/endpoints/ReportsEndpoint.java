@@ -6,6 +6,7 @@ import com.poorknight.housestatus.reports.HouseDailySummary;
 import com.poorknight.housestatus.reports.HouseDailySummaryReporter;
 import com.poorknight.housestatus.reports.HouseStatusReport;
 import com.poorknight.housestatus.reports.HouseStatusReporter;
+import com.poorknight.time.TimeFinder;
 import org.joda.time.LocalDate;
 
 import javax.ws.rs.Consumes;
@@ -19,10 +20,12 @@ public class ReportsEndpoint {
 
 	private HouseStatusReporter houseStatusReporter;
 	private HouseDailySummaryReporter houseDailySummaryReporter;
+	private TimeFinder timeFinder;
 
-	public ReportsEndpoint(HouseStatusReporter houseStatusReporter, HouseDailySummaryReporter houseDailySummaryReporter) {
+	public ReportsEndpoint(HouseStatusReporter houseStatusReporter, HouseDailySummaryReporter houseDailySummaryReporter, TimeFinder timeFinder) {
 		this.houseStatusReporter = houseStatusReporter;
 		this.houseDailySummaryReporter = houseDailySummaryReporter;
+		this.timeFinder = timeFinder;
 	}
 
 	@GET
@@ -43,9 +46,9 @@ public class ReportsEndpoint {
 	@Path("/daily-summary")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String singleDaySummary(String dateString) {
+	public String singleDaySummary() {
 		try {
-			LocalDate date = LocalDate.parse(dateString);
+			LocalDate date = timeFinder.getCurrentLocalTime().minusDays(1).toLocalDate();
 			HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(date);
 			return new ObjectMapper().writeValueAsString(houseDailySummary);
 

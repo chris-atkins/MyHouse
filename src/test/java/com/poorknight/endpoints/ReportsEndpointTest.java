@@ -5,6 +5,8 @@ import com.poorknight.housestatus.reports.HouseDailySummary;
 import com.poorknight.housestatus.reports.HouseDailySummaryReporter;
 import com.poorknight.housestatus.reports.HouseStatusReport;
 import com.poorknight.housestatus.reports.HouseStatusReporter;
+import com.poorknight.time.TimeFinder;
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -30,6 +32,9 @@ public class ReportsEndpointTest {
 	@Mock
 	private HouseDailySummaryReporter houseDailySummaryReporter;
 
+	@Mock
+	private TimeFinder timeFinder;
+
 	@Test
 	public void reportLast24HoursDelegatesCorrectly() throws Exception {
 		List<String> localTimes = Arrays.asList("hi", "there");
@@ -46,7 +51,6 @@ public class ReportsEndpointTest {
 
 	@Test
 	public void reportsDailySummaries() throws Exception {
-		LocalDate date = LocalDate.parse("2019-02-06");
 		Integer numberOfMinutesDataExistsFor = 7;
 		Integer numberOfMinutesHeaterIsOn = 2;
 		Double averageHouseTemperature = 3d;
@@ -56,9 +60,11 @@ public class ReportsEndpointTest {
 		Double averateTimeBetweenHeaterCyclesAtOneTemp = 7d;
 		Double averageHouseTempSetting = 34d;
 		HouseDailySummary expectedSummary = new HouseDailySummary(numberOfMinutesDataExistsFor, numberOfMinutesHeaterIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageHouseTempSetting, averageWindSpeed, averateTimeBetweenHeaterCyclesAtOneTemp);
+		when(timeFinder.getCurrentLocalTime()).thenReturn(DateTime.parse("2019-02-25T05:5:00.000Z"));
+		LocalDate date = LocalDate.parse("2019-02-24");
 		when(houseDailySummaryReporter.summaryForDay(date)).thenReturn(expectedSummary);
 
-		String results = reportsEndpoint.singleDaySummary("2019-02-06");
+		String results = reportsEndpoint.singleDaySummary();
 		HouseDailySummary houseDailySummary = new ObjectMapper().readValue(results, HouseDailySummary.class);
 
 		assertThat(houseDailySummary).isEqualTo(expectedSummary);
