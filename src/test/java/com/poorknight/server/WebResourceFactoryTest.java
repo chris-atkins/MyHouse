@@ -2,7 +2,6 @@ package com.poorknight.server;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.sun.jersey.api.client.WebResource;
-import jersey.repackaged.com.google.common.collect.ImmutableMap;
 import org.glassfish.jersey.SslConfigurator;
 import org.junit.After;
 import org.junit.Before;
@@ -12,6 +11,7 @@ import org.mockito.Mock;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import javax.net.ssl.SSLContext;
 import java.lang.reflect.Field;
