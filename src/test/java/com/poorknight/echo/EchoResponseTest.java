@@ -1,9 +1,13 @@
 package com.poorknight.echo;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertThat;
@@ -26,5 +30,14 @@ public class EchoResponseTest {
 		assertThat(echoResponse.getResponse().getOutputSpeech().getText(), equalTo("Hi there"));
 		assertThat(echoResponse.getResponse().getOutputSpeech().getType(), equalTo("PlainText"));
 		assertThat(echoResponse.getResponse().getShouldEndSession(), equalTo(Boolean.TRUE));
+	}
+
+	@Test
+	public void doesNotIncludeNullNodesWhenJsonSerializing() throws JsonProcessingException {
+		final EchoResponse echoResponse = EchoResponse.noOutputSpeechResponse();
+
+		String jsonString = new ObjectMapper().writeValueAsString(echoResponse);
+
+		Assertions.assertThat(jsonString).isEqualTo("{\"version\":\"1.0\",\"response\":{\"shouldEndSession\":true}}");
 	}
 }
