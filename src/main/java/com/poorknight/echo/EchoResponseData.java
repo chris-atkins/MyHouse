@@ -1,5 +1,8 @@
 package com.poorknight.echo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class EchoResponseData {
 
 	private EchoResponseOutputSpeech outputSpeech = new EchoResponseOutputSpeech();
