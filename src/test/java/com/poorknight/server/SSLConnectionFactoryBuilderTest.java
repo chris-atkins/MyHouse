@@ -45,6 +45,6 @@ public class SSLConnectionFactoryBuilderTest {
 		assertThat(result).isSameAs(mockSslConnectionFactory);
 		Mockito.verify(mockContextFactory).setKeyStorePath(expectedKeyStorePath);
 		Mockito.verify(mockContextFactory).setKeyStorePassword(expectedKeyStorePassword);
-		Mockito.verify(mockContextFactory).setIncludeCipherSuites(Sdk.SUPPORTED_CIPHER_SUITES);
+		Mockito.verify(mockContextFactory).setIncludeCipherSuites("SSL_RSA_WITH_3DES_EDE_CBC_SHA", "SSL_RSA_WITH_RC4_128_SHA", "TLS_ECDH_RSA_WITH_3DES_EDE_CBC_SHA", "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA", "TLS_ECDH_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA", "TLS_ECDH_RSA_WITH_AES_256_CBC_SHA384", "TLS_ECDH_RSA_WITH_RC4_128_SHA", "TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA", "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA", "TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256", "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA", "TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384", "TLS_ECDHE_RSA_WITH_RC4_128_SHA");
 	}
 }
