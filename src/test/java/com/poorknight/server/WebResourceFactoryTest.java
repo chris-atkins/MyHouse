@@ -43,7 +43,10 @@ public class WebResourceFactoryTest {
 	@Test
 	public void overridesIpFromEnvironmentVariable_WithAMethod() throws Exception {
 		setUpMocksForSslConfig();
-		Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
+		Map<String, String> env = new ImmutableMap.Builder<String, String>()
+				.put("HOUSE_URL", "1.2.3.4")
+				.put("HOUSE_TRUSTSTORE_PATH", "nothing")
+				.put("HOUSE_TRUSTSTORE_PASSWORD", "really").build();
 		setEnv(env);
 
 		WebResource.Builder webResourceBuilder = WebResourceFactory.buildSecuredHomeWebResource("/theBestPath");

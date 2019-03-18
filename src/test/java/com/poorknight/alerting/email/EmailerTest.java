@@ -53,7 +53,7 @@ public class EmailerTest {
 	@Test
 	public void emailIsSetupCorrectly() throws Exception {
 		emailer.sendEmail(subject, body);
-		PowerMockito.verifyStatic();
+		PowerMockito.verifyStatic(Transport.class);
 		Transport.send(messageCaptor.capture());
 
 		final Message message = messageCaptor.getValue();

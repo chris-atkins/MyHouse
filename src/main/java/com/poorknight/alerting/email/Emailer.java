@@ -15,10 +15,19 @@ import javax.mail.internet.MimeMessage;
 
 import com.poorknight.settings.Environment;
 
-public class Emailer {
-
+class SMTPAuthenticator extends Authenticator {
 	private static final String SMTP_AUTH_USER = Environment.getEnvironmentVariable("SMTP_USER");
 	private static final String SMTP_AUTH_PWD = Environment.getEnvironmentVariable("SMTP_PASSWORD");
+
+	@Override
+	public PasswordAuthentication getPasswordAuthentication() {
+		final String username = SMTP_AUTH_USER;
+		final String password = SMTP_AUTH_PWD;
+		return new PasswordAuthentication(username, password);
+	}
+}
+
+public class Emailer {
 
 	private static final String SMTP_HOST_NAME = "smtp.gmail.com";
 	private static final String SMTP_PORT = "587";
@@ -68,15 +77,6 @@ public class Emailer {
 		return props;
 	}
 
-	private static class SMTPAuthenticator extends Authenticator {
-		@Override
-		public PasswordAuthentication getPasswordAuthentication() {
-			final String username = SMTP_AUTH_USER;
-			final String password = SMTP_AUTH_PWD;
-			return new PasswordAuthentication(username, password);
-		}
-	}
-
 	private Message buildMessage(final EmailSubject subject, final EmailBody body, final Session session) throws MessagingException, AddressException {
 		final Message message = new MimeMessage(session);
 		message.setFrom(new InternetAddress(from.getFrom()));
@@ -86,3 +86,8 @@ public class Emailer {
 		return message;
 	}
 }
+
+
+
+
+

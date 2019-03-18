@@ -8,22 +8,18 @@ import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
 import org.assertj.core.data.Offset;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
-import org.joda.time.Instant;
 import org.joda.time.LocalDate;
-import org.joda.time.ReadableDuration;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

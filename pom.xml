@@ -21,27 +21,41 @@
 	<properties>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.compiler.source>1.8</maven.compiler.source>
-		<maven.compiler.target>1.8</maven.compiler.target>
+		<java.release.version>11</java.release.version>
+		<!--<maven.compiler.source>1.8</maven.compiler.source>-->
+		<!--<maven.compiler.target>1.8</maven.compiler.target>-->
 
 		<jetty.version>9.4.15.v20190215</jetty.version>
 		<alexa-skills-kit.version>1.8.1</alexa-skills-kit.version>
-		<jersey.version>2.25.1</jersey.version>
-		<log4j.version>1.2.17</log4j.version>
-		<slf4j-api.version>1.7.10</slf4j-api.version>
-		<javax.mail.version>1.5.5</javax.mail.version>
+		<jersey.version>2.28</jersey.version>
+		<jersey-client.version>1.19.4</jersey-client.version>
+		<jersey-json.version>1.19.4</jersey-json.version>
+		<jackson-core.version>2.9.8</jackson-core.version>
+		<javax.mail.version>1.6.2</javax.mail.version>
+		<joda-time.version>2.10.1</joda-time.version>
+		<apache.commons.lang.version>3.8.1</apache.commons.lang.version>
 
 		<junit.version>4.11</junit.version>
-		<mockito-all.version>1.9.5</mockito-all.version>
-		<hamcrest-library.version>1.3</hamcrest-library.version>
-		<hamcrest-core.version>1.3</hamcrest-core.version>
-		<powermock.version>1.5.6</powermock.version>
-		<apache.commons.lang.version>3.4</apache.commons.lang.version>
-		<assertj.version>3.5.2</assertj.version>
+		<assertj.version>3.12.1</assertj.version>
+		<mockito-core.version>2.25.1</mockito-core.version>
+		<powermock-api-mockito2.version>2.0.0</powermock-api-mockito2.version>
+		<powermock-module-junit4.version>2.0.0</powermock-module-junit4.version>
+		<hamcrest-library.version>2.1</hamcrest-library.version>
+		<hamcrest-core.version>2.1</hamcrest-core.version>
+		<hamcrest-date.version>2.0.5</hamcrest-date.version>
+		<testcontainers.mysql.version>1.10.7</testcontainers.mysql.version>
+		<mysql-connector-java.version>8.0.15</mysql-connector-java.version>
 
-		<maven-compiler-plugin.version>3.1</maven-compiler-plugin.version>
-		<maven-shade-plugin.version>2.4.2</maven-shade-plugin.version>
-		<maven-eclipse-plugin.version>2.9</maven-eclipse-plugin.version>
+		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
+		<maven-shade-plugin.version>3.2.1</maven-shade-plugin.version>
+		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
+		<spotbugs-maven-plugin.version>3.1.11</spotbugs-maven-plugin.version>
+		<maven-pmd-plugin.version>3.11.0</maven-pmd-plugin.version>
+
+		<log4j.version>1.2.17</log4j.version>
+		<slf4j-api.version>1.7.26</slf4j-api.version>
+		<logback-classic.version>1.2.3</logback-classic.version>
+		<flyway-core.version>5.2.4</flyway-core.version>
 	</properties>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEPENDENCIES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -79,17 +93,35 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.sun.jersey</groupId>
-			<artifactId>jersey-client</artifactId>
-			<version>1.19</version>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson-core.version}</version>
 		</dependency>
 
 		<dependency>
-			<groupId>log4j</groupId>
-			<artifactId>log4j</artifactId>
-			<version>${log4j.version}</version>
-			<scope>compile</scope>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-client.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.glassfish.jersey.inject</groupId>
+			<artifactId>jersey-hk2</artifactId>
+			<version>${jersey.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-json</artifactId>
+			<version>${jersey-json.version}</version>
+		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>log4j</groupId>-->
+			<!--<artifactId>log4j</artifactId>-->
+			<!--<version>${log4j.version}</version>-->
+			<!--<scope>compile</scope>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>org.slf4j</groupId>
@@ -102,6 +134,16 @@
 			<groupId>com.amazon.alexa</groupId>
 			<artifactId>alexa-skills-kit</artifactId>
 			<version>${alexa-skills-kit.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>log4j</artifactId>
+					<groupId>log4j</groupId>
+				</exclusion>
+				<exclusion>
+					<artifactId>slf4j-log4j12</artifactId>
+					<groupId>org.slf4j</groupId>
+				</exclusion>
+			</exclusions>
 		</dependency>
 
 		<dependency>
@@ -113,25 +155,25 @@
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.9.9</version>
+			<version>${joda-time.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<version>8.0.13</version>
+			<version>${mysql-connector-java.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.flywaydb</groupId>
 			<artifactId>flyway-core</artifactId>
-			<version>5.2.1</version>
+			<version>${flyway-core.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.2.3</version>
+			<version>${logback-classic.version}</version>
 		</dependency>
 
 		<dependency>
@@ -158,28 +200,28 @@
 		<dependency>
 			<groupId>org.exparity</groupId>
 			<artifactId>hamcrest-date</artifactId>
-			<version>1.1.0</version>
+			<version>${hamcrest-date.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.mockito</groupId>
-			<artifactId>mockito-all</artifactId>
-			<version>${mockito-all.version}</version>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.powermock</groupId>
 			<artifactId>powermock-module-junit4</artifactId>
-			<version>${powermock.version}</version>
+			<version>${powermock-module-junit4.version}</version>
 			<scope>test</scope>
 		</dependency>
 
 		<dependency>
 			<groupId>org.powermock</groupId>
-			<artifactId>powermock-api-mockito</artifactId>
-			<version>${powermock.version}</version>
+			<artifactId>powermock-api-mockito2</artifactId>
+			<version>${powermock-api-mockito2.version}</version>
 			<scope>test</scope>
 		</dependency>
 
@@ -200,19 +242,9 @@
 		<dependency>
 			<groupId>org.testcontainers</groupId>
 			<artifactId>mysql</artifactId>
-			<version>1.10.1</version>
+			<version>${testcontainers.mysql.version}</version>
 			<scope>test</scope>
 		</dependency>
-
-
-
-
-		<!-- <dependency> <groupId>org.glassfish.jersey.core</groupId> <artifactId>jersey-server</artifactId> 
-			<version>2.22.1</version> </dependency> -->
-
-		<!--<dependency> <groupId>org.glassfish.jersey.containers</groupId> <artifactId>jersey-container-jetty-http</artifactId> 
-			<version>2.22.1</version> </dependency> -->
-
 
 	</dependencies>
 
@@ -232,13 +264,21 @@
 					</configuration>
 				</plugin>
 
+				<!--<plugin>-->
+					<!--<groupId>org.apache.maven.plugins</groupId>-->
+					<!--<artifactId>maven-compiler-plugin</artifactId>-->
+					<!--<version>${maven-compiler-plugin.version}</version>-->
+					<!--<configuration>-->
+						<!--<source>${maven.compiler.source}</source>-->
+						<!--<target>${maven.compiler.target}</target>-->
+					<!--</configuration>-->
+				<!--</plugin>-->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<version>${maven-compiler-plugin.version}</version>
 					<configuration>
-						<source>${maven.compiler.source}</source>
-						<target>${maven.compiler.target}</target>
+						<release>${java.release.version}</release>
 					</configuration>
 				</plugin>
 
@@ -247,6 +287,9 @@
 					<artifactId>maven-surefire-plugin</artifactId>
 					<version>2.12.4</version>
 					<configuration>
+						<argLine>
+							--illegal-access=permit
+						</argLine>
 						<forkMode>always</forkMode>
 						<environmentVariables>
 							<PATH>${env.PATH}</PATH>
@@ -297,12 +340,12 @@
 				<plugin>
 					<groupId>com.github.spotbugs</groupId>
 					<artifactId>spotbugs-maven-plugin</artifactId>
-					<version>3.1.10</version>
+					<version>${spotbugs-maven-plugin.version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-pmd-plugin</artifactId>
-					<version>3.11.0</version>
+					<version>${maven-pmd-plugin.version}</version>
 				</plugin>
 
 			</plugins>

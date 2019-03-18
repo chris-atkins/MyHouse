@@ -132,7 +132,7 @@ public class MyHouseServer {
 	}
 
 	private static void setupLogging() {
-		org.apache.log4j.BasicConfigurator.configure();
+//		org.apache.log4j.BasicConfigurator.configure();
 	}
 
 	private static SslConnectionFactory setupSSL() {

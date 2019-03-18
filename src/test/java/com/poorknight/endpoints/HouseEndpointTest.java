@@ -62,7 +62,7 @@ public class HouseEndpointTest {
 		HouseIpRequest houseIpRequest = new HouseIpRequest("1.2.3.4");
 		houseEndpoint.updateHouseUrl(houseIpRequest);
 
-		PowerMockito.verifyStatic();
+		PowerMockito.verifyStatic(WebResourceFactory.class);
 		WebResourceFactory.setHouseIp(eq("1.2.3.4"));
 	}
 

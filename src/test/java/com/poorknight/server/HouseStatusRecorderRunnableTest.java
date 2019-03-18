@@ -3,14 +3,12 @@ package com.poorknight.server;
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.HouseStatusRecorder;
 import com.poorknight.server.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
-import com.poorknight.timedtemp.AutomatedHouseTemperatureController;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.poorknight.server.FixedScheduleTaskManager.AutomatedHouseTemperatureControllerRunnable;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 

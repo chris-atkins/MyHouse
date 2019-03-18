@@ -15,7 +15,7 @@ import org.junit.runners.JUnit4;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.mockito.junit.MockitoJUnitRunner;
 import org.testcontainers.containers.MySQLContainer;
 
 import java.sql.*;
@@ -341,6 +341,7 @@ public class HouseStatusRepositoryTest {
 		private Double pressureHPa = 1017d;
 		private WeatherStatus weatherStatus = new WeatherStatus(tempFahrenheit, windSpeedMph, humidityPercent, pressureHPa);
 
+
 		@Test
 		public void closesStatementAndConnectionOnExecutionError() throws Exception {
 			when(databaseConnector.getConnection()).thenReturn(connection);
@@ -438,9 +439,6 @@ public class HouseStatusRepositoryTest {
 		public void queryWrapsExceptionWhenClosingConnectionThrows() throws Exception {
 			when(databaseConnector.getConnection()).thenReturn(connection);
 			when(connection.createStatement()).thenReturn(statement);
-			ResultSet resultSet = Mockito.mock(ResultSet.class);
-			when(resultSet.next()).thenReturn(false);
-			when(statement.executeQuery(anyString())).thenReturn(resultSet);
 
 			SQLException sqlException = new SQLException();
 			doThrow(sqlException).when(connection).close();
@@ -453,4 +451,5 @@ public class HouseStatusRepositoryTest {
 			}
 		}
 	}
+
 }
