@@ -44,7 +44,7 @@ public class SSLConnectionFactoryBuilderTest {
 		assertThat(result).isSameAs(mockSslConnectionFactory);
 		Mockito.verify(mockContextFactory).setKeyStorePath(expectedKeyStorePath);
 		Mockito.verify(mockContextFactory).setKeyStorePassword(expectedKeyStorePassword);
-		Mockito.verify(mockContextFactory).setIncludeCipherSuites("*");
+		Mockito.verify(mockContextFactory).setIncludeCipherSuites(".*");
 	}
 
 }

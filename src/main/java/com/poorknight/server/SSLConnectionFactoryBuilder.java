@@ -26,7 +26,7 @@ public class SSLConnectionFactoryBuilder {
 		final SslContextFactory sslContextFactory = sslConnectionFactory.getSslContextFactory();
 		sslContextFactory.setKeyStorePath(Environment.getEnvironmentVariable("SSL_KEYSTORE_PATH"));
 		sslContextFactory.setKeyStorePassword(Environment.getEnvironmentVariable("SSL_KEYSTORE_PASSWORD"));
-		sslContextFactory.setIncludeCipherSuites("*");
+		sslContextFactory.setIncludeCipherSuites(".*");
 //		String[] excludeCipherSuites = sslContextFactory.getExcludeCipherSuites();
 //		System.out.println("\n\nEXCLUDED CIPHER SUITES");
 //		for (String excludedCipherSuite : excludeCipherSuites) {
