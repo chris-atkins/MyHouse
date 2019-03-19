@@ -39,13 +39,15 @@ public class SSLConnectionFactoryBuilderTest {
 
 	@Test
 	public void setsUpConnectionFactoryCorrectly() throws Exception {
+		when(mockContextFactory.getExcludeCipherSuites()).thenReturn(new String[]{"hi"});
+
 		final SslConnectionFactory result = SSLConnectionFactoryBuilder.build();
 
 		assertThat(result).isSameAs(mockSslConnectionFactory);
 		Mockito.verify(mockContextFactory).setKeyStorePath(expectedKeyStorePath);
 		Mockito.verify(mockContextFactory).setKeyStorePassword(expectedKeyStorePassword);
 		Mockito.verify(mockContextFactory).setIncludeCipherSuites(".*");
-//		Mockito.verify(mockContextFactory).setExcludeCipherSuites("TLS_DHE.*");
+		Mockito.verify(mockContextFactory).setExcludeCipherSuites("hi","^TLS_DHE.*$");
 	}
 
 }
