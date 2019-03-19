@@ -161,7 +161,7 @@
 			<artifactId>flyway-core</artifactId>
 			<version>${flyway-core.version}</version>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>

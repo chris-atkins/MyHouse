@@ -1,6 +1,5 @@
 package com.poorknight.server;
 
-import com.amazon.speech.Sdk;
 import com.poorknight.settings.Environment;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.jetty.server.SslConnectionFactory;
@@ -45,6 +44,7 @@ public class SSLConnectionFactoryBuilderTest {
 		assertThat(result).isSameAs(mockSslConnectionFactory);
 		Mockito.verify(mockContextFactory).setKeyStorePath(expectedKeyStorePath);
 		Mockito.verify(mockContextFactory).setKeyStorePassword(expectedKeyStorePassword);
-		Mockito.verify(mockContextFactory).setIncludeCipherSuites(Sdk.SUPPORTED_CIPHER_SUITES);
+		Mockito.verify(mockContextFactory).setIncludeCipherSuites("*");
 	}
+
 }
