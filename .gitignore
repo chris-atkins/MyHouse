@@ -5,3 +5,4 @@ docker-config/*.jar
 docker-config/keystore
 MyHouse.iml
 .idea
+openjdk-11.0.2_linux-x64_bin.tar.gz
