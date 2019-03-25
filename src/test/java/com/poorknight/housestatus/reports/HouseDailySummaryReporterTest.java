@@ -38,7 +38,7 @@ public class HouseDailySummaryReporterTest {
 	int minutesCounter;
 
 	@Before
-	public void setUp() throws Exception {
+	public void setUp() {
 		startingTime = DateTime.now();
 		minutesCounter = 0;
 	}

@@ -3,10 +3,9 @@ package com.poorknight.housestatus.reports;
 import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
+import com.poorknight.time.TimeFinder;
 import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
-import org.joda.time.LocalTime;
 
 import java.util.List;
 
@@ -19,11 +18,9 @@ public class HouseDailySummaryReporter {
 	}
 
 	public HouseDailySummary summaryForDay(LocalDate date) {
-		DateTime houseLocalMidnight = date.toDateTime(LocalTime.MIDNIGHT, DateTimeZone.forID("America/Detroit"));
-		DateTime startTimeUtc = houseLocalMidnight.toDateTime(DateTimeZone.UTC);
-		DateTime endTimeUtc = startTimeUtc.plusDays(1).minusMillis(1);
+		TimeFinder.UtcTimeRange utcTimeRange = new TimeFinder().getUtcRangeForLocalDay(date);
 
-		List<HouseDataPoint> dataPoints = houseStatusRepository.retrieveHouseStatusFrom(startTimeUtc, endTimeUtc);
+		List<HouseDataPoint> dataPoints = houseStatusRepository.retrieveHouseStatusFrom(utcTimeRange.getStartTime(), utcTimeRange.getEndTime());
 		if (dataPoints.size() == 0) {
 			return new HouseDailySummary(0, null, null, null, null, null, null, null);
 		}
