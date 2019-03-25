@@ -3,14 +3,15 @@ package com.poorknight.housestatus.reports;
 import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.thermostat.ThermostatStatus;
+import com.poorknight.time.TimeFinder;
+import com.poorknight.time.TimeFinder.UtcTimeRange;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.JUnit4;
 import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,27 +20,21 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({DateTime.class})
+@RunWith(JUnit4.class)
 public class HouseStatusReporterTest {
 
 	private HouseStatusReporter houseStatusReporter;
 
 	private HouseStatusRepository houseStatusRepository;
 
-	private DateTime currentTime = new DateTime();
-	private DateTime oneDayAgo = currentTime.minusDays(1);
-
 	@Before
 	public void setup() {
-		PowerMockito.mockStatic(DateTime.class);
-		PowerMockito.when(DateTime.now()).thenReturn(currentTime);
 		houseStatusRepository = Mockito.mock(HouseStatusRepository.class);
 		houseStatusReporter = new HouseStatusReporter(houseStatusRepository);
 	}
 
 	@Test
-	public void returnsAReportForLast24Hours() {
+	public void returnsAReportForRequestedDay() {
 		List<HouseDataPoint> repositoryResponse = new ArrayList<>();
 
 		DateTime time1 = new DateTime("2017-12-01T11:35:01");
@@ -54,9 +49,11 @@ public class HouseStatusReporterTest {
 		ThermostatStatus thermostatStatus3 = new ThermostatStatus(9.10, 11.12, null);
 		repositoryResponse.add(new HouseDataPoint(time3, null, thermostatStatus3, null));
 
-		when(houseStatusRepository.retrieveHouseStatusFrom(oneDayAgo, currentTime)).thenReturn(repositoryResponse);
+		LocalDate date = new LocalDate();
+		UtcTimeRange dateRange = new TimeFinder().getUtcRangeForLocalDay(date);
+		when(houseStatusRepository.retrieveHouseStatusFrom(dateRange.getStartTime(), dateRange.getEndTime())).thenReturn(repositoryResponse);
 
-		HouseStatusReport houseStatusReport = houseStatusReporter.reportForLast24Hours();
+		HouseStatusReport houseStatusReport = houseStatusReporter.reportForDay(date);
 		assertThat(houseStatusReport.getLocalTimes()).containsExactly("12-01 11:35 AM", "12-02 09:35 PM", "12-03 11:35 AM");
 		assertThat(houseStatusReport.getHouseTemperatures()).containsExactly(1.2, 5.6, 9.10);
 		assertThat(houseStatusReport.getThermostatSettings()).containsExactly(3.4, 7.8, 11.12);
@@ -64,11 +61,13 @@ public class HouseStatusReporterTest {
 
 	@Test
 	public void passesExceptionFromRepository() {
+		LocalDate date = new LocalDate();
+		UtcTimeRange dateRange = new TimeFinder().getUtcRangeForLocalDay(date);
 		RuntimeException thrownException = new RuntimeException("something went wrong");
-		when(houseStatusRepository.retrieveHouseStatusFrom(oneDayAgo, currentTime)).thenThrow(thrownException);
+		when(houseStatusRepository.retrieveHouseStatusFrom(dateRange.getStartTime(), dateRange.getEndTime())).thenThrow(thrownException);
 
 		try {
-			houseStatusReporter.reportForLast24Hours();
+			houseStatusReporter.reportForDay(date);
 			fail("expecting exception");
 		} catch (Exception e) {
 			assertThat(e).isEqualTo(thrownException);

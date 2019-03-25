@@ -2,7 +2,8 @@ package com.poorknight.housestatus.reports;
 
 import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
-import org.joda.time.DateTime;
+import com.poorknight.time.TimeFinder;
+import org.joda.time.LocalDate;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -15,10 +16,9 @@ public class HouseStatusReporter {
 		this.repository = repository;
 	}
 
-	public HouseStatusReport reportForLast24Hours() {
-		DateTime endTime = DateTime.now();
-		DateTime startTime = endTime.minusDays(1);
-		List<HouseDataPoint> houseDataPoints = repository.retrieveHouseStatusFrom(startTime, endTime);
+	public HouseStatusReport reportForDay(LocalDate date) {
+		TimeFinder.UtcTimeRange rangeForLocalDay = new TimeFinder().getUtcRangeForLocalDay(date);
+		List<HouseDataPoint> houseDataPoints = repository.retrieveHouseStatusFrom(rangeForLocalDay.getStartTime(), rangeForLocalDay.getEndTime());
 
 		List<String> localTimes = new LinkedList<>();
 		List<Double> houseTemperatures = new LinkedList<>();

@@ -32,9 +32,10 @@ public class ReportsEndpoint {
 	@Path("/last24Hours")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public String reportLast24Hours() {
+	public String reportLastDay() {
 		try {
-			HouseStatusReport houseStatusReport = houseStatusReporter.reportForLast24Hours();
+			LocalDate yesterday = getYesterdaysDate();
+			HouseStatusReport houseStatusReport = houseStatusReporter.reportForDay(yesterday);
 			return new ObjectMapper().writeValueAsString(houseStatusReport);
 
 		} catch (JsonProcessingException e) {
@@ -48,12 +49,16 @@ public class ReportsEndpoint {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String singleDaySummary() {
 		try {
-			LocalDate date = timeFinder.getCurrentLocalTime().minusDays(1).toLocalDate();
-			HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(date);
+			LocalDate yesterday = getYesterdaysDate();
+			HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(yesterday);
 			return new ObjectMapper().writeValueAsString(houseDailySummary);
 
 		} catch (JsonProcessingException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	private LocalDate getYesterdaysDate() {
+		return timeFinder.getCurrentLocalTime().minusDays(1).toLocalDate();
 	}
 }

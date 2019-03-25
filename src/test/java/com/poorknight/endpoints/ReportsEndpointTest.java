@@ -41,9 +41,12 @@ public class ReportsEndpointTest {
 		List<Double> houseTemperatures = Arrays.asList(1.2, 3.4);
 		List<Double> thermostatSettings = Arrays.asList(5.6, 7.8);
 		HouseStatusReport report = new HouseStatusReport(localTimes, houseTemperatures, thermostatSettings);
-		when(houseStatusReporter.reportForLast24Hours()).thenReturn(report);
 
-		String results = reportsEndpoint.reportLast24Hours();
+		when(timeFinder.getCurrentLocalTime()).thenReturn(DateTime.parse("2019-02-25T05:5:00.000Z"));
+		LocalDate date = LocalDate.parse("2019-02-24");
+		when(houseStatusReporter.reportForDay(date)).thenReturn(report);
+
+		String results = reportsEndpoint.reportLastDay();
 		HouseStatusReport houseStatusReport = new ObjectMapper().readValue(results, HouseStatusReport.class);
 
 		assertThat(houseStatusReport).isEqualTo(report);
