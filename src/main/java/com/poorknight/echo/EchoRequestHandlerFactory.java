@@ -28,6 +28,10 @@ public class EchoRequestHandlerFactory {
 			return new LightsOffRequestHandler(new HouseCommandMessager());
 		}
 
+		if (intentName.equals("DimLights")) {
+			return new DimLightsRequestHandler(new HouseCommandMessager());
+		}
+
 		if (intentName.equals("LightsOn")) {
 			return new LightsOnRequestHandler(new HouseCommandMessager());
 		}

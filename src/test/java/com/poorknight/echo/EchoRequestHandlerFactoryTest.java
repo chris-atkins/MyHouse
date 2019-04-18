@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
+import com.poorknight.echo.housecommand.DimLightsRequestHandler;
 import com.poorknight.echo.housecommand.GoingToWorkRequestHandler;
 import com.poorknight.echo.housecommand.OutsideLightsOffRequestHandler;
 import com.poorknight.echo.housecommand.OutsideLightsOnRequestHandler;
@@ -37,6 +38,13 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("LightsOff");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightsOffRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsDimLightsRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("DimLights");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(DimLightsRequestHandler.class)));
 	}
 
 	@Test

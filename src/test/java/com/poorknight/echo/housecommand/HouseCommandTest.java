@@ -33,4 +33,9 @@ public class HouseCommandTest {
 	public void outdsideLightsOn_hasTheCorrectString() throws Exception {
 		assertThat(HouseCommand.OUTSIDE_LIGHTS_ON.getCommandAsString()).isEqualTo("outside-lights-on");
 	}
+
+	@Test
+	public void dimLights_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.DIM_LIGHTS.getCommandAsString()).isEqualTo("dim-lights");
+	}
 }
