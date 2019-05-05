@@ -14,7 +14,6 @@ public class EchoEndpoint {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public EchoResponse postEchoRequest(final JsonNode request) {
-		System.out.println("Got a request: " + request.toString());
 		return EchoRequestHandlerFactory.handlerFor(request).handle();
 	}
 

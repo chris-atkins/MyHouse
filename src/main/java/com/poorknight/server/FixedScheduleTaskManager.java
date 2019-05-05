@@ -4,6 +4,7 @@ import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.HouseStatusRecorder;
 import com.poorknight.timedlights.OutsideLightsController;
 import com.poorknight.timedtemp.AutomatedHouseTemperatureController;
+import org.joda.time.DateTime;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -45,8 +46,10 @@ public class FixedScheduleTaskManager {
 		@Override
 		public void run() {
 			try {
+				System.out.println(new DateTime().toLocalDateTime().toString() + ": Initiating timed OutsideLightsController.putLightsToCorrectStateForTimeOfDay()");
 				controller.putLightsToCorrectStateForTimeOfDay();
 			} catch (RuntimeException e) {
+				System.out.println("Problem running OutsideLightControllerRunnable");
 				e.printStackTrace();
 			}
 		}
