@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -138,9 +139,38 @@ public class ThermostatMessagerTest {
 		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.AC_ON);
 	}
 
+	@Test
+	public void throwsExceptionForUnknownThermostatState() throws IOException {
+		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		JsonNode acJson = new ObjectMapper().readTree("{\n" +
+				"  \"fmode\": 0,\n" +
+				"  \"fstate\": 1,\n" +
+				"  \"hold\": 1,\n" +
+				"  \"override\": 1,\n" +
+				"  \"t_cool\": 66.0,\n" +
+				"  \"t_type_post\": 0,\n" +
+				"  \"temp\": 69.5,\n" +
+				"  \"time\": {\n" +
+				"    \"day\": 5,\n" +
+				"    \"hour\": 18,\n" +
+				"    \"minute\": 26\n" +
+				"  },\n" +
+				"  \"tmode\": 2,\n" +
+				"  \"tstate\": 5\n" +
+				"}");
+		when(builder.get(JsonNode.class)).thenReturn(acJson);
+
+		try {
+			final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+			fail("expectingException");
+		} catch (RuntimeException e) {
+			assertThat(e.getMessage()).isEqualTo("Unknown thermostat(tstate) state returned from house thermostat: 5");
+		}
+	}
+
 	private JsonNode buildJsonResponseFromThermostat(final Double temperature) {
 		final ObjectNode response = JsonNodeFactory.instance.objectNode();
-
 		response.put("temp", temperature);
 		response.put("tmode", 1);
 		response.put("fmode", 0);
@@ -160,7 +190,6 @@ public class ThermostatMessagerTest {
 
 		return response;
 	}
-
 
 	private JsonNode buildJsonResponseFromThermostat(double temperature, int tstate, double tempSetting) {
 		final ObjectNode response = JsonNodeFactory.instance.objectNode();

@@ -51,11 +51,9 @@ public class ThermostatMessager {
 
 	public ThermostatStatus requestThermostatStatus() {
 		final JsonNode response = requestThermostatState();
-
-		System.out.println("Status from thermostat:\n" + response.toString());
-
-		Double currentTemp = response.get("temp").asDouble();
-		Double tempSetting = findTempSetting(response);
+		
+		double currentTemp = response.get("temp").asDouble();
+		double tempSetting = findTempSetting(response);
 		FurnaceState furnaceState = findFurnaceState(response);
 
 		return new ThermostatStatus(currentTemp, tempSetting, furnaceState);
@@ -70,13 +68,12 @@ public class ThermostatMessager {
 	}
 
 	private FurnaceState findFurnaceState(JsonNode response) {
-		double tstate = response.get("tstate").asDouble();
-		if (tstate == 2) {
-			return FurnaceState.AC_ON;
+		int tstate = response.get("tstate").asInt();
+		switch (tstate) {
+			case 0: return FurnaceState.OFF;
+			case 1: return FurnaceState.HEAT_ON;
+			case 2: return FurnaceState.AC_ON;
+			default: throw new RuntimeException("Unknown thermostat(tstate) state returned from house thermostat: " + tstate);
 		}
-		if (tstate == 1) {
-			return FurnaceState.HEAT_ON;
-		}
-		return FurnaceState.OFF;
 	}
 }
