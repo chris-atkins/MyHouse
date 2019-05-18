@@ -28,7 +28,7 @@ public class ThermostatStatus {
 	}
 
 	public enum FurnaceState {
-		HEAT_ON, OFF
+		HEAT_ON, AC_ON, OFF
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package com.poorknight.thermostat;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.server.WebResourceFactory;
@@ -17,6 +18,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -105,6 +107,35 @@ public class ThermostatMessagerTest {
 		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(155.5);
 		assertThat(thermostatStatus.getTempSetting()).isEqualTo(173);
 		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.OFF);
+	}
+
+	@Test
+	public void houseStatusReadsValuesWithAirConditioningMode() throws IOException {
+		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		JsonNode acJson = new ObjectMapper().readTree("{\n" +
+				"  \"fmode\": 0,\n" +
+				"  \"fstate\": 1,\n" +
+				"  \"hold\": 1,\n" +
+				"  \"override\": 1,\n" +
+				"  \"t_cool\": 66.0,\n" +
+				"  \"t_type_post\": 0,\n" +
+				"  \"temp\": 69.5,\n" +
+				"  \"time\": {\n" +
+				"    \"day\": 5,\n" +
+				"    \"hour\": 18,\n" +
+				"    \"minute\": 26\n" +
+				"  },\n" +
+				"  \"tmode\": 2,\n" +
+				"  \"tstate\": 2\n" +
+				"}");
+		when(builder.get(JsonNode.class)).thenReturn(acJson);
+
+		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+
+		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(69.5);
+		assertThat(thermostatStatus.getTempSetting()).isEqualTo(66.0);
+		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.AC_ON);
 	}
 
 	private JsonNode buildJsonResponseFromThermostat(final Double temperature) {
