@@ -51,6 +51,7 @@ public class ThermostatMessager {
 
 	public ThermostatStatus requestThermostatStatus() {
 		final JsonNode response = requestThermostatState();
+		System.out.println("Status from thermostat:\n" + response.toString());
 		double currentTemp = response.get("temp").asDouble();
 		double tempSetting = response.get("t_heat").asDouble();
 		double tstate = response.get("tstate").asDouble();
