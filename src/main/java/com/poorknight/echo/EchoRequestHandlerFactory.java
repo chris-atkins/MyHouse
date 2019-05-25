@@ -8,8 +8,8 @@ import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
-import com.poorknight.echo.thermostat.HeatOffHandler;
-import com.poorknight.echo.thermostat.HeatOnHandler;
+import com.poorknight.echo.thermostat.HouseTempDownHandler;
+import com.poorknight.echo.thermostat.HouseTempUpHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
 import com.poorknight.lights.HueMessager;
 import com.poorknight.pi.PiMessager;
@@ -56,12 +56,12 @@ public class EchoRequestHandlerFactory {
 			return new TempCheckHandler(new ThermostatMessager());
 		}
 
-		if(intentName.equals("HeatOn")) {
-			return new HeatOnHandler(new ThermostatMessager());
+		if(intentName.equals("HouseTempUp")) {
+			return new HouseTempUpHandler(new ThermostatMessager());
 		}
 
-		if(intentName.equals("HeatOff")) {
-			return new HeatOffHandler(new ThermostatMessager());
+		if(intentName.equals("HouseTempDown")) {
+			return new HouseTempDownHandler(new ThermostatMessager());
 		}
 
 		if(intentName.equals("AtWorkMode")) {

@@ -6,13 +6,13 @@ import com.poorknight.thermostat.ThermostatMessager;
 
 import java.math.BigDecimal;
 
-public class HeatOffHandler implements EchoRequestHandler {
+public class HouseTempDownHandler implements EchoRequestHandler {
 
 	private static final BigDecimal TEMP_INCREMENT = new BigDecimal("2");
 
 	private final ThermostatMessager thermostatMessager;
 
-	public HeatOffHandler(final ThermostatMessager thermostatMessager) {
+	public HouseTempDownHandler(final ThermostatMessager thermostatMessager) {
 		this.thermostatMessager = thermostatMessager;
 	}
 

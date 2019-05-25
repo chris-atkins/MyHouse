@@ -6,14 +6,14 @@ import com.poorknight.thermostat.ThermostatMessager;
 
 import java.math.BigDecimal;
 
-public class HeatOnHandler implements EchoRequestHandler {
+public class HouseTempUpHandler implements EchoRequestHandler {
 
 	private static final BigDecimal TEMP_INCREMENT = new BigDecimal("2");
 	private static final BigDecimal MAX_ALLOWED_TEMP = new BigDecimal("72");
 
 	private final ThermostatMessager thermostatMessager;
 
-	public HeatOnHandler(final ThermostatMessager thermostatMessager) {
+	public HouseTempUpHandler(final ThermostatMessager thermostatMessager) {
 		this.thermostatMessager = thermostatMessager;
 	}
 

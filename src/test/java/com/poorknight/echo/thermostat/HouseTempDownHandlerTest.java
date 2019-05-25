@@ -15,10 +15,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HeatOffHandlerTest {
+public class HouseTempDownHandlerTest {
 
 	@InjectMocks
-	private HeatOffHandler handler;
+	private HouseTempDownHandler handler;
 
 	@Mock
 	private ThermostatMessager thermostatMessager;
