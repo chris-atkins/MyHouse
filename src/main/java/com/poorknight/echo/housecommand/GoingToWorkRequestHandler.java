@@ -6,17 +6,17 @@ import com.poorknight.echo.EchoResponse;
 public class GoingToWorkRequestHandler implements EchoRequestHandler {
 
 	private final HouseCommandMessager houseCommandMessager;
-	private final HouseCommandResponseBuilder houseCommandResponseBuilder;
+	private final GoingToWorkResponseBuilder goingToWorkResponseBuilder;
 
-	public GoingToWorkRequestHandler(final HouseCommandMessager houseCommandMessager, final HouseCommandResponseBuilder houseCommandResponseBuilder) {
+	public GoingToWorkRequestHandler(final HouseCommandMessager houseCommandMessager, final GoingToWorkResponseBuilder goingToWorkResponseBuilder) {
 		this.houseCommandMessager = houseCommandMessager;
-		this.houseCommandResponseBuilder = houseCommandResponseBuilder;
+		this.goingToWorkResponseBuilder = goingToWorkResponseBuilder;
 	}
 
 	@Override
 	public EchoResponse handle() {
 		houseCommandMessager.requestHouseCommand(HouseCommand.AT_WORK_MODE);
-		String response = houseCommandResponseBuilder.buildHouseCommandAlexaResponse();
+		String response = goingToWorkResponseBuilder.buildHouseCommandAlexaResponse();
 		return EchoResponse.responseWithSpeech(response);
 	}
 }

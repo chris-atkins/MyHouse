@@ -6,7 +6,9 @@ public enum HouseCommand {
 	LIGHTS_OFF("lights-off"),
 	OUTSIDE_LIGHTS_ON("outside-lights-on"),
 	OUTSIDE_LIGHTS_OFF("outside-lights-off"),
-	DIM_LIGHTS("dim-lights");
+	DIM_LIGHTS("dim-lights"),
+	HOUSE_TEMP_UP("house-temp-up"),
+	HOUSE_TEMP_DOWN("house-temp-down");
 
 	private final String commandAsString;
 

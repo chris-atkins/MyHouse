@@ -2,7 +2,7 @@ package com.poorknight.echo.housecommand;
 
 import java.util.Random;
 
-public class HouseCommandResponseBuilder {
+public class GoingToWorkResponseBuilder {
 
 
 	/*package*/ String buildHouseCommandAlexaResponse() {

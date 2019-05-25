@@ -38,4 +38,14 @@ public class HouseCommandTest {
 	public void dimLights_hasTheCorrectString() throws Exception {
 		assertThat(HouseCommand.DIM_LIGHTS.getCommandAsString()).isEqualTo("dim-lights");
 	}
+
+	@Test
+	public void houseTempUp_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.HOUSE_TEMP_UP.getCommandAsString()).isEqualTo("house-temp-up");
+	}
+
+	@Test
+	public void houseTempDown_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.HOUSE_TEMP_DOWN.getCommandAsString()).isEqualTo("house-temp-down");
+	}
 }

@@ -8,8 +8,6 @@ import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
-import com.poorknight.echo.thermostat.HouseTempDownHandler;
-import com.poorknight.echo.thermostat.HouseTempUpHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
 import com.poorknight.lights.HueMessager;
 import com.poorknight.pi.PiMessager;
@@ -65,7 +63,7 @@ public class EchoRequestHandlerFactory {
 		}
 
 		if(intentName.equals("AtWorkMode")) {
-			return new GoingToWorkRequestHandler(new HouseCommandMessager(), new HouseCommandResponseBuilder());
+			return new GoingToWorkRequestHandler(new HouseCommandMessager(), new GoingToWorkResponseBuilder());
 		}
 
 		throw new RuntimeException("Unknown intent: " + intentName);

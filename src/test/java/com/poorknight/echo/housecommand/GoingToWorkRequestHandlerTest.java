@@ -23,19 +23,19 @@ public class GoingToWorkRequestHandlerTest {
 	private HouseCommandMessager houseCommandMessager;
 
 	@Mock
-	private HouseCommandResponseBuilder houseCommandResponseBuilder;
+	private GoingToWorkResponseBuilder goingToWorkResponseBuilder;
 
 	private HouseCommand houseCommand = AT_WORK_MODE;
 
 	@Before
 	public void setUp() throws Exception {
-		handler = new GoingToWorkRequestHandler(houseCommandMessager, houseCommandResponseBuilder);
+		handler = new GoingToWorkRequestHandler(houseCommandMessager, goingToWorkResponseBuilder);
 	}
 
 	@Test
 	public void whenARequestIsHandled_TheHouseCommandMessagerIsCalled_AndTheCorrectResponseIsReturned() throws Exception {
 		final String speechResponse = RandomStringUtils.random(20);
-		when(houseCommandResponseBuilder.buildHouseCommandAlexaResponse()).thenReturn(speechResponse);
+		when(goingToWorkResponseBuilder.buildHouseCommandAlexaResponse()).thenReturn(speechResponse);
 
 		final EchoResponse echoResponse = handler.handle();
 

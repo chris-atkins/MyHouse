@@ -1,6 +1,7 @@
 package com.poorknight.echo.thermostat;
 
 import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.housecommand.HouseTempDownHandler;
 import com.poorknight.thermostat.ThermostatMessager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
