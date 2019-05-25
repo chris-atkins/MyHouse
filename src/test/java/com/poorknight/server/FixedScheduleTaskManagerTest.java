@@ -11,6 +11,7 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import static com.poorknight.server.FixedScheduleTaskManager.*;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -40,7 +41,7 @@ public class FixedScheduleTaskManagerTest {
 	@Test
 	public void startCallsAutomatedTemperatureController() throws Exception {
 		fixedScheduleTaskManager.startAllTasks();
-		verify(executor).scheduleAtFixedRate(automatedHouseTemperatureController, 2L, 10L, TimeUnit.MINUTES);
+		verify(executor, times(0)).scheduleAtFixedRate(automatedHouseTemperatureController, 2L, 10L, TimeUnit.MINUTES);
 	}
 
 	@Test
