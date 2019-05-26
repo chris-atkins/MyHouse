@@ -3,6 +3,14 @@ package com.poorknight.echo;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
 import com.poorknight.echo.housecommand.*;
+import com.poorknight.echo.housecommand.combination.GoingToWorkRequestHandler;
+import com.poorknight.echo.housecommand.combination.GoingToWorkResponseBuilder;
+import com.poorknight.echo.housecommand.lights.DimLightsRequestHandler;
+import com.poorknight.echo.housecommand.lights.OutsideLightsOffRequestHandler;
+import com.poorknight.echo.housecommand.lights.OutsideLightsOnRequestHandler;
+import com.poorknight.echo.housecommand.temperature.HouseTempDownHandler;
+import com.poorknight.echo.housecommand.temperature.HouseTempUpHandler;
+import com.poorknight.echo.housecommand.temperature.TempAdjustmentResponseBuilder;
 import com.poorknight.echo.lights.color.DesiredColorTranslator;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
@@ -55,11 +63,11 @@ public class EchoRequestHandlerFactory {
 		}
 
 		if(intentName.equals("HouseTempUp")) {
-			return new HouseTempUpHandler(new ThermostatMessager());
+			return new HouseTempUpHandler(new HouseCommandMessager(), new TempAdjustmentResponseBuilder());
 		}
 
 		if(intentName.equals("HouseTempDown")) {
-			return new HouseTempDownHandler(new ThermostatMessager());
+			return new HouseTempDownHandler(new HouseCommandMessager(), new TempAdjustmentResponseBuilder());
 		}
 
 		if(intentName.equals("AtWorkMode")) {

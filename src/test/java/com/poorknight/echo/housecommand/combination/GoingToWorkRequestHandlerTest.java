@@ -1,7 +1,9 @@
-package com.poorknight.echo.housecommand;
+package com.poorknight.echo.housecommand.combination;
 
 import com.poorknight.echo.EchoResponse;
 import com.poorknight.echo.EchoResponseData;
+import com.poorknight.echo.housecommand.HouseCommand;
+import com.poorknight.echo.housecommand.HouseCommandMessager;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;

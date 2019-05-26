@@ -1,4 +1,4 @@
-package com.poorknight.echo.housecommand;
+package com.poorknight.echo.housecommand.combination;
 
 import org.junit.Before;
 import org.junit.Test;

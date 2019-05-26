@@ -1,6 +1,7 @@
-package com.poorknight.echo.housecommand;
+package com.poorknight.echo.housecommand.lights;
 
 import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.housecommand.HouseCommandMessager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -21,7 +22,7 @@ public class OutsideLightsOnRequestHandlerTest {
 	private HouseCommandMessager messager;
 
 	@Test
-	public void delegatesCorrectly() throws Exception {
+	public void delegatesCorrectly() {
 		final EchoResponse response = handler.handle();
 
 		verify(messager).requestHouseCommand(OUTSIDE_LIGHTS_ON);

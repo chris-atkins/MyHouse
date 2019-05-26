@@ -9,11 +9,11 @@ import javax.ws.rs.core.MediaType;
 
 public class HouseCommandMessager {
 
-	public void requestHouseCommand(final HouseCommand houseCommand) {
+	public JsonNode requestHouseCommand(final HouseCommand houseCommand) {
 		final WebResource.Builder endpoint = buildWebResource();
 		final JsonNode requestBody = buildRequestBody(houseCommand);
 
-		endpoint.put(JsonNode.class, requestBody);
+		return endpoint.put(JsonNode.class, requestBody);
 	}
 
 	private WebResource.Builder buildWebResource() {
@@ -23,6 +23,6 @@ public class HouseCommandMessager {
 	}
 
 	private JsonNode buildRequestBody(final HouseCommand houseCommand) {
-		return JsonNodeFactory.instance.objectNode().put("command", houseCommand.getCommandAsString());
+		return JsonNodeFactory.instance.objectNode().put("command", houseCommand.asPiString());
 	}
 }

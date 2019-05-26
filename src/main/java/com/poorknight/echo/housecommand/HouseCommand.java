@@ -10,13 +10,23 @@ public enum HouseCommand {
 	HOUSE_TEMP_UP("house-temp-up"),
 	HOUSE_TEMP_DOWN("house-temp-down");
 
-	private final String commandAsString;
+	private final String piString;
 
-	HouseCommand(String commandAsString) {
-		this.commandAsString = commandAsString;
+	HouseCommand(String piString) {
+		this.piString = piString;
 	}
 
-	/*package*/ String getCommandAsString() {
-		return commandAsString;
+	public static HouseCommand fromPiString(String stringToParse) {
+		for (HouseCommand command : HouseCommand.values()) {
+			if (command.piString.equals(stringToParse)) {
+				return command;
+			}
+		}
+		throw new RuntimeException("Cannot translate string into HouseCommand. The passed string does not represent a valid HouseCommand: " + stringToParse);
+	}
+
+	/*package*/
+	public String asPiString() {
+		return piString;
 	}
 }

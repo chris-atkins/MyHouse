@@ -1,7 +1,9 @@
-package com.poorknight.echo.housecommand;
+package com.poorknight.echo.housecommand.combination;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.housecommand.HouseCommand;
+import com.poorknight.echo.housecommand.HouseCommandMessager;
 
 public class GoingToWorkRequestHandler implements EchoRequestHandler {
 

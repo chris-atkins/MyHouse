@@ -1,14 +1,12 @@
-package com.poorknight.echo.housecommand;
+package com.poorknight.echo.housecommand.lights;
 
 import com.poorknight.echo.EchoResponse;
-import org.assertj.core.api.Assertions;
+import com.poorknight.echo.housecommand.HouseCommand;
+import com.poorknight.echo.housecommand.HouseCommandMessager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
-import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import static org.assertj.core.api.Assertions.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 

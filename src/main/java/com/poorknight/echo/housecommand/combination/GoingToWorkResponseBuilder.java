@@ -1,4 +1,4 @@
-package com.poorknight.echo.housecommand;
+package com.poorknight.echo.housecommand.combination;
 
 import java.util.Random;
 
