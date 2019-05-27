@@ -34,7 +34,7 @@ public class TempAdjustmentResponseBuilder {
 	}
 
 	private EchoResponse buildSuccessResponse(JsonNode commandResponseFromPi) {
-		double newTemp = commandResponseFromPi.get("new-target-temp").asDouble();
+		double newTemp = commandResponseFromPi.get("target-temp").asDouble();
 		String upOrDown = findUpOrDownString(commandResponseFromPi);
 		String acOrFurnace = findAcOrFurnaceString(commandResponseFromPi);
 

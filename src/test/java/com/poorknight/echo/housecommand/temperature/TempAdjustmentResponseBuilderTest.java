@@ -26,7 +26,7 @@ public class TempAdjustmentResponseBuilderTest {
 				.put("command", HOUSE_TEMP_DOWN.asPiString())
 				.put("result", SUCCESS.asPiString())
 				.put("temperature-mode", AC.asPiString())
-				.put("new-target-temp", newTemp);
+				.put("target-temp", newTemp);
 
 		EchoResponse echoResponse = new TempAdjustmentResponseBuilder().buildResponse(responseFromPi);
 
@@ -40,7 +40,7 @@ public class TempAdjustmentResponseBuilderTest {
 				.put("command", HOUSE_TEMP_DOWN.asPiString())
 				.put("result", SUCCESS.asPiString())
 				.put("temperature-mode", FURNACE.asPiString())
-				.put("new-target-temp", newTemp);
+				.put("target-temp", newTemp);
 
 		EchoResponse echoResponse = new TempAdjustmentResponseBuilder().buildResponse(responseFromPi);
 
@@ -77,7 +77,7 @@ public class TempAdjustmentResponseBuilderTest {
 				.put("command", HOUSE_TEMP_UP.asPiString())
 				.put("result", SUCCESS.asPiString())
 				.put("temperature-mode", AC.asPiString())
-				.put("new-target-temp", newTemp);
+				.put("target-temp", newTemp);
 
 		EchoResponse echoResponse = new TempAdjustmentResponseBuilder().buildResponse(responseFromPi);
 
@@ -91,7 +91,7 @@ public class TempAdjustmentResponseBuilderTest {
 				.put("command", HOUSE_TEMP_UP.asPiString())
 				.put("result", SUCCESS.asPiString())
 				.put("temperature-mode", FURNACE.asPiString())
-				.put("new-target-temp", newTemp);
+				.put("target-temp", newTemp);
 
 		EchoResponse echoResponse = new TempAdjustmentResponseBuilder().buildResponse(responseFromPi);
 
