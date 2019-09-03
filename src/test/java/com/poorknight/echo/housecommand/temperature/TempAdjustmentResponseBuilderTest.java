@@ -82,6 +82,7 @@ public class TempAdjustmentResponseBuilderTest {
 		EchoResponse echoResponse = new TempAdjustmentResponseBuilder().buildResponse(responseFromPi);
 
 		assertThat(echoResponse.getResponse().getOutputSpeech().getText()).isEqualTo("AC turned up to " + newTemp + ".");
+
 	}
 
 	@Test
@@ -96,6 +97,20 @@ public class TempAdjustmentResponseBuilderTest {
 		EchoResponse echoResponse = new TempAdjustmentResponseBuilder().buildResponse(responseFromPi);
 
 		assertThat(echoResponse.getResponse().getOutputSpeech().getText()).isEqualTo("Furnace turned up to " + newTemp + ".");
+	}
+
+	@Test
+	public void tempChange_RemovesTrailingZeroDecimalPlace() {
+		double newTemp = 60.0;
+		ObjectNode responseFromPi = JsonNodeFactory.instance.objectNode()
+				.put("command", HOUSE_TEMP_UP.asPiString())
+				.put("result", SUCCESS.asPiString())
+				.put("temperature-mode", AC.asPiString())
+				.put("target-temp", newTemp);
+
+		EchoResponse echoResponse = new TempAdjustmentResponseBuilder().buildResponse(responseFromPi);
+
+		assertThat(echoResponse.getResponse().getOutputSpeech().getText()).isEqualTo("AC turned up to 60.");
 	}
 
 	@Test

@@ -34,11 +34,24 @@ public class TempAdjustmentResponseBuilder {
 	}
 
 	private EchoResponse buildSuccessResponse(JsonNode commandResponseFromPi) {
-		double newTemp = commandResponseFromPi.get("target-temp").asDouble();
+		String newTemp = findNewThermostatTemp(commandResponseFromPi);
 		String upOrDown = findUpOrDownString(commandResponseFromPi);
 		String acOrFurnace = findAcOrFurnaceString(commandResponseFromPi);
 
 		return EchoResponse.responseWithSpeech(acOrFurnace + " turned " + upOrDown + " to " + newTemp + ".");
+	}
+
+	private String findNewThermostatTemp(JsonNode commandResponseFromPi) {
+		double newTempDouble = commandResponseFromPi.get("target-temp").asDouble();
+		return tempToTruncatedString(newTempDouble);
+	}
+
+	private String tempToTruncatedString(double newTempDouble) {
+		String temp = Double.toString(newTempDouble);
+		if (temp.endsWith(".0")) {
+			return temp.substring(0, temp.length() - 2);
+		}
+		return temp;
 	}
 
 	private String findUpOrDownString(JsonNode commandResponseFromPi) {
