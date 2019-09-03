@@ -33,4 +33,15 @@ public class TempCheckHandlerTest {
 		assertThat(response.getOutputSpeech().getType()).isEqualTo("PlainText");
 		assertThat(response.getShouldEndSession()).isTrue();
 	}
+
+	@Test
+	public void whenRequestIsHandled_TrailingZeroDecimalPlaces_AreTruncated() throws Exception {
+		when(thermostatMessager.requestCurrentTemp()).thenReturn(new BigDecimal("42.0"));
+		final EchoResponse echoResponse = handler.handle();
+
+		final EchoResponseData response = echoResponse.getResponse();
+		assertThat(response.getOutputSpeech().getText()).isEqualTo("It's 42 degrees.");
+		assertThat(response.getOutputSpeech().getType()).isEqualTo("PlainText");
+		assertThat(response.getShouldEndSession()).isTrue();
+	}
 }

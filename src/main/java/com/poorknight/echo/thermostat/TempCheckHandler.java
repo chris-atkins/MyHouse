@@ -21,6 +21,15 @@ public class TempCheckHandler implements EchoRequestHandler {
 	}
 
 	private String buildResponseSpeech(final BigDecimal currentTemp) {
-		return "It's " + currentTemp.toString() + " degrees.";
+		String tempString = buildRoundedTempString(currentTemp);
+		return "It's " + tempString + " degrees.";
+	}
+
+	private String buildRoundedTempString(BigDecimal currentTemp) {
+		String tempString = currentTemp.toString();
+		if (tempString.endsWith(".0")) {
+			tempString = tempString.substring(0, tempString.length() - 2);
+		}
+		return tempString;
 	}
 }
