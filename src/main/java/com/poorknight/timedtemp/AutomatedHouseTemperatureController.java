@@ -2,11 +2,14 @@ package com.poorknight.timedtemp;
 
 
 import com.poorknight.thermostat.ThermostatMessager;
+import com.poorknight.thermostat.ThermostatStatus;
 import com.poorknight.time.TimeFinder;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeConstants;
 
 import java.math.BigDecimal;
+
+import static com.poorknight.thermostat.ThermostatStatus.FurnaceState.HEAT_ON;
 
 public class AutomatedHouseTemperatureController {
 
@@ -20,6 +23,10 @@ public class AutomatedHouseTemperatureController {
 	}
 
 	public void setTempAtTimeTriggers() {
+		if (this.houseIsNotInFurnaceMode()) {
+			return;
+		}
+
 		DateTime currentLocalTime = timeFinder.getCurrentLocalTime();
 
 		if (itIsAWeekday(currentLocalTime)) {
@@ -27,6 +34,15 @@ public class AutomatedHouseTemperatureController {
 		} else {
 			lowerHeatBetween3amAnd11am(currentLocalTime);
 		}
+	}
+
+	private boolean houseIsNotInFurnaceMode() {
+		ThermostatStatus thermostatStatus = this.thermostatMessager.requestThermostatStatus();
+
+		if (thermostatStatus.getFurnaceState() == HEAT_ON) {
+			return false;
+		}
+		return true;
 	}
 
 	private boolean itIsAWeekday(DateTime currentLocalTime) {
