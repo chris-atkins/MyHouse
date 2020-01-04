@@ -6,6 +6,7 @@ import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatMessager;
 import com.poorknight.thermostat.ThermostatStatus;
 import com.poorknight.time.TimeFinder;
+import org.assertj.core.api.Assertions;
 import org.joda.time.DateTime;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +14,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import static com.poorknight.thermostat.ThermostatStatus.FurnaceState.HEAT_ON;
+import static com.poorknight.thermostat.ThermostatStatus.ThermostatMode.FURNACE_MODE;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -36,7 +39,7 @@ public class HouseStatusRecorderTest {
 
 	@Test
 	public void recordsHouseStatus() {
-		ThermostatStatus thermostatStatus = new ThermostatStatus(55.53, 26.75, ThermostatStatus.FurnaceState.HEAT_ON);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(55.53, 26.75, HEAT_ON, FURNACE_MODE);
 		when(thermostatMessager.requestThermostatStatus()).thenReturn(thermostatStatus);
 
 		DateTime utcTime = DateTime.parse("2018-03-04T22:55:53");

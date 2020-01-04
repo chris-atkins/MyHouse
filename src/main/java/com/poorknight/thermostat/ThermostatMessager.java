@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.server.WebResourceFactory;
 import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
+import com.poorknight.thermostat.ThermostatStatus.ThermostatMode;
 import com.sun.jersey.api.client.WebResource;
 
 import javax.ws.rs.core.MediaType;
@@ -55,8 +56,9 @@ public class ThermostatMessager {
 		double currentTemp = response.get("temp").asDouble();
 		double tempSetting = findTempSetting(response);
 		FurnaceState furnaceState = findFurnaceState(response);
+		ThermostatMode thermostatMode = findThermostatMode(response);
 
-		return new ThermostatStatus(currentTemp, tempSetting, furnaceState);
+		return new ThermostatStatus(currentTemp, tempSetting, furnaceState, thermostatMode);
 	}
 
 	private double findTempSetting(JsonNode response) {
@@ -73,7 +75,18 @@ public class ThermostatMessager {
 			case 0: return FurnaceState.OFF;
 			case 1: return FurnaceState.HEAT_ON;
 			case 2: return FurnaceState.AC_ON;
-			default: throw new RuntimeException("Unknown thermostat(tstate) state returned from house thermostat: " + tstate);
+			default: throw new RuntimeException("Unknown thermostat state (tstate) returned from house thermostat: " + tstate);
+		}
+	}
+
+	private ThermostatMode findThermostatMode(JsonNode response) {
+		int tstate = response.get("tmode").asInt();
+		switch (tstate) {
+			case 0: return ThermostatMode.OFF;
+			case 1: return ThermostatMode.FURNACE_MODE;
+			case 2: return ThermostatMode.AC_MODE;
+			case 3: return ThermostatMode.AUTO_MODE;
+			default: throw new RuntimeException("Unknown thermostat mode (tmode) returned from house thermostat: " + tstate);
 		}
 	}
 }

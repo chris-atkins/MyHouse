@@ -6,6 +6,8 @@ import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.housestatus.repository.MySqlConnectionParameters;
 import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatStatus;
+import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
+import com.poorknight.thermostat.ThermostatStatus.ThermostatMode;
 import org.flywaydb.core.Flyway;
 import org.joda.time.DateTime;
 import org.junit.*;
@@ -22,6 +24,9 @@ import java.sql.*;
 import java.util.List;
 import java.util.Properties;
 
+import static com.poorknight.thermostat.ThermostatStatus.FurnaceState.*;
+import static com.poorknight.thermostat.ThermostatStatus.FurnaceState.OFF;
+import static com.poorknight.thermostat.ThermostatStatus.ThermostatMode.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doThrow;
@@ -120,9 +125,10 @@ public class HouseStatusRepositoryTest {
 			DateTime localTime = DateTime.parse("2018-04-04T04:30:00");
 			double houseTemp = 70.75;
 			double tempSetting = 27.6;
-			ThermostatStatus.FurnaceState furnaceState = ThermostatStatus.FurnaceState.HEAT_ON;
+			FurnaceState furnaceState = HEAT_ON;
+			ThermostatStatus.ThermostatMode thermostatMode = FURNACE_MODE;
 
-			ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState);
+			ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState, thermostatMode);
 			Double tempFahrenheit = 27.12;
 			Double windSpeedMph = 9.17;
 			Double humidityPercent = 81d;
@@ -145,6 +151,7 @@ public class HouseStatusRepositoryTest {
 			double windSpeed = resultSet.getDouble("EXTERNAL_WIND_SPEED_MPH");
 			double humidity = resultSet.getDouble("EXTERNAL_HUMIDITY_PERCENT");
 			double pressure = resultSet.getDouble("EXTERNAL_PRESSURE_HPA");
+			String modeOfThermostate = resultSet.getString("THERMOSTAT_MODE");
 
 			assertThat(utcTimeString).isEqualTo("2018-03-03 12:30:00");
 			assertThat(localTimeString).isEqualTo("2018-04-04 04:30:00");
@@ -155,6 +162,7 @@ public class HouseStatusRepositoryTest {
 			assertThat(windSpeed).isEqualTo(9.17);
 			assertThat(humidity).isEqualTo(81d);
 			assertThat(pressure).isEqualTo(1017.12);
+			assertThat(modeOfThermostate).isEqualTo("FURNACE_MODE");
 
 			statement.close();
 			connection.close();
@@ -164,22 +172,22 @@ public class HouseStatusRepositoryTest {
 		public void reportsCorrectly() {
 			DateTime utcTime1 = DateTime.parse("2018-03-03T12:30:00");
 			DateTime localTime1 = DateTime.parse("2018-04-04T04:30:00");
-			ThermostatStatus thermostatStatus1 = new ThermostatStatus(70.75, 27.6, ThermostatStatus.FurnaceState.HEAT_ON);
+			ThermostatStatus thermostatStatus1 = new ThermostatStatus(70.75, 27.6, HEAT_ON, FURNACE_MODE);
 			WeatherStatus weatherStatus1 = new WeatherStatus(27.1, 9.17, 21d, 1017.2);
 
 			DateTime utcTime2 = DateTime.parse("2018-03-03T12:31:00");
 			DateTime localTime2 = DateTime.parse("2018-04-04T04:31:00");
-			ThermostatStatus thermostatStatus2 = new ThermostatStatus(70.75, 27.6, ThermostatStatus.FurnaceState.HEAT_ON);
+			ThermostatStatus thermostatStatus2 = new ThermostatStatus(70.75, 27.6, AC_ON, AC_MODE);
 			WeatherStatus weatherStatus2 = new WeatherStatus(27.2, 19.17, 1d, 101.12);
 
 			DateTime utcTime3 = DateTime.parse("2018-03-03T12:29:00");
 			DateTime localTime3 = DateTime.parse("2018-04-04T04:29:00");
-			ThermostatStatus thermostatStatus3 = new ThermostatStatus(-1, -1, ThermostatStatus.FurnaceState.HEAT_ON);
+			ThermostatStatus thermostatStatus3 = new ThermostatStatus(-1, -1, HEAT_ON, ThermostatMode.OFF);
 			WeatherStatus weatherStatus3 = new WeatherStatus(27.3, 9.1, 84d, 117.12);
 
 			DateTime utcTime4 = DateTime.parse("2018-03-03T12:32:00");
 			DateTime localTime4 = DateTime.parse("2018-04-04T04:32:00");
-			ThermostatStatus thermostatStatus4 = new ThermostatStatus(-1, -1, ThermostatStatus.FurnaceState.HEAT_ON);
+			ThermostatStatus thermostatStatus4 = new ThermostatStatus(-1, -1, OFF, AUTO_MODE);
 			WeatherStatus weatherStatus4 = new WeatherStatus(27.45, 9.3, 82d, 17.12);
 
 
@@ -200,7 +208,7 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesTempWith2DecimalPlacesOver100() throws Exception {
-			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, OFF, FURNACE_MODE);
 
 			Double tempFahrenheit = 101.01;
 			WeatherStatus weatherStatus = new WeatherStatus(tempFahrenheit, 1d, 1d, 1d);
@@ -223,7 +231,7 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesNegativeTempWith2DecimalPlaces() throws Exception {
-			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, OFF, AC_MODE);
 
 			Double tempFahrenheit = -13.55;
 			WeatherStatus weatherStatus = new WeatherStatus(tempFahrenheit, 1d, 1d, 1d);
@@ -246,7 +254,7 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handles100PercentHumidity() throws Exception {
-			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, OFF, AUTO_MODE);
 
 			Double humidity = 100d;
 			WeatherStatus weatherStatus = new WeatherStatus(1d, 1d, humidity, 1d);
@@ -269,7 +277,7 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesTwoDecimalPlaceHumidity() throws Exception {
-			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, OFF, ThermostatMode.OFF);
 
 			Double humidity = 55.55;
 			WeatherStatus weatherStatus = new WeatherStatus(1d, 1d, humidity, 1d);
@@ -292,7 +300,7 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesHurricaneForceWinds() throws Exception {
-			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, ThermostatStatus.FurnaceState.OFF);
+			ThermostatStatus thermostatStatus = new ThermostatStatus(1d, 1d, OFF, FURNACE_MODE);
 
 			Double wind = 155.55;
 			WeatherStatus weatherStatus = new WeatherStatus(1d, wind, 1d, 1d);
@@ -333,8 +341,8 @@ public class HouseStatusRepositoryTest {
 		private DateTime localTime = DateTime.parse("2018-04-04T04:30:00");
 		private double houseTemp = 70.75;
 		private double tempSetting = 27.6;
-		private ThermostatStatus.FurnaceState furnaceState = ThermostatStatus.FurnaceState.HEAT_ON;
-		private ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState);
+		private FurnaceState furnaceState = HEAT_ON;
+		private ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState, AC_MODE);
 		private Double tempFahrenheit = 27.12;
 		private Double windSpeedMph = 9.17;
 		private Double humidityPercent = 81d;

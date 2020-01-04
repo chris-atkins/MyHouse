@@ -13,14 +13,15 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.math.BigDecimal;
 
+import static com.poorknight.thermostat.ThermostatStatus.ThermostatMode.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AutomatedHouseTemperatureControllerTest {
 
-	private static final ThermostatStatus STATUS_IN_FURNACE_MODE = new ThermostatStatus(65.5, 65.5, ThermostatStatus.FurnaceState.HEAT_ON);
-	private static final ThermostatStatus STATUS_IN_AC_MODE = new ThermostatStatus(65.5, 65.5, ThermostatStatus.FurnaceState.AC_ON);
-	private static final ThermostatStatus STATUS_IN_NO_MODE = new ThermostatStatus(65.5, 65.5, ThermostatStatus.FurnaceState.OFF);
+	private static final ThermostatStatus STATUS_IN_FURNACE_MODE = new ThermostatStatus(65.5, 65.5, null, FURNACE_MODE);
+	private static final ThermostatStatus STATUS_IN_AC_MODE = new ThermostatStatus(65.5, 65.5, null, AC_MODE);
+	private static final ThermostatStatus STATUS_IN_NO_MODE = new ThermostatStatus(65.5, 65.5, null, OFF);
 
 
 	private AutomatedHouseTemperatureController controller;

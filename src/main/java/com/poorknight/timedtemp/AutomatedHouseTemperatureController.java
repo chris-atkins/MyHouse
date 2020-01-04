@@ -9,7 +9,7 @@ import org.joda.time.DateTimeConstants;
 
 import java.math.BigDecimal;
 
-import static com.poorknight.thermostat.ThermostatStatus.FurnaceState.HEAT_ON;
+import static com.poorknight.thermostat.ThermostatStatus.ThermostatMode.FURNACE_MODE;
 
 public class AutomatedHouseTemperatureController {
 
@@ -39,7 +39,7 @@ public class AutomatedHouseTemperatureController {
 	private boolean houseIsNotInFurnaceMode() {
 		ThermostatStatus thermostatStatus = this.thermostatMessager.requestThermostatStatus();
 
-		if (thermostatStatus.getFurnaceState() == HEAT_ON) {
+		if (thermostatStatus.getThermostatMode() == FURNACE_MODE) {
 			return false;
 		}
 		return true;

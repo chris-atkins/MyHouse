@@ -5,6 +5,7 @@ import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.thermostat.ThermostatStatus;
 import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
+import com.poorknight.thermostat.ThermostatStatus.ThermostatMode;
 import org.assertj.core.data.Offset;
 import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
@@ -337,19 +338,25 @@ public class HouseDailySummaryReporterTest {
 	}
 
 	private HouseDataPoint buildDataPointWithHouseTemp(Double temp) {
-		ThermostatStatus thermostatStatus = new ThermostatStatus(temp, 0.0, null);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(temp, 0.0, null, null);
 		DateTime dateTime = getDateTime();
 		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
 	}
 
 	private HouseDataPoint buildDataPointWitTempSetting(Double tempSetting) {
-		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, null);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, null, null);
 		DateTime dateTime = getDateTime();
 		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
 	}
 
 	private HouseDataPoint buildDataPointWithFurnaceState(FurnaceState furnaceState) {
-		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, 0.0, furnaceState);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, 0.0, furnaceState, null);
+		DateTime dateTime = getDateTime();
+		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
+	}
+
+	private HouseDataPoint buildDataPointWithThermostatMode(ThermostatMode thermostatMode) {
+		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, 0.0, null, thermostatMode);
 		DateTime dateTime = getDateTime();
 		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
 	}
@@ -361,7 +368,7 @@ public class HouseDailySummaryReporterTest {
 	}
 
 	private HouseDataPoint buildDataPointWithInternalAndExternalTemp(double internalTemp, double externalTemp) {
-		ThermostatStatus thermostatStatus = new ThermostatStatus(internalTemp, 0.0, null);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(internalTemp, 0.0, null, null);
 		WeatherStatus weatherStatus = new WeatherStatus(externalTemp, 0.0, 0.0, 0.0);
 		DateTime dateTime = getDateTime();
 		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, weatherStatus);
@@ -374,7 +381,7 @@ public class HouseDailySummaryReporterTest {
 	}
 
 	private ThermostatStatus nullThermostatStatus() {
-		return new ThermostatStatus(0.0, 0.0, null);
+		return new ThermostatStatus(0.0, 0.0, null, null);
 	}
 
 	private WeatherStatus nullWeatherStatus() {
@@ -382,13 +389,13 @@ public class HouseDailySummaryReporterTest {
 	}
 
 	private HouseDataPoint buildDataPointWithFurnaceStateAndTempSetting(FurnaceState furnaceState, double tempSetting) {
-		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, furnaceState);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, furnaceState, null);
 		DateTime dateTime = getDateTime();
 		return new HouseDataPoint(dateTime, dateTime, thermostatStatus, nullWeatherStatus());
 	}
 
 	private HouseDataPoint buildDataPointWithFurnaceStateAndTempSetting(FurnaceState furnaceState, double tempSetting, Boolean skipMinute) {
-		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, furnaceState);
+		ThermostatStatus thermostatStatus = new ThermostatStatus(0.0, tempSetting, furnaceState, null);
 		DateTime time = getDateTime();
 		if (skipMinute) {
 			time = getDateTime();

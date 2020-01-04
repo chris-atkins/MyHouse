@@ -35,9 +35,6 @@ public class ThermostatMessagerTest {
 	private final static String thermostatPath = "/tstat";
 
 	@Mock
-	private Client client;
-
-	@Mock
 	private WebResource.Builder webResource;
 
 	@Mock
@@ -52,13 +49,13 @@ public class ThermostatMessagerTest {
 	public void setup() {
 		PowerMockito.mockStatic(WebResourceFactory.class);
 		PowerMockito.when(WebResourceFactory.buildSecuredHomeWebResource(thermostatPath)).thenReturn(webResource);
+		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
 		messager = new ThermostatMessager();
 	}
 
 	@Test
-	public void returnsTempFromThermostat() throws Exception {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+	public void returnsTempFromThermostat() {
 		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(55.5));
 
 		final BigDecimal response = messager.requestCurrentTemp();
@@ -70,10 +67,7 @@ public class ThermostatMessagerTest {
 	}
 
 	@Test
-	public void postsNewDesiredTempToThermostat() throws Exception {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-
+	public void postsNewDesiredTempToThermostat() {
 		messager.postHeatTargetTemperature(new BigDecimal("68.5"));
 
 		verify(builder).post(eq(JsonNode.class), captor.capture());
@@ -86,86 +80,79 @@ public class ThermostatMessagerTest {
 
 	@Test
 	public void returnsHouseStatusWhenHeaterIsOn() {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(55.5, 1, 73));
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(55.5, 1, 73, 1));
 
 		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
 
 		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(55.5);
 		assertThat(thermostatStatus.getTempSetting()).isEqualTo(73);
 		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.HEAT_ON);
+		assertThat(thermostatStatus.getThermostatMode()).isEqualTo(ThermostatStatus.ThermostatMode.FURNACE_MODE);
 	}
 
 	@Test
 	public void returnsHouseStatusWhenHeaterIsOff() {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, 0, 173));
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, 0, 173, 1));
 
 		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
 
 		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(155.5);
 		assertThat(thermostatStatus.getTempSetting()).isEqualTo(173);
 		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.OFF);
+		assertThat(thermostatStatus.getThermostatMode()).isEqualTo(ThermostatStatus.ThermostatMode.FURNACE_MODE);
+	}
+
+	@Test
+	public void returnsHouseStatusWhenThermostatModeIsOff() {
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, 0, 173, 0));
+
+		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+
+		assertThat(thermostatStatus.getThermostatMode()).isEqualTo(ThermostatStatus.ThermostatMode.OFF);
+	}
+
+	@Test
+	public void returnsHouseStatusWhenThermostatModeIsAuto() {
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, 0, 173, 3));
+
+		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+
+		assertThat(thermostatStatus.getThermostatMode()).isEqualTo(ThermostatStatus.ThermostatMode.AUTO_MODE);
+	}
+
+	@Test
+	public void throwsExceptionForUnknownThermostatMode() {
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, 0, 173, 4));
+
+		try {
+			final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+			fail("expectingException");
+		} catch (RuntimeException e) {
+			assertThat(e.getMessage()).isEqualTo("Unknown thermostat mode (tmode) returned from house thermostat: 4");
+		}
 	}
 
 	@Test
 	public void houseStatusReadsValuesWithAirConditioningMode() throws IOException {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		JsonNode acJson = new ObjectMapper().readTree("{\n" +
-				"  \"fmode\": 0,\n" +
-				"  \"fstate\": 1,\n" +
-				"  \"hold\": 1,\n" +
-				"  \"override\": 1,\n" +
-				"  \"t_cool\": 66.0,\n" +
-				"  \"t_type_post\": 0,\n" +
-				"  \"temp\": 69.5,\n" +
-				"  \"time\": {\n" +
-				"    \"day\": 5,\n" +
-				"    \"hour\": 18,\n" +
-				"    \"minute\": 26\n" +
-				"  },\n" +
-				"  \"tmode\": 2,\n" +
-				"  \"tstate\": 2\n" +
-				"}");
-		when(builder.get(JsonNode.class)).thenReturn(acJson);
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(69.5, 2, 66.0, 2));
 
 		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
 
 		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(69.5);
 		assertThat(thermostatStatus.getTempSetting()).isEqualTo(66.0);
 		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.AC_ON);
+		assertThat(thermostatStatus.getThermostatMode()).isEqualTo(ThermostatStatus.ThermostatMode.AC_MODE);
 	}
 
 	@Test
-	public void throwsExceptionForUnknownThermostatState() throws IOException {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		JsonNode acJson = new ObjectMapper().readTree("{\n" +
-				"  \"fmode\": 0,\n" +
-				"  \"fstate\": 1,\n" +
-				"  \"hold\": 1,\n" +
-				"  \"override\": 1,\n" +
-				"  \"t_cool\": 66.0,\n" +
-				"  \"t_type_post\": 0,\n" +
-				"  \"temp\": 69.5,\n" +
-				"  \"time\": {\n" +
-				"    \"day\": 5,\n" +
-				"    \"hour\": 18,\n" +
-				"    \"minute\": 26\n" +
-				"  },\n" +
-				"  \"tmode\": 2,\n" +
-				"  \"tstate\": 5\n" +
-				"}");
-		when(builder.get(JsonNode.class)).thenReturn(acJson);
+	public void throwsExceptionForUnknownThermostatState() {
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(69.5, 5, 66.0, 2));
 
 		try {
 			final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
 			fail("expectingException");
 		} catch (RuntimeException e) {
-			assertThat(e.getMessage()).isEqualTo("Unknown thermostat(tstate) state returned from house thermostat: 5");
+			assertThat(e.getMessage()).isEqualTo("Unknown thermostat state (tstate) returned from house thermostat: 5");
 		}
 	}
 
@@ -191,11 +178,11 @@ public class ThermostatMessagerTest {
 		return response;
 	}
 
-	private JsonNode buildJsonResponseFromThermostat(double temperature, int tstate, double tempSetting) {
+	private JsonNode buildJsonResponseFromThermostat(double temperature, int tstate, double tempSetting, int tmode) {
 		final ObjectNode response = JsonNodeFactory.instance.objectNode();
 
 		response.put("temp", temperature);
-		response.put("tmode", 1);
+		response.put("tmode", tmode);
 		response.put("fmode", 0);
 		response.put("override", 1);
 		response.put("hold", 1);

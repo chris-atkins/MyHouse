@@ -38,15 +38,15 @@ public class HouseStatusReporterTest {
 		List<HouseDataPoint> repositoryResponse = new ArrayList<>();
 
 		DateTime time1 = new DateTime("2017-12-01T11:35:01");
-		ThermostatStatus thermostatStatus1 = new ThermostatStatus(1.2, 3.4, null);
+		ThermostatStatus thermostatStatus1 = new ThermostatStatus(1.2, 3.4, null, null);
 		repositoryResponse.add(new HouseDataPoint(time1, null, thermostatStatus1, null));
 
 		DateTime time2 = new DateTime("2017-12-02T21:35:02");
-		ThermostatStatus thermostatStatus2 = new ThermostatStatus(5.6, 7.8, null);
+		ThermostatStatus thermostatStatus2 = new ThermostatStatus(5.6, 7.8, null, null);
 		repositoryResponse.add(new HouseDataPoint(time2, null, thermostatStatus2, null));
 
 		DateTime time3 = new DateTime("2017-12-03T11:35:03");
-		ThermostatStatus thermostatStatus3 = new ThermostatStatus(9.10, 11.12, null);
+		ThermostatStatus thermostatStatus3 = new ThermostatStatus(9.10, 11.12, null, null);
 		repositoryResponse.add(new HouseDataPoint(time3, null, thermostatStatus3, null));
 
 		LocalDate date = new LocalDate();
