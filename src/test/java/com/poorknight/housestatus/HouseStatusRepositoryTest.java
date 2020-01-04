@@ -320,6 +320,25 @@ public class HouseStatusRepositoryTest {
 			statement.close();
 			connection.close();
 		}
+
+		@Test
+		public void handlesNullThermostatMode() throws Exception {
+			String formatString = "INSERT INTO HOUSE_STATUS(" +
+					"TIME_UTC, TIME_LOCAL, HOUSE_TEMP, TEMP_SETTING, FURNACE_STATE, " +
+					"EXTERNAL_TEMP_F, EXTERNAL_WIND_SPEED_MPH, EXTERNAL_HUMIDITY_PERCENT, EXTERNAL_PRESSURE_HPA) " +
+					"values (\"%s\", \"%s\", %5.2f, %5.2f, \"%s\", %5.2f, %5.2f, %5.2f, %6.2f)";
+			String insertStatement = String.format(formatString, "2018-03-03T12:30:00", "2018-04-04T04:30:00", 1d, 1d, "OFF", 1d, 1d, 1d, 1d);
+
+			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
+			Statement statement = connection.createStatement();
+			statement.execute(insertStatement);
+			statement.close();
+
+			List<HouseDataPoint> houseDataPoints = repository.retrieveHouseStatusFrom(DateTime.parse("2018-03-03T12:30:00"), DateTime.parse("2018-03-03T12:31:00"));
+
+			assertThat(houseDataPoints.size()).isEqualTo(1);
+			assertThat(houseDataPoints.get(0).getThermostatStatus().getThermostatMode()).isNull();
+		}
 	}
 
 	@RunWith(MockitoJUnitRunner.class)

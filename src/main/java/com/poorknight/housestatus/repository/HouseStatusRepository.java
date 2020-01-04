@@ -120,7 +120,8 @@ public class HouseStatusRepository {
 		Double houseTemp = resultSet.getDouble("HOUSE_TEMP");
 		Double tempSetting = resultSet.getDouble("TEMP_SETTING");
 		FurnaceState furnaceState = FurnaceState.valueOf(resultSet.getString("FURNACE_STATE"));
-		ThermostatMode thermostatMode = ThermostatMode.valueOf(resultSet.getString("THERMOSTAT_MODE"));
+		String thermostat_mode = resultSet.getString("THERMOSTAT_MODE");
+		ThermostatMode thermostatMode = thermostat_mode == null ? null : ThermostatMode.valueOf(thermostat_mode);
 		ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState, thermostatMode);
 
 		Double tempFahrenheit = resultSet.getDouble("EXTERNAL_TEMP_F");
