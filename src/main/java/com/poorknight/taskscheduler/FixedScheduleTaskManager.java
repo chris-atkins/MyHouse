@@ -1,4 +1,4 @@
-package com.poorknight.server;
+package com.poorknight.taskscheduler;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.HouseStatusRecorder;
@@ -26,7 +26,7 @@ public class FixedScheduleTaskManager {
 	public void startAllTasks() {
 		System.out.println("STARTING TASKS");
 		executor.scheduleAtFixedRate(outsideLigtscontroller, 1L, 5, TimeUnit.MINUTES);
-		executor.scheduleAtFixedRate(automatedTempController, 2L, 10L, TimeUnit.MINUTES);
+		executor.scheduleAtFixedRate(automatedTempController, Integer.MAX_VALUE, 10L, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(houseStatusRecorder, 30L, 60L, TimeUnit.SECONDS);
 		System.out.println("TASKS STARTED");
 	}
@@ -35,11 +35,11 @@ public class FixedScheduleTaskManager {
 		executor.shutdown();
 	}
 
-	static class OutsideLightControllerRunnable implements Runnable {
+	public static class OutsideLightControllerRunnable implements Runnable {
 
 		private OutsideLightsController controller;
 
-		OutsideLightControllerRunnable(final OutsideLightsController controller) {
+		public OutsideLightControllerRunnable(final OutsideLightsController controller) {
 			this.controller = controller;
 		}
 
@@ -55,7 +55,7 @@ public class FixedScheduleTaskManager {
 		}
 	}
 
-	static class AutomatedHouseTemperatureControllerRunnable implements Runnable {
+	public static class AutomatedHouseTemperatureControllerRunnable implements Runnable {
 
 		private AutomatedHouseTemperatureController automatedHouseTemperatureController;
 
@@ -73,7 +73,7 @@ public class FixedScheduleTaskManager {
 		}
 	}
 
-	static class HouseStatusRecorderRunnable implements Runnable {
+	public static class HouseStatusRecorderRunnable implements Runnable {
 
 		private final HouseStatusRecorder houseStatusRecorder;
 		private final TextMessageAlerter textMessageAlerter;

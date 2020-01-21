@@ -1,4 +1,4 @@
-package com.poorknight.server;
+package com.poorknight.taskscheduler;
 
 import com.poorknight.timedtemp.AutomatedHouseTemperatureController;
 import org.junit.Test;
@@ -7,7 +7,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.poorknight.server.FixedScheduleTaskManager.*;
+import static com.poorknight.taskscheduler.FixedScheduleTaskManager.*;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)

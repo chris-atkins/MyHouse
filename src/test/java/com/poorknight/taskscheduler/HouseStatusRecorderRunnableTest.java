@@ -1,8 +1,8 @@
-package com.poorknight.server;
+package com.poorknight.taskscheduler;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.HouseStatusRecorder;
-import com.poorknight.server.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
+import com.poorknight.taskscheduler.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;

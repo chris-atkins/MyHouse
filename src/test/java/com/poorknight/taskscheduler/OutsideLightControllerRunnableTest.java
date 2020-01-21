@@ -1,6 +1,6 @@
-package com.poorknight.server;
+package com.poorknight.taskscheduler;
 
-import com.poorknight.server.FixedScheduleTaskManager.OutsideLightControllerRunnable;
+import com.poorknight.taskscheduler.FixedScheduleTaskManager.OutsideLightControllerRunnable;
 import com.poorknight.timedlights.OutsideLightsController;
 import org.junit.Test;
 import org.junit.runner.RunWith;

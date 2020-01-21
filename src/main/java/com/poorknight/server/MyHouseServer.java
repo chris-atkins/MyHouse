@@ -12,7 +12,8 @@ import com.poorknight.housestatus.repository.DatabaseConnector;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.housestatus.repository.MySqlConnectionParameters;
 import com.poorknight.housestatus.weather.WeatherRetriever;
-import com.poorknight.server.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
+import com.poorknight.taskscheduler.FixedScheduleTaskManager;
+import com.poorknight.taskscheduler.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
 import com.poorknight.thermostat.ThermostatMessager;
 import com.poorknight.timedlights.OutsideLightDesiredStateDecider;
 import com.poorknight.timedlights.OutsideLightsController;
@@ -31,8 +32,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import static com.poorknight.server.FixedScheduleTaskManager.OutsideLightControllerRunnable;
-import static com.poorknight.server.FixedScheduleTaskManager.AutomatedHouseTemperatureControllerRunnable;
+import static com.poorknight.taskscheduler.FixedScheduleTaskManager.OutsideLightControllerRunnable;
+import static com.poorknight.taskscheduler.FixedScheduleTaskManager.AutomatedHouseTemperatureControllerRunnable;
 
 
 public class MyHouseServer {
