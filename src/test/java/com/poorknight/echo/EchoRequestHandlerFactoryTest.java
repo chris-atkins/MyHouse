@@ -14,6 +14,7 @@ import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
 import com.poorknight.echo.housecommand.temperature.HouseTempDownHandler;
 import com.poorknight.echo.housecommand.temperature.HouseTempUpHandler;
+import com.poorknight.echo.thermostat.HouseTempSettingHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -87,6 +88,13 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("TempCheck");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(TempCheckHandler.class)));
+	}
+
+	@Test
+	public void returnsHoueTempSettingRequestHandlerWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("HouseTempSetting");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(HouseTempSettingHandler.class)));
 	}
 
 	@Test

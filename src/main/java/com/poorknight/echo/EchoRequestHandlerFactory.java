@@ -16,6 +16,7 @@ import com.poorknight.echo.lights.color.LightColorRequestHandler;
 import com.poorknight.echo.lights.off.LightsOffRequestHandler;
 import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
+import com.poorknight.echo.thermostat.HouseTempSettingHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
 import com.poorknight.lights.HueMessager;
 import com.poorknight.pi.PiMessager;
@@ -60,6 +61,10 @@ public class EchoRequestHandlerFactory {
 
 		if (intentName.equals("TempCheck")) {
 			return new TempCheckHandler(new ThermostatMessager());
+		}
+
+		if (intentName.equals("HouseTempSetting")) {
+			return new HouseTempSettingHandler(new ThermostatMessager());
 		}
 
 		if(intentName.equals("HouseTempUp")) {
