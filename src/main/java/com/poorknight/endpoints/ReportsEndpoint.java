@@ -30,8 +30,21 @@ public class ReportsEndpoint {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String reportLastDay() {
+		LocalDate yesterday = getYesterdaysDate();
+		return retrieveDataPointsForDay(yesterday);
+	}
+
+	@GET
+	@Path("/daily-data/{dateString}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String getDataPointsForDay(@PathParam("dateString") String dateString) {
+		LocalDate date = LocalDate.parse(dateString);
+		return retrieveDataPointsForDay(date);
+	}
+
+	private String retrieveDataPointsForDay(LocalDate yesterday) {
 		try {
-			LocalDate yesterday = getYesterdaysDate();
 			HouseStatusReport houseStatusReport = houseStatusReporter.reportForDay(yesterday);
 			return new ObjectMapper().writeValueAsString(houseStatusReport);
 

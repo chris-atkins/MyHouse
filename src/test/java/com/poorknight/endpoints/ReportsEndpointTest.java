@@ -53,6 +53,22 @@ public class ReportsEndpointTest {
 	}
 
 	@Test
+	public void getDataPointsForDayDelegatesCorrectly() throws Exception {
+		List<String> localTimes = Arrays.asList("hi", "there");
+		List<Double> houseTemperatures = Arrays.asList(1.2, 3.4);
+		List<Double> thermostatSettings = Arrays.asList(5.6, 7.8);
+		HouseStatusReport report = new HouseStatusReport(localTimes, houseTemperatures, thermostatSettings);
+
+		LocalDate date = LocalDate.parse("2020-09-01");
+		when(houseStatusReporter.reportForDay(date)).thenReturn(report);
+
+		String results = reportsEndpoint.getDataPointsForDay("2020-09-01");
+		HouseStatusReport houseStatusReport = new ObjectMapper().readValue(results, HouseStatusReport.class);
+
+		assertThat(houseStatusReport).isEqualTo(report);
+	}
+
+	@Test
 	public void reportsDailySummaries() throws Exception {
 		Integer numberOfMinutesDataExistsFor = 7;
 		Integer numberOfMinutesHeaterIsOn = 12;
