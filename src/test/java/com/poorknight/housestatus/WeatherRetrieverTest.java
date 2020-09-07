@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poorknight.housestatus.weather.WeatherRetriever;
 import com.poorknight.housestatus.weather.WeatherStatus;
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import org.junit.Before;

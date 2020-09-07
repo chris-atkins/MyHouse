@@ -2,7 +2,7 @@ package com.poorknight.echo.pi;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.pi.PiMessager;
+import com.poorknight.house.pi.PiMessager;
 
 public class WinkRequestHandler implements EchoRequestHandler {
 

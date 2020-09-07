@@ -2,7 +2,6 @@ package com.poorknight.echo;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
-import com.poorknight.echo.housecommand.*;
 import com.poorknight.echo.housecommand.combination.GoingToWorkRequestHandler;
 import com.poorknight.echo.housecommand.combination.GoingToWorkResponseBuilder;
 import com.poorknight.echo.housecommand.lights.DimLightsRequestHandler;
@@ -18,9 +17,10 @@ import com.poorknight.echo.lights.on.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
 import com.poorknight.echo.thermostat.HouseTempSettingHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
-import com.poorknight.lights.HueMessager;
-import com.poorknight.pi.PiMessager;
-import com.poorknight.thermostat.ThermostatMessager;
+import com.poorknight.house.commands.HouseCommandMessager;
+import com.poorknight.house.lights.HueMessager;
+import com.poorknight.house.pi.PiMessager;
+import com.poorknight.house.thermostat.ThermostatMessager;
 
 public class EchoRequestHandlerFactory {
 

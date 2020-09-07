@@ -2,7 +2,7 @@ package com.poorknight.housestatus;
 
 import com.poorknight.housestatus.repository.DatabaseConnector;
 import com.poorknight.housestatus.repository.MySqlConnectionParameters;
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.powermock.api.mockito.PowerMockito;

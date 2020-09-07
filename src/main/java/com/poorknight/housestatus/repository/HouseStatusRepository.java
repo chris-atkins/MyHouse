@@ -1,9 +1,9 @@
 package com.poorknight.housestatus.repository;
 
 import com.poorknight.housestatus.weather.WeatherStatus;
-import com.poorknight.thermostat.ThermostatStatus;
-import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
-import com.poorknight.thermostat.ThermostatStatus.ThermostatMode;
+import com.poorknight.house.thermostat.ThermostatStatus;
+import com.poorknight.house.thermostat.ThermostatStatus.FurnaceState;
+import com.poorknight.house.thermostat.ThermostatStatus.ThermostatMode;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;

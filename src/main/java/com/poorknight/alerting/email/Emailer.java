@@ -13,7 +13,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 
 class SMTPAuthenticator extends Authenticator {
 	private static final String SMTP_AUTH_USER = Environment.getEnvironmentVariable("SMTP_USER");

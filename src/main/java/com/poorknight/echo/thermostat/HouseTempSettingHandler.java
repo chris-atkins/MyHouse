@@ -2,9 +2,9 @@ package com.poorknight.echo.thermostat;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.thermostat.ThermostatMessager;
-import com.poorknight.thermostat.ThermostatStatus;
-import com.poorknight.thermostat.ThermostatStatus.ThermostatMode;
+import com.poorknight.house.thermostat.ThermostatMessager;
+import com.poorknight.house.thermostat.ThermostatStatus;
+import com.poorknight.house.thermostat.ThermostatStatus.ThermostatMode;
 
 public class HouseTempSettingHandler implements EchoRequestHandler {
 

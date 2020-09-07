@@ -3,15 +3,14 @@ package com.poorknight.echo.housecommand.temperature;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.echo.housecommand.HouseCommandResult;
 import org.apache.commons.lang3.RandomUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-import static com.poorknight.echo.housecommand.HouseCommand.HOUSE_TEMP_DOWN;
-import static com.poorknight.echo.housecommand.HouseCommand.HOUSE_TEMP_UP;
-import static com.poorknight.echo.housecommand.HouseCommandResult.*;
+import static com.poorknight.house.commands.HouseCommand.HOUSE_TEMP_DOWN;
+import static com.poorknight.house.commands.HouseCommand.HOUSE_TEMP_UP;
+import static com.poorknight.house.commands.HouseCommandResult.*;
 import static com.poorknight.echo.housecommand.temperature.HouseTemperatureMode.AC;
 import static com.poorknight.echo.housecommand.temperature.HouseTemperatureMode.FURNACE;
 import static org.assertj.core.api.Assertions.assertThat;

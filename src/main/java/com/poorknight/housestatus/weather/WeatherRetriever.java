@@ -1,7 +1,7 @@
 package com.poorknight.housestatus.weather;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 import com.sun.jersey.api.client.Client;
 
 import javax.ws.rs.core.MediaType;

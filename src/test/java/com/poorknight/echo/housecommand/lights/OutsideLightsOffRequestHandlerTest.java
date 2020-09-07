@@ -1,14 +1,14 @@
 package com.poorknight.echo.housecommand.lights;
 
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.house.commands.HouseCommandMessager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.poorknight.echo.housecommand.HouseCommand.OUTSIDE_LIGHTS_OFF;
+import static com.poorknight.house.commands.HouseCommand.OUTSIDE_LIGHTS_OFF;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 

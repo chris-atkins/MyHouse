@@ -1,7 +1,7 @@
 package com.poorknight.housestatus.repository;
 
 import com.poorknight.housestatus.weather.WeatherStatus;
-import com.poorknight.thermostat.ThermostatStatus;
+import com.poorknight.house.thermostat.ThermostatStatus;
 import org.joda.time.DateTime;
 
 import java.util.Objects;

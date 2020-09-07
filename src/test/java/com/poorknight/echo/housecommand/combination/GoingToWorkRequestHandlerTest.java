@@ -2,8 +2,8 @@ package com.poorknight.echo.housecommand.combination;
 
 import com.poorknight.echo.EchoResponse;
 import com.poorknight.echo.EchoResponseData;
-import com.poorknight.echo.housecommand.HouseCommand;
-import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.house.commands.HouseCommand;
+import com.poorknight.house.commands.HouseCommandMessager;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.poorknight.echo.housecommand.HouseCommand.AT_WORK_MODE;
+import static com.poorknight.house.commands.HouseCommand.AT_WORK_MODE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

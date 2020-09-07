@@ -1,7 +1,7 @@
 package com.poorknight.server;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;

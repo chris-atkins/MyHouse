@@ -2,10 +2,10 @@ package com.poorknight.echo.housecommand.temperature;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.echo.housecommand.HouseCommand;
+import com.poorknight.house.commands.HouseCommand;
 
-import static com.poorknight.echo.housecommand.HouseCommandResult.FAILURE;
-import static com.poorknight.echo.housecommand.HouseCommandResult.NO_CHANGE;
+import static com.poorknight.house.commands.HouseCommandResult.FAILURE;
+import static com.poorknight.house.commands.HouseCommandResult.NO_CHANGE;
 
 public class TempAdjustmentResponseBuilder {
 

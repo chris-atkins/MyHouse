@@ -1,7 +1,7 @@
 package com.poorknight.server;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
-import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.house.commands.HouseCommandMessager;
 import com.poorknight.endpoints.ReportsEndpoint;
 import com.poorknight.housestatus.*;
 import com.poorknight.endpoints.EchoEndpoint;
@@ -12,14 +12,14 @@ import com.poorknight.housestatus.repository.DatabaseConnector;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.housestatus.repository.MySqlConnectionParameters;
 import com.poorknight.housestatus.weather.WeatherRetriever;
-import com.poorknight.taskscheduler.FixedScheduleTaskManager;
-import com.poorknight.taskscheduler.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
-import com.poorknight.thermostat.ThermostatMessager;
-import com.poorknight.timedlights.OutsideLightDesiredStateDecider;
-import com.poorknight.timedlights.OutsideLightsController;
-import com.poorknight.timedtemp.AutomatedHouseTemperatureController;
+import com.poorknight.scheduledtasks.FixedScheduleTaskManager;
+import com.poorknight.scheduledtasks.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
+import com.poorknight.house.thermostat.ThermostatMessager;
+import com.poorknight.scheduledtasks.timedlights.OutsideLightDesiredStateDecider;
+import com.poorknight.scheduledtasks.timedlights.OutsideLightsController;
+import com.poorknight.scheduledtasks.timedtemp.AutomatedHouseTemperatureController;
 import com.poorknight.time.TimeFinder;
-import com.poorknight.web.HelloWorldWebPageHandler;
+import com.poorknight.server.web.HelloWorldWebPageHandler;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.ContextHandler;
 import org.eclipse.jetty.server.handler.ContextHandlerCollection;
@@ -32,8 +32,8 @@ import org.glassfish.jersey.servlet.ServletContainer;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 
-import static com.poorknight.taskscheduler.FixedScheduleTaskManager.OutsideLightControllerRunnable;
-import static com.poorknight.taskscheduler.FixedScheduleTaskManager.AutomatedHouseTemperatureControllerRunnable;
+import static com.poorknight.scheduledtasks.FixedScheduleTaskManager.OutsideLightControllerRunnable;
+import static com.poorknight.scheduledtasks.FixedScheduleTaskManager.AutomatedHouseTemperatureControllerRunnable;
 
 
 public class MyHouseServer {

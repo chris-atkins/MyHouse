@@ -3,9 +3,9 @@ package com.poorknight.echo.housecommand.temperature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.house.commands.HouseCommandMessager;
 
-import static com.poorknight.echo.housecommand.HouseCommand.HOUSE_TEMP_DOWN;
+import static com.poorknight.house.commands.HouseCommand.HOUSE_TEMP_DOWN;
 
 public class HouseTempDownHandler implements EchoRequestHandler {
 

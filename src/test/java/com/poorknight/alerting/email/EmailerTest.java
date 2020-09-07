@@ -23,7 +23,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({ Transport.class, Environment.class })

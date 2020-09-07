@@ -1,7 +1,7 @@
 package com.poorknight.echo.lights.color;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.poorknight.lights.LightColor;
+import com.poorknight.house.lights.LightColor;
 
 public class DesiredColorTranslator {
 

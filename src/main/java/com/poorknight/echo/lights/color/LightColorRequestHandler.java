@@ -3,7 +3,7 @@ package com.poorknight.echo.lights.color;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.lights.HueMessager;
+import com.poorknight.house.lights.HueMessager;
 
 public class LightColorRequestHandler implements EchoRequestHandler {
 

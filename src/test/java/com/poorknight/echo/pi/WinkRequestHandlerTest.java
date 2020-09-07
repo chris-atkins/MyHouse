@@ -11,7 +11,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.pi.PiMessager;
+import com.poorknight.house.pi.PiMessager;
 
 @RunWith(MockitoJUnitRunner.class)
 public class WinkRequestHandlerTest {

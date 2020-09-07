@@ -1,8 +1,8 @@
 package com.poorknight.echo.lights.off;
 
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.echo.housecommand.HouseCommand;
-import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.house.commands.HouseCommand;
+import com.poorknight.house.commands.HouseCommandMessager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

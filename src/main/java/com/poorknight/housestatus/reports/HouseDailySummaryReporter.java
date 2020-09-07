@@ -2,7 +2,7 @@ package com.poorknight.housestatus.reports;
 
 import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
-import com.poorknight.thermostat.ThermostatStatus.FurnaceState;
+import com.poorknight.house.thermostat.ThermostatStatus.FurnaceState;
 import com.poorknight.time.TimeFinder;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;

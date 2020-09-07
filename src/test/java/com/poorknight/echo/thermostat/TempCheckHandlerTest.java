@@ -2,7 +2,7 @@ package com.poorknight.echo.thermostat;
 
 import com.poorknight.echo.EchoResponse;
 import com.poorknight.echo.EchoResponseData;
-import com.poorknight.thermostat.ThermostatMessager;
+import com.poorknight.house.thermostat.ThermostatMessager;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;

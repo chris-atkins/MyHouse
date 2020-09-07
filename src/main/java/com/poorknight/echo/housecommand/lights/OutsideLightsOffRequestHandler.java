@@ -2,9 +2,9 @@ package com.poorknight.echo.housecommand.lights;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.echo.housecommand.HouseCommandMessager;
+import com.poorknight.house.commands.HouseCommandMessager;
 
-import static com.poorknight.echo.housecommand.HouseCommand.OUTSIDE_LIGHTS_OFF;
+import static com.poorknight.house.commands.HouseCommand.OUTSIDE_LIGHTS_OFF;
 
 public class OutsideLightsOffRequestHandler implements EchoRequestHandler {
 

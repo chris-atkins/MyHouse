@@ -1,6 +1,6 @@
 package com.poorknight.housestatus.repository;
 
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

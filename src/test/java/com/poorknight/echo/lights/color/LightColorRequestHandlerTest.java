@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.EchoResponse;
-import com.poorknight.lights.HueMessager;
-import com.poorknight.lights.LightColor;
+import com.poorknight.house.lights.HueMessager;
+import com.poorknight.house.lights.LightColor;
 
 @RunWith(JUnit4.class)
 public class LightColorRequestHandlerTest {

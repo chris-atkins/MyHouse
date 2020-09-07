@@ -1,6 +1,6 @@
 package com.poorknight.server;
 
-import com.poorknight.settings.Environment;
+import com.poorknight.server.settings.Environment;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.eclipse.jetty.server.SslConnectionFactory;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
