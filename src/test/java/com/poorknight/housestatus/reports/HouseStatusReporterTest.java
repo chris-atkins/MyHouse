@@ -60,6 +60,40 @@ public class HouseStatusReporterTest {
 	}
 
 	@Test
+	public void ignoresDataPointsThatAreTheSameTempAndSettingAsTheLast() {
+		List<HouseDataPoint> repositoryResponse = new ArrayList<>();
+
+		DateTime time1 = new DateTime("2017-12-01T11:35:01");
+		ThermostatStatus thermostatStatus1 = new ThermostatStatus(1.2, 3.4, null, null);
+		repositoryResponse.add(new HouseDataPoint(time1, null, thermostatStatus1, null));
+
+		DateTime time2 = new DateTime("2017-12-02T21:35:02");
+		ThermostatStatus thermostatStatus2 = new ThermostatStatus(5.6, 7.8, null, null);
+		repositoryResponse.add(new HouseDataPoint(time2, null, thermostatStatus2, null));
+
+		DateTime time3 = new DateTime("2017-12-02T22:35:02");
+		ThermostatStatus thermostatStatus3 = new ThermostatStatus(5.6, 7.8, null, null);
+		repositoryResponse.add(new HouseDataPoint(time3, null, thermostatStatus3, null));
+
+		DateTime time4 = new DateTime("2017-12-02T23:35:02");
+		ThermostatStatus thermostatStatus4 = new ThermostatStatus(5.6, 7.8, null, null);
+		repositoryResponse.add(new HouseDataPoint(time4, null, thermostatStatus4, null));
+
+		DateTime time5 = new DateTime("2017-12-03T11:35:03");
+		ThermostatStatus thermostatStatus5 = new ThermostatStatus(9.10, 11.12, null, null);
+		repositoryResponse.add(new HouseDataPoint(time5, null, thermostatStatus5, null));
+
+		LocalDate date = new LocalDate();
+		UtcTimeRange dateRange = new TimeFinder().getUtcRangeForLocalDay(date);
+		when(houseStatusRepository.retrieveHouseStatusFrom(dateRange.getStartTime(), dateRange.getEndTime())).thenReturn(repositoryResponse);
+
+		HouseStatusReport houseStatusReport = houseStatusReporter.reportForDay(date);
+		assertThat(houseStatusReport.getLocalTimes()).containsExactly("12-01 11:35 AM", "12-02 09:35 PM", "12-03 11:35 AM");
+		assertThat(houseStatusReport.getHouseTemperatures()).containsExactly(1.2, 5.6, 9.10);
+		assertThat(houseStatusReport.getThermostatSettings()).containsExactly(3.4, 7.8, 11.12);
+	}
+
+	@Test
 	public void passesExceptionFromRepository() {
 		LocalDate date = new LocalDate();
 		UtcTimeRange dateRange = new TimeFinder().getUtcRangeForLocalDay(date);

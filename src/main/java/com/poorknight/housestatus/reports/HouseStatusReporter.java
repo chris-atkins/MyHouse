@@ -23,10 +23,23 @@ public class HouseStatusReporter {
 		List<String> localTimes = new LinkedList<>();
 		List<Double> houseTemperatures = new LinkedList<>();
 		List<Double> thermostatSettings = new LinkedList<>();
+		double lastTemp = Double.MIN_VALUE;
+		double lastSetting = Double.MIN_VALUE;
 		for (HouseDataPoint dataPoint : houseDataPoints) {
+
+			double houseTemp = dataPoint.getThermostatStatus().getHouseTemp();
+			double tempSetting = dataPoint.getThermostatStatus().getTempSetting();
+
+			if (houseTemp == lastTemp && tempSetting == lastSetting) {
+				continue;
+			}
+
 			localTimes.add(dataPoint.getLocalTime().toString("MM-dd hh:mm a"));
-			houseTemperatures.add(dataPoint.getThermostatStatus().getHouseTemp());
-			thermostatSettings.add(dataPoint.getThermostatStatus().getTempSetting());
+			houseTemperatures.add(houseTemp);
+			thermostatSettings.add(tempSetting);
+
+			lastTemp = houseTemp;
+			lastSetting = tempSetting;
 		}
 
 		return new HouseStatusReport(localTimes, houseTemperatures, thermostatSettings);
