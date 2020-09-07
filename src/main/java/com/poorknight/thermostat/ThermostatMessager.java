@@ -13,18 +13,10 @@ import java.math.BigDecimal;
 
 public class ThermostatMessager {
 
-	public  BigDecimal requestCurrentTemp() {
-		final JsonNode response = requestThermostatState();
-		return readTempFromResponse(response);
-	}
 
-	private JsonNode requestThermostatState() {
-		return prepareJsonRequest().get(JsonNode.class);
-	}
+	private String postEndpoint = "/tstat";
+	private String getEndpoint = "/house/status";
 
-	private BigDecimal readTempFromResponse(final JsonNode response) {
-		return new BigDecimal(response.get("temp").asDouble());
-	}
 
 	public void postHeatTargetTemperature(final BigDecimal targetTemperature) {
 		final JsonNode request = buildRequestToSetTempTo(targetTemperature);
@@ -41,52 +33,61 @@ public class ThermostatMessager {
 	}
 
 	private JsonNode postTempRequest(final JsonNode request) {
-		return prepareJsonRequest().post(JsonNode.class, request);
+		return preparePostJsonRequest().post(JsonNode.class, request);
 	}
 
-	private WebResource.Builder prepareJsonRequest() {
-		return WebResourceFactory.buildSecuredHomeWebResource("/tstat")
+	private WebResource.Builder preparePostJsonRequest() {
+		return WebResourceFactory.buildSecuredHomeWebResource(postEndpoint)
 				.type(MediaType.APPLICATION_JSON_TYPE)
 				.accept(MediaType.APPLICATION_JSON_TYPE);
 	}
 
+	/////////////////////////////////////////////////////////////////////////////////////
+
+	public  BigDecimal requestCurrentTemp() {
+		final ThermostatStatus status = requestThermostatStatus();
+		return new BigDecimal(status.getHouseTemp());
+	}
+
 	public ThermostatStatus requestThermostatStatus() {
 		final JsonNode response = requestThermostatState();
-		
-		double currentTemp = response.get("temp").asDouble();
-		double tempSetting = findTempSetting(response);
+
+		double currentTemp = response.get("current_temp").asDouble();
+		double tempSetting = response.get("temp_setting").asDouble();
 		FurnaceState furnaceState = findFurnaceState(response);
 		ThermostatMode thermostatMode = findThermostatMode(response);
 
 		return new ThermostatStatus(currentTemp, tempSetting, furnaceState, thermostatMode);
 	}
 
-	private double findTempSetting(JsonNode response) {
-		JsonNode heatSettingNode = response.get("t_heat");
-		if (heatSettingNode != null) {
-			return heatSettingNode.asDouble();
-		}
-		return response.get("t_cool").asDouble();
+	private JsonNode requestThermostatState() {
+		return prepareGetJsonRequest().get(JsonNode.class);
+	}
+
+	private WebResource.Builder prepareGetJsonRequest() {
+		return WebResourceFactory.buildSecuredHomeWebResource(getEndpoint)
+				.type(MediaType.APPLICATION_JSON_TYPE)
+				.accept(MediaType.APPLICATION_JSON_TYPE);
 	}
 
 	private FurnaceState findFurnaceState(JsonNode response) {
-		int tstate = response.get("tstate").asInt();
-		switch (tstate) {
-			case 0: return FurnaceState.OFF;
-			case 1: return FurnaceState.HEAT_ON;
-			case 2: return FurnaceState.AC_ON;
-			default: throw new RuntimeException("Unknown thermostat state (tstate) returned from house thermostat: " + tstate);
+		String state = response.get("state").asText();
+		switch (state) {
+			case "OFF": return FurnaceState.OFF;
+			case "HEAT_ON": return FurnaceState.HEAT_ON;
+			case "AC_ON": return FurnaceState.AC_ON;
+			default: throw new RuntimeException("Unknown thermostat state returned from house: " + state);
 		}
 	}
 
 	private ThermostatMode findThermostatMode(JsonNode response) {
-		int tstate = response.get("tmode").asInt();
-		switch (tstate) {
-			case 0: return ThermostatMode.OFF;
-			case 1: return ThermostatMode.FURNACE_MODE;
-			case 2: return ThermostatMode.AC_MODE;
-			case 3: return ThermostatMode.AUTO_MODE;
-			default: throw new RuntimeException("Unknown thermostat mode (tmode) returned from house thermostat: " + tstate);
+		String mode = response.get("mode").asText();
+		switch (mode) {
+			case "OFF": return ThermostatMode.OFF;
+			case "FURNACE": return ThermostatMode.FURNACE_MODE;
+			case "AC": return ThermostatMode.AC_MODE;
+			case "AUTO": return ThermostatMode.AUTO_MODE;
+			default: throw new RuntimeException("Unknown thermostat mode returned from house: " + mode);
 		}
 	}
 }
