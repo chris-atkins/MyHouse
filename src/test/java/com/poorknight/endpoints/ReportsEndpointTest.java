@@ -74,4 +74,26 @@ public class ReportsEndpointTest {
 
 		assertThat(houseDailySummary).isEqualTo(expectedSummary);
 	}
+
+	@Test
+	public void reportsDailySummariesForSpecificDays() throws Exception {
+		Integer numberOfMinutesDataExistsFor = 7;
+		Integer numberOfMinutesHeaterIsOn = 12;
+		Integer numberOfMinutesACIsOn = 2;
+		Double averageHouseTemperature = 3d;
+		Double averageExternalTemperature = 4d;
+		Double averageInternalExternalTemperatureDifference = 5d;
+		Double averageWindSpeed = 6d;
+		Double averateTimeBetweenHeaterCyclesAtOneTemp = 7d;
+		Double averateTimeBetweenACCyclesAtOneTemp = 12.3;
+		Double averageHouseTempSetting = 34d;
+		HouseDailySummary expectedSummary = new HouseDailySummary(numberOfMinutesDataExistsFor, numberOfMinutesHeaterIsOn, numberOfMinutesACIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageHouseTempSetting, averageWindSpeed, averateTimeBetweenHeaterCyclesAtOneTemp, averateTimeBetweenACCyclesAtOneTemp);
+		LocalDate date = LocalDate.parse("2020-09-01");
+		when(houseDailySummaryReporter.summaryForDay(date)).thenReturn(expectedSummary);
+
+		String results = reportsEndpoint.singleDaySummaryForDay("2020-09-01");
+		HouseDailySummary houseDailySummary = new ObjectMapper().readValue(results, HouseDailySummary.class);
+
+		assertThat(houseDailySummary).isEqualTo(expectedSummary);
+	}
 }

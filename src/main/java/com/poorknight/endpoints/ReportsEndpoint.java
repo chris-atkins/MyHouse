@@ -9,10 +9,7 @@ import com.poorknight.housestatus.reports.HouseStatusReporter;
 import com.poorknight.time.TimeFinder;
 import org.joda.time.LocalDate;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("/")
@@ -48,8 +45,21 @@ public class ReportsEndpoint {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String singleDaySummary() {
+		LocalDate yesterday = getYesterdaysDate();
+		return retrieveSummaryForDay(yesterday);
+	}
+
+	@GET
+	@Path("/daily-summary/{dateString}")
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String singleDaySummaryForDay(@PathParam("dateString") String dateString) {
+		LocalDate date = LocalDate.parse(dateString);
+		return retrieveSummaryForDay(date);
+	}
+
+	private String retrieveSummaryForDay(LocalDate yesterday) {
 		try {
-			LocalDate yesterday = getYesterdaysDate();
 			HouseDailySummary houseDailySummary = houseDailySummaryReporter.summaryForDay(yesterday);
 			return new ObjectMapper().writeValueAsString(houseDailySummary);
 
