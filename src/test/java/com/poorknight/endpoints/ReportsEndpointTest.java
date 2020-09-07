@@ -55,14 +55,16 @@ public class ReportsEndpointTest {
 	@Test
 	public void reportsDailySummaries() throws Exception {
 		Integer numberOfMinutesDataExistsFor = 7;
-		Integer numberOfMinutesHeaterIsOn = 2;
+		Integer numberOfMinutesHeaterIsOn = 12;
+		Integer numberOfMinutesACIsOn = 2;
 		Double averageHouseTemperature = 3d;
 		Double averageExternalTemperature = 4d;
 		Double averageInternalExternalTemperatureDifference = 5d;
 		Double averageWindSpeed = 6d;
 		Double averateTimeBetweenHeaterCyclesAtOneTemp = 7d;
+		Double averateTimeBetweenACCyclesAtOneTemp = 12.3;
 		Double averageHouseTempSetting = 34d;
-		HouseDailySummary expectedSummary = new HouseDailySummary(numberOfMinutesDataExistsFor, numberOfMinutesHeaterIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageHouseTempSetting, averageWindSpeed, averateTimeBetweenHeaterCyclesAtOneTemp);
+		HouseDailySummary expectedSummary = new HouseDailySummary(numberOfMinutesDataExistsFor, numberOfMinutesHeaterIsOn, numberOfMinutesACIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageHouseTempSetting, averageWindSpeed, averateTimeBetweenHeaterCyclesAtOneTemp, averateTimeBetweenACCyclesAtOneTemp);
 		when(timeFinder.getCurrentLocalTime()).thenReturn(DateTime.parse("2019-02-25T05:5:00.000Z"));
 		LocalDate date = LocalDate.parse("2019-02-24");
 		when(houseDailySummaryReporter.summaryForDay(date)).thenReturn(expectedSummary);

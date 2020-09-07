@@ -11,7 +11,7 @@ import java.util.List;
 
 public class HouseDailySummaryReporter {
 
-	HouseStatusRepository houseStatusRepository;
+	private HouseStatusRepository houseStatusRepository;
 
 	public HouseDailySummaryReporter(HouseStatusRepository houseStatusRepository) {
 		this.houseStatusRepository = houseStatusRepository;
@@ -22,27 +22,37 @@ public class HouseDailySummaryReporter {
 
 		List<HouseDataPoint> dataPoints = houseStatusRepository.retrieveHouseStatusFrom(utcTimeRange.getStartTime(), utcTimeRange.getEndTime());
 		if (dataPoints.size() == 0) {
-			return new HouseDailySummary(0, null, null, null, null, null, null, null);
+			return new HouseDailySummary(0, null, null, null, null, null, null, null, null, null);
 		}
 
 
 		Integer numberOfMinutesDataExistsFor = dataPoints.size();
 		Integer numberOfMinutesHeaterIsOn = findNumberOfMinutesHeaterIsOn(dataPoints);
+		Integer numberOfMinutesACIsOn = findNumberOfMinutesACIsOn(dataPoints);
 		Double averageHouseTemperature = findAverageHouseTemp(dataPoints);
 		Double averageExternalTemperature = findAverageExternalTemp(dataPoints);
 		Double averageInternalExternalTemperatureDifference = averageExternalTemperature - averageHouseTemperature;
 		Double averageHouseTempSetting = findAverageHouseTempSetting(dataPoints);
 		Double averageWindSpeed = findAverageWindSpeed(dataPoints);
 		Double averageTimeBetweenHeaterCyclesAtOneTemp = findAverageTimeBetweenHeaterCyclesAtOneTemp(dataPoints);
+		Double averageTimeBetweenACCyclesAtOneTemp = findAverageTimeBetweenACCyclesAtOneTemp(dataPoints);
 
-		HouseDailySummary summary = new HouseDailySummary(numberOfMinutesDataExistsFor, numberOfMinutesHeaterIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageHouseTempSetting, averageWindSpeed, averageTimeBetweenHeaterCyclesAtOneTemp);
+		HouseDailySummary summary = new HouseDailySummary(numberOfMinutesDataExistsFor, numberOfMinutesHeaterIsOn, numberOfMinutesACIsOn, averageHouseTemperature, averageExternalTemperature, averageInternalExternalTemperatureDifference, averageHouseTempSetting, averageWindSpeed, averageTimeBetweenHeaterCyclesAtOneTemp, averageTimeBetweenACCyclesAtOneTemp);
 		return summary;
 	}
 
 	private Integer findNumberOfMinutesHeaterIsOn(List<HouseDataPoint> dataPoints) {
+		return countFurnaceStateInstances(dataPoints, FurnaceState.HEAT_ON);
+	}
+
+	private Integer findNumberOfMinutesACIsOn(List<HouseDataPoint> dataPoints) {
+		return countFurnaceStateInstances(dataPoints, FurnaceState.AC_ON);
+	}
+
+	private Integer countFurnaceStateInstances(List<HouseDataPoint> dataPoints, FurnaceState furnaceState) {
 		int count = 0;
 		for (HouseDataPoint dataPoint : dataPoints) {
-			if (dataPoint.getThermostatStatus().getFurnaceState() == FurnaceState.HEAT_ON) {
+			if (dataPoint.getThermostatStatus().getFurnaceState() == furnaceState) {
 				count++;
 			}
 		}
@@ -82,6 +92,14 @@ public class HouseDailySummaryReporter {
 	}
 
 	private Double findAverageTimeBetweenHeaterCyclesAtOneTemp(List<HouseDataPoint> dataPoints) {
+		return findAverageTimeBetweenCycles(dataPoints, FurnaceState.HEAT_ON);
+	}
+
+	private Double findAverageTimeBetweenACCyclesAtOneTemp(List<HouseDataPoint> dataPoints) {
+		return findAverageTimeBetweenCycles(dataPoints, FurnaceState.AC_ON);
+	}
+
+	private Double findAverageTimeBetweenCycles(List<HouseDataPoint> dataPoints, FurnaceState targetState) {
 		if (dataPoints.size() == 0) {
 			return null;
 		}
@@ -101,7 +119,11 @@ public class HouseDailySummaryReporter {
 			Double tempSetting = dataPoint.getThermostatStatus().getTempSetting();
 			DateTime currentUtcTime = dataPoint.getUtcTime();
 
-			if (! lastTempSetting.equals(tempSetting) && (furnaceState == FurnaceState.OFF || lastFurnaceState == FurnaceState.OFF)) {
+			if (!lastTempSetting.equals(tempSetting) && (furnaceState == FurnaceState.OFF || lastFurnaceState == FurnaceState.OFF)) {
+				badCycle = true;
+			}
+
+			if (furnaceState != FurnaceState.OFF && furnaceState != targetState) {
 				badCycle = true;
 			}
 
@@ -109,7 +131,7 @@ public class HouseDailySummaryReporter {
 				badCycle = true;
 			}
 
-			if (furnaceState == FurnaceState.HEAT_ON && lastFurnaceState == FurnaceState.OFF && firstCycleStarted) {
+			if (furnaceState == targetState && lastFurnaceState != targetState && firstCycleStarted) {
 				if (!badCycle) {
 					numberOfCycles++;
 					totalTime += currentCycleTime;
@@ -122,7 +144,7 @@ public class HouseDailySummaryReporter {
 				currentCycleTime++;
 			}
 
-			if (furnaceState == FurnaceState.HEAT_ON) {
+			if (furnaceState == targetState) {
 				firstCycleStarted = true;
 			}
 
