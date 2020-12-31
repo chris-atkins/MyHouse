@@ -4,28 +4,31 @@ import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.HouseStatusRecorder;
 import com.poorknight.scheduledtasks.timedlights.OutsideLightsController;
 import com.poorknight.scheduledtasks.timedtemp.AutomatedHouseTemperatureController;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.joda.time.DateTime;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
 
+@SuppressWarnings("PMD")
+@SuppressFBWarnings(value="URF_UNREAD_FIELD")
 public class FixedScheduleTaskManager {
 
 	private ScheduledThreadPoolExecutor executor;
-	private OutsideLightControllerRunnable outsideLigtscontroller;
+	private OutsideLightControllerRunnable outsideLightsController;
 	private AutomatedHouseTemperatureControllerRunnable automatedTempController;
 	private HouseStatusRecorderRunnable houseStatusRecorder;
 
-	public FixedScheduleTaskManager(final ScheduledThreadPoolExecutor executor, final OutsideLightControllerRunnable outsideLigtscontroller, AutomatedHouseTemperatureControllerRunnable automatedTempController, HouseStatusRecorderRunnable houseStatusRecorder) {
+
+	public FixedScheduleTaskManager(final ScheduledThreadPoolExecutor executor, final OutsideLightControllerRunnable outsideLightsController, AutomatedHouseTemperatureControllerRunnable automatedTempController, HouseStatusRecorderRunnable houseStatusRecorder) {
 		this.executor = executor;
-		this.outsideLigtscontroller = outsideLigtscontroller;
+		this.outsideLightsController = outsideLightsController;
 		this.automatedTempController = automatedTempController;
 		this.houseStatusRecorder = houseStatusRecorder;
 	}
 
 	public void startAllTasks() {
 		System.out.println("STARTING TASKS");
-//		executor.scheduleAtFixedRate(outsideLigtscontroller, 1L, 5, TimeUnit.MINUTES);
+//		executor.scheduleAtFixedRate(outsideLightsController, 1L, 5, TimeUnit.MINUTES);
 //		executor.scheduleAtFixedRate(automatedTempController, 2L, 10L, TimeUnit.MINUTES);
 //		executor.scheduleAtFixedRate(houseStatusRecorder, 30L, 60L, TimeUnit.SECONDS);
 		System.out.println("TASKS STARTED");
