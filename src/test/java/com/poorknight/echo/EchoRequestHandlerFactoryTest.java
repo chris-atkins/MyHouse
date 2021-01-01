@@ -4,13 +4,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
-import com.poorknight.echo.housecommand.lights.DimLightsRequestHandler;
+import com.poorknight.echo.housecommand.lights.*;
 import com.poorknight.echo.housecommand.combination.GoingToWorkRequestHandler;
-import com.poorknight.echo.housecommand.lights.OutsideLightsOffRequestHandler;
-import com.poorknight.echo.housecommand.lights.OutsideLightsOnRequestHandler;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
-import com.poorknight.echo.housecommand.lights.LightsOffRequestHandler;
-import com.poorknight.echo.housecommand.lights.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
 import com.poorknight.echo.housecommand.temperature.HouseTempDownHandler;
 import com.poorknight.echo.housecommand.temperature.HouseTempUpHandler;
@@ -53,6 +49,27 @@ public class EchoRequestHandlerFactoryTest {
 		final JsonNode request = buildRequest("LightsOn");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightsOnRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsBasementOffRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("BasementOff");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(BasementOffRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsBasementDimRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("BasementDim");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(BasementDimRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsBasementOnRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("BasementOn");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(BasementOnRequestHandler.class)));
 	}
 
 	@Test

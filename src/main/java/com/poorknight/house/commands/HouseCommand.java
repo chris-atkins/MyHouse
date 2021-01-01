@@ -8,7 +8,10 @@ public enum HouseCommand {
 	OUTSIDE_LIGHTS_OFF("outside-lights-off"),
 	DIM_LIGHTS("dim-lights"),
 	HOUSE_TEMP_UP("house-temp-up"),
-	HOUSE_TEMP_DOWN("house-temp-down");
+	HOUSE_TEMP_DOWN("house-temp-down"),
+	BASEMENT_OFF("basement-off"),
+	BASEMENT_DIM("basement-dim"),
+	BASEMENT_ON("basement-on");
 
 	private final String piString;
 

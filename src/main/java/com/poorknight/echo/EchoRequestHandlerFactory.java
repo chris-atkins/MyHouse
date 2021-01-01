@@ -4,16 +4,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.hello.HelloRequestHandler;
 import com.poorknight.echo.housecommand.combination.GoingToWorkRequestHandler;
 import com.poorknight.echo.housecommand.combination.GoingToWorkResponseBuilder;
-import com.poorknight.echo.housecommand.lights.DimLightsRequestHandler;
-import com.poorknight.echo.housecommand.lights.OutsideLightsOffRequestHandler;
-import com.poorknight.echo.housecommand.lights.OutsideLightsOnRequestHandler;
+import com.poorknight.echo.housecommand.lights.*;
 import com.poorknight.echo.housecommand.temperature.HouseTempDownHandler;
 import com.poorknight.echo.housecommand.temperature.HouseTempUpHandler;
 import com.poorknight.echo.housecommand.temperature.TempAdjustmentResponseBuilder;
 import com.poorknight.echo.lights.color.DesiredColorTranslator;
 import com.poorknight.echo.lights.color.LightColorRequestHandler;
-import com.poorknight.echo.housecommand.lights.LightsOffRequestHandler;
-import com.poorknight.echo.housecommand.lights.LightsOnRequestHandler;
 import com.poorknight.echo.pi.WinkRequestHandler;
 import com.poorknight.echo.thermostat.HouseTempSettingHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
@@ -41,6 +37,18 @@ public class EchoRequestHandlerFactory {
 
 		if (intentName.equals("LightsOn")) {
 			return new LightsOnRequestHandler(new HouseCommandMessager());
+		}
+
+		if (intentName.equals("BasementOff")) {
+			return new BasementOffRequestHandler(new HouseCommandMessager());
+		}
+
+		if (intentName.equals("BasementDim")) {
+			return new BasementDimRequestHandler(new HouseCommandMessager());
+		}
+
+		if (intentName.equals("BasementOn")) {
+			return new BasementOnRequestHandler(new HouseCommandMessager());
 		}
 
 		if (intentName.equals("OutsideLightsOff")) {
