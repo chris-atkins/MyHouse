@@ -1,6 +1,7 @@
-package com.poorknight.echo.lights.off;
+package com.poorknight.echo.housecommand.lights;
 
 import com.poorknight.echo.EchoResponse;
+import com.poorknight.echo.housecommand.lights.LightsOnRequestHandler;
 import com.poorknight.house.commands.HouseCommand;
 import com.poorknight.house.commands.HouseCommandMessager;
 import org.junit.Test;
@@ -14,18 +15,18 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LightsOffRequestHandlerTest {
+public class LightsOnRequestHandlerTest {
 
 	@InjectMocks
-	private LightsOffRequestHandler handler;
+	private LightsOnRequestHandler handler;
 
 	@Mock
-	private HouseCommandMessager houseCommandMessager;
+	private HouseCommandMessager houseMessager;
 
 	@Test
 	public void sendsOffRequestWhenCalled() throws Exception {
 		handler.handle();
-		verify(houseCommandMessager).requestHouseCommand(HouseCommand.LIGHTS_OFF);
+		verify(houseMessager).requestHouseCommand(HouseCommand.LIGHTS_ON);
 	}
 
 	@Test

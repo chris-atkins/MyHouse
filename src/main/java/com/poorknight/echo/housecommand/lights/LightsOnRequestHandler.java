@@ -1,4 +1,4 @@
-package com.poorknight.echo.lights.on;
+package com.poorknight.echo.housecommand.lights;
 
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoResponse;
