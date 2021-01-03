@@ -39,6 +39,10 @@ public class EchoRequestHandlerFactory {
 			return new LightsOnRequestHandler(new HouseCommandMessager());
 		}
 
+		if (intentName.equals("DiningLightsBright")) {
+			return new DiningLightsBrightRequestHandler(new HouseCommandMessager());
+		}
+
 		if (intentName.equals("BasementOff")) {
 			return new BasementOffRequestHandler(new HouseCommandMessager());
 		}

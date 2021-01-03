@@ -52,6 +52,13 @@ public class EchoRequestHandlerFactoryTest {
 	}
 
 	@Test
+	public void returnsDiningLightsBrightRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("DiningLightsBright");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(DiningLightsBrightRequestHandler.class)));
+	}
+
+	@Test
 	public void returnsBasementOffRequestWhenAppropriate() throws Exception {
 		final JsonNode request = buildRequest("BasementOff");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
