@@ -55,6 +55,14 @@ public class EchoRequestHandlerFactory {
 			return new BasementOnRequestHandler(new HouseCommandMessager());
 		}
 
+		if (intentName.equals("BedroomOn")) {
+			return new BedroomOnRequestHandler(new HouseCommandMessager());
+		}
+
+		if (intentName.equals("BedroomOff")) {
+			return new BedroomOffRequestHandler(new HouseCommandMessager());
+		}
+
 		if (intentName.equals("OutsideLightsOff")) {
 			return new OutsideLightsOffRequestHandler(new HouseCommandMessager());
 		}

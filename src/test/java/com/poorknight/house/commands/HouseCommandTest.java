@@ -51,6 +51,42 @@ public class HouseCommandTest {
 		assertThat(HouseCommand.HOUSE_TEMP_DOWN.asPiString()).isEqualTo("house-temp-down");
 	}
 
+
+	@Test
+	public void basementOff_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.BASEMENT_OFF.asPiString()).isEqualTo("basement-off");
+	}
+
+
+	@Test
+	public void basementDim_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.BASEMENT_DIM.asPiString()).isEqualTo("basement-dim");
+	}
+
+
+	@Test
+	public void basementOn_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.BASEMENT_ON.asPiString()).isEqualTo("basement-on");
+	}
+
+
+	@Test
+	public void diningLightBright_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.DINING_LIGHTS_BRIGHT.asPiString()).isEqualTo("dining-lights-bright");
+	}
+
+
+	@Test
+	public void bedroomOn_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.BEDROOM_ON.asPiString()).isEqualTo("bedroom-on");
+	}
+
+
+	@Test
+	public void bedroomOff_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.BEDROOM_OFF.asPiString()).isEqualTo("bedroom-off");
+	}
+
 	@Test
 	public void canBuildHouseCommandFromString() {
 		assertThat(HouseCommand.fromPiString("at-work-mode")).isEqualTo(HouseCommand.AT_WORK_MODE);
@@ -61,6 +97,12 @@ public class HouseCommandTest {
 		assertThat(HouseCommand.fromPiString("dim-lights")).isEqualTo(HouseCommand.DIM_LIGHTS);
 		assertThat(HouseCommand.fromPiString("house-temp-up")).isEqualTo(HouseCommand.HOUSE_TEMP_UP);
 		assertThat(HouseCommand.fromPiString("house-temp-down")).isEqualTo(HouseCommand.HOUSE_TEMP_DOWN);
+		assertThat(HouseCommand.fromPiString("basement-off")).isEqualTo(HouseCommand.BASEMENT_OFF);
+		assertThat(HouseCommand.fromPiString("basement-dim")).isEqualTo(HouseCommand.BASEMENT_DIM);
+		assertThat(HouseCommand.fromPiString("basement-on")).isEqualTo(HouseCommand.BASEMENT_ON);
+		assertThat(HouseCommand.fromPiString("dining-lights-bright")).isEqualTo(HouseCommand.DINING_LIGHTS_BRIGHT);
+		assertThat(HouseCommand.fromPiString("bedroom-on")).isEqualTo(HouseCommand.BEDROOM_ON);
+		assertThat(HouseCommand.fromPiString("bedroom-off")).isEqualTo(HouseCommand.BEDROOM_OFF);
 	}
 
 	@Test

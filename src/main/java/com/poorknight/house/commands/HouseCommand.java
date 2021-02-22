@@ -12,7 +12,9 @@ public enum HouseCommand {
 	BASEMENT_OFF("basement-off"),
 	BASEMENT_DIM("basement-dim"),
 	BASEMENT_ON("basement-on"),
-	DINING_LIGHTS_BRIGHT("dining-lights-bright");
+	DINING_LIGHTS_BRIGHT("dining-lights-bright"),
+	BEDROOM_ON("bedroom-on"),
+	BEDROOM_OFF("bedroom-off");
 
 	private final String piString;
 

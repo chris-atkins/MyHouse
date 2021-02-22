@@ -80,6 +80,20 @@ public class EchoRequestHandlerFactoryTest {
 	}
 
 	@Test
+	public void returnsBedroomOnRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("BedroomOn");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(BedroomOnRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsBedroomOffRequestWhenAppropriate() throws Exception {
+		final JsonNode request = buildRequest("BedroomOff");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(BedroomOffRequestHandler.class)));
+	}
+
+	@Test
 	public void returnsOutsideLightsOffRequestWhenAppropriate() throws Exception {
 		final JsonNode request = buildRequest("OutsideLightsOff");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
