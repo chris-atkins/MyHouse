@@ -25,7 +25,7 @@
 		<!--<maven.compiler.source>1.8</maven.compiler.source>-->
 		<!--<maven.compiler.target>1.8</maven.compiler.target>-->
 
-		<jetty.version>9.4.15.v20190215</jetty.version>
+		<jetty.version>11.0.1</jetty.version>
 		<alexa-skills-kit.version>1.8.1</alexa-skills-kit.version>
 		<jersey.version>2.28</jersey.version>
 		<jersey-client.version>1.19.4</jersey-client.version>
