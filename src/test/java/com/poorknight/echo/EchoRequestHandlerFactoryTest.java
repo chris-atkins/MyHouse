@@ -24,146 +24,160 @@ import static org.junit.Assert.fail;
 public class EchoRequestHandlerFactoryTest {
 
 	@Test
-	public void returnsHelloRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsHelloRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("SayHi");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(HelloRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsLightsOffRequestWhenAppropriate() throws Exception {
+	public void returnsLightsOffRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("LightsOff");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightsOffRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsDimLightsRequestWhenAppropriate() throws Exception {
+	public void returnsDimLightsRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("DimLights");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(DimLightsRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsLightsOnRequestWhenAppropriate() throws Exception {
+	public void returnsLightsOnRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("LightsOn");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightsOnRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsDiningLightsBrightRequestWhenAppropriate() throws Exception {
+	public void returnsDiningLightsBrightRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("DiningLightsBright");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(DiningLightsBrightRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsBasementOffRequestWhenAppropriate() throws Exception {
+	public void returnsBasementOffRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("BasementOff");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(BasementOffRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsBasementDimRequestWhenAppropriate() throws Exception {
+	public void returnsBasementDimRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("BasementDim");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(BasementDimRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsBasementOnRequestWhenAppropriate() throws Exception {
+	public void returnsBasementOnRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("BasementOn");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(BasementOnRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsBedroomOnRequestWhenAppropriate() throws Exception {
+	public void returnsBedroomOnRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("BedroomOn");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(BedroomOnRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsBedroomOffRequestWhenAppropriate() throws Exception {
+	public void returnsBedroomOffRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("BedroomOff");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(BedroomOffRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsOutsideLightsOffRequestWhenAppropriate() throws Exception {
+	public void returnsFancyLightOnRequestWhenAppropriate() {
+		final JsonNode request = buildRequest("FancyLightOn");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(FancyLightOnRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsFancyLightOffRequestWhenAppropriate() {
+		final JsonNode request = buildRequest("FancyLightOff");
+		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
+		assertThat(handler, is(instanceOf(FancyLightOffRequestHandler.class)));
+	}
+
+	@Test
+	public void returnsOutsideLightsOffRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("OutsideLightsOff");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(OutsideLightsOffRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsOutsideLightsOnRequestWhenAppropriate() throws Exception {
+	public void returnsOutsideLightsOnRequestWhenAppropriate() {
 		final JsonNode request = buildRequest("OutsideLightsOn");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(OutsideLightsOnRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsLightColorRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsLightColorRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("LightColor");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(LightColorRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsWinkRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsWinkRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("Wink");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(WinkRequestHandler.class)));
 	}
 
 	@Test
-	public void returnsTempCheckRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsTempCheckRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("TempCheck");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(TempCheckHandler.class)));
 	}
 
 	@Test
-	public void returnsHoueTempSettingRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsHoueTempSettingRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("HouseTempSetting");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(HouseTempSettingHandler.class)));
 	}
 
 	@Test
-	public void returnsHeatOnRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsHeatOnRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("HouseTempUp");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(HouseTempUpHandler.class)));
 	}
 
 	@Test
-	public void returnsHeatOffRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsHeatOffRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("HouseTempDown");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(HouseTempDownHandler.class)));
 	}
 
 	@Test
-	public void returnsHouseCommandRequestHandlerWhenAppropriate() throws Exception {
+	public void returnsHouseCommandRequestHandlerWhenAppropriate() {
 		final JsonNode request = buildRequest("AtWorkMode");
 		final EchoRequestHandler handler = EchoRequestHandlerFactory.handlerFor(request);
 		assertThat(handler, is(instanceOf(GoingToWorkRequestHandler.class)));
 	}
 
 	@Test(expected = RuntimeException.class)
-	public void throwsExceptionForUnknownIntent() throws Exception {
+	public void throwsExceptionForUnknownIntent() {
 		final JsonNode request = buildRequest("IDontKnowThisIntent");
 		EchoRequestHandlerFactory.handlerFor(request);
 	}
 
 	@Test
-	public void throwsExceptionWithRequestContent_WhenRequestIsNotFormedAsExpected() throws Exception {
+	public void throwsExceptionWithRequestContent_WhenRequestIsNotFormedAsExpected() {
 		final JsonNode request = buildRequestWithNoPathToIntent();
 
 		try {

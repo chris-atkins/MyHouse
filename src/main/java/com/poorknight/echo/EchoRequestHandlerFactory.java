@@ -63,6 +63,14 @@ public class EchoRequestHandlerFactory {
 			return new BedroomOffRequestHandler(new HouseCommandMessager());
 		}
 
+		if (intentName.equals("FancyLightOn")) {
+			return new FancyLightOnRequestHandler(new HouseCommandMessager());
+		}
+
+		if (intentName.equals("FancyLightOff")) {
+			return new FancyLightOffRequestHandler(new HouseCommandMessager());
+		}
+
 		if (intentName.equals("OutsideLightsOff")) {
 			return new OutsideLightsOffRequestHandler(new HouseCommandMessager());
 		}
