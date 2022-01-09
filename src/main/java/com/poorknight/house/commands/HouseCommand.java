@@ -16,7 +16,9 @@ public enum HouseCommand {
 	BEDROOM_ON("bedroom-on"),
 	BEDROOM_OFF("bedroom-off"),
 	FANCY_LIGHT_ON("fancy-light-on"),
-	FANCY_LIGHT_OFF("fancy-light-off");
+	FANCY_LIGHT_OFF("fancy-light-off"),
+	PLANT_LIGHTS_ON("plant-lights-on"),
+	PLANT_LIGHTS_OFF("plant-lights-off");
 
 	private final String piString;
 

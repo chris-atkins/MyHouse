@@ -3,11 +3,13 @@ package com.poorknight.scheduledtasks;
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.HouseStatusRecorder;
 import com.poorknight.scheduledtasks.timedlights.OutsideLightsController;
+import com.poorknight.scheduledtasks.timedlights.PlantLightController;
 import com.poorknight.scheduledtasks.timedtemp.AutomatedHouseTemperatureController;
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import org.joda.time.DateTime;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 @SuppressWarnings("PMD")
 @SuppressFBWarnings(value="URF_UNREAD_FIELD")
@@ -15,13 +17,15 @@ public class FixedScheduleTaskManager {
 
 	private ScheduledThreadPoolExecutor executor;
 	private OutsideLightControllerRunnable outsideLightsController;
+	private PlantLightsControllerRunnable plantLightsController;
 	private AutomatedHouseTemperatureControllerRunnable automatedTempController;
 	private HouseStatusRecorderRunnable houseStatusRecorder;
 
 
-	public FixedScheduleTaskManager(final ScheduledThreadPoolExecutor executor, final OutsideLightControllerRunnable outsideLightsController, AutomatedHouseTemperatureControllerRunnable automatedTempController, HouseStatusRecorderRunnable houseStatusRecorder) {
+	public FixedScheduleTaskManager(final ScheduledThreadPoolExecutor executor, final OutsideLightControllerRunnable outsideLightsController, PlantLightsControllerRunnable plantLightsController, AutomatedHouseTemperatureControllerRunnable automatedTempController, HouseStatusRecorderRunnable houseStatusRecorder) {
 		this.executor = executor;
 		this.outsideLightsController = outsideLightsController;
+		this.plantLightsController = plantLightsController;
 		this.automatedTempController = automatedTempController;
 		this.houseStatusRecorder = houseStatusRecorder;
 	}
@@ -29,6 +33,7 @@ public class FixedScheduleTaskManager {
 	public void startAllTasks() {
 		System.out.println("STARTING TASKS");
 //		executor.scheduleAtFixedRate(outsideLightsController, 1L, 5, TimeUnit.MINUTES);
+		executor.scheduleAtFixedRate(plantLightsController, 3L, 10, TimeUnit.MINUTES);
 //		executor.scheduleAtFixedRate(automatedTempController, 2L, 10L, TimeUnit.MINUTES);
 //		executor.scheduleAtFixedRate(houseStatusRecorder, 30L, 60L, TimeUnit.SECONDS);
 		System.out.println("TASKS STARTED");
@@ -53,6 +58,25 @@ public class FixedScheduleTaskManager {
 				controller.putLightsToCorrectStateForTimeOfDay();
 			} catch (RuntimeException e) {
 				System.out.println("Problem running OutsideLightControllerRunnable");
+				e.printStackTrace();
+			}
+		}
+	}
+	public static class PlantLightsControllerRunnable implements Runnable {
+
+		private PlantLightController controller;
+
+		public PlantLightsControllerRunnable(final PlantLightController controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void run() {
+			try {
+				System.out.println(new DateTime().toLocalDateTime().toString() + ": Initiating timed PlantLightsController.putLightsToCorrectStateForTimeOfDay()");
+				controller.putLightsToCorrectStateForTimeOfDay();
+			} catch (RuntimeException e) {
+				System.out.println("Problem running PlantLightsControllerRunnable");
 				e.printStackTrace();
 			}
 		}

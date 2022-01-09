@@ -25,6 +25,9 @@ public class FixedScheduleTaskManagerTest {
 	private OutsideLightControllerRunnable outsideLightsController;
 
 	@Mock
+	private PlantLightsControllerRunnable plantLightsController;
+
+	@Mock
 	private AutomatedHouseTemperatureControllerRunnable automatedHouseTemperatureController;
 
 	@Mock
@@ -49,6 +52,12 @@ public class FixedScheduleTaskManagerTest {
 	public void startCallsHouseStatusReportController() throws Exception {
 		fixedScheduleTaskManager.startAllTasks();
 		verify(executor, times(0)).scheduleAtFixedRate(houseStatusReportController, 30L, 60L, TimeUnit.SECONDS);
+	}
+
+	@Test
+	public void startPlantLightsController() throws Exception {
+		fixedScheduleTaskManager.startAllTasks();
+		verify(executor, times(1)).scheduleAtFixedRate(plantLightsController, 3L, 10L, TimeUnit.MINUTES);
 	}
 
 	@Test

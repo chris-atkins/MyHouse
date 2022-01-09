@@ -15,8 +15,11 @@ import com.poorknight.housestatus.weather.WeatherRetriever;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
 import com.poorknight.house.thermostat.ThermostatMessager;
+import com.poorknight.scheduledtasks.FixedScheduleTaskManager.PlantLightsControllerRunnable;
 import com.poorknight.scheduledtasks.timedlights.OutsideLightDesiredStateDecider;
 import com.poorknight.scheduledtasks.timedlights.OutsideLightsController;
+import com.poorknight.scheduledtasks.timedlights.PlantLightController;
+import com.poorknight.scheduledtasks.timedlights.PlantLightsDesiredStateDecider;
 import com.poorknight.scheduledtasks.timedtemp.AutomatedHouseTemperatureController;
 import com.poorknight.time.TimeFinder;
 import com.poorknight.server.web.HelloWorldWebPageHandler;
@@ -101,10 +104,11 @@ public class MyHouseServer {
 		final ScheduledThreadPoolExecutor executor = new ScheduledThreadPoolExecutor(3);
 
 		final OutsideLightControllerRunnable outsideLightscontrollerRunnable = buildOutsideLightControllerRunnable();
+		final PlantLightsControllerRunnable plantLightsControllerRunnable = buildPlantLightsControllerRunnable();
 		final AutomatedHouseTemperatureControllerRunnable automatedTempControllerRunnable = buildAutomatedHouseTemperatureControllerRunnable();
 		final HouseStatusRecorderRunnable houseStatusRecorderRunnable = buildHouseStatusRecorderRunnable();
 
-		return new FixedScheduleTaskManager(executor, outsideLightscontrollerRunnable, automatedTempControllerRunnable, houseStatusRecorderRunnable);
+		return new FixedScheduleTaskManager(executor, outsideLightscontrollerRunnable, plantLightsControllerRunnable, automatedTempControllerRunnable, houseStatusRecorderRunnable);
 	}
 
 	private static OutsideLightControllerRunnable buildOutsideLightControllerRunnable() {
@@ -112,6 +116,13 @@ public class MyHouseServer {
 		final OutsideLightDesiredStateDecider decider = new OutsideLightDesiredStateDecider();
 		final OutsideLightsController outsideLightsController = new OutsideLightsController(decider, houseCommandMessager);
 		return new OutsideLightControllerRunnable(outsideLightsController);
+	}
+
+	private static PlantLightsControllerRunnable buildPlantLightsControllerRunnable() {
+		final HouseCommandMessager houseCommandMessager = new HouseCommandMessager();
+		final PlantLightsDesiredStateDecider decider = new PlantLightsDesiredStateDecider();
+		final PlantLightController plantLightsController = new PlantLightController(decider, houseCommandMessager);
+		return new PlantLightsControllerRunnable(plantLightsController);
 	}
 
 	private static AutomatedHouseTemperatureControllerRunnable buildAutomatedHouseTemperatureControllerRunnable() {

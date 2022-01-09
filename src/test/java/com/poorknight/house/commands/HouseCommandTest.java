@@ -98,6 +98,18 @@ public class HouseCommandTest {
 		assertThat(HouseCommand.FANCY_LIGHT_OFF.asPiString()).isEqualTo("fancy-light-off");
 	}
 
+
+	@Test
+	public void plantLightsOff_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.PLANT_LIGHTS_OFF.asPiString()).isEqualTo("plant-lights-off");
+	}
+
+
+	@Test
+	public void plantLightsOn_hasTheCorrectString() throws Exception {
+		assertThat(HouseCommand.PLANT_LIGHTS_ON.asPiString()).isEqualTo("plant-lights-on");
+	}
+
 	@Test
 	public void canBuildHouseCommandFromString() {
 		assertThat(HouseCommand.fromPiString("at-work-mode")).isEqualTo(HouseCommand.AT_WORK_MODE);
@@ -116,6 +128,8 @@ public class HouseCommandTest {
 		assertThat(HouseCommand.fromPiString("bedroom-off")).isEqualTo(HouseCommand.BEDROOM_OFF);
 		assertThat(HouseCommand.fromPiString("fancy-light-on")).isEqualTo(HouseCommand.FANCY_LIGHT_ON);
 		assertThat(HouseCommand.fromPiString("fancy-light-off")).isEqualTo(HouseCommand.FANCY_LIGHT_OFF);
+		assertThat(HouseCommand.fromPiString("plant-lights-on")).isEqualTo(HouseCommand.PLANT_LIGHTS_ON);
+		assertThat(HouseCommand.fromPiString("plant-lights-off")).isEqualTo(HouseCommand.PLANT_LIGHTS_OFF);
 	}
 
 	@Test
