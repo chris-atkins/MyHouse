@@ -2,17 +2,16 @@ package com.poorknight.scheduledtasks.timedlights;
 
 import com.poorknight.house.commands.HouseCommandMessager;
 
-import static com.poorknight.house.commands.HouseCommand.OUTSIDE_LIGHTS_OFF;
-import static com.poorknight.house.commands.HouseCommand.OUTSIDE_LIGHTS_ON;
+import static com.poorknight.house.commands.HouseCommand.*;
 import static com.poorknight.scheduledtasks.timedlights.DesiredState.OFF;
 import static com.poorknight.scheduledtasks.timedlights.DesiredState.ON;
 
-public class OutsideLightsController {
+public class FancyLightController {
 
-	private OutsideLightsDesiredStateDecider decider;
+	private FancyLightDesiredStateDecider decider;
 	private HouseCommandMessager houseCommandMessager;
 
-	public OutsideLightsController(final OutsideLightsDesiredStateDecider decider, final HouseCommandMessager houseCommandMessager) {
+	public FancyLightController(final FancyLightDesiredStateDecider decider, final HouseCommandMessager houseCommandMessager) {
 		this.decider = decider;
 		this.houseCommandMessager = houseCommandMessager;
 	}
@@ -21,11 +20,11 @@ public class OutsideLightsController {
 		final DesiredState desiredState = decider.findDesiredState();
 
 		if (desiredState == OFF) {
-			houseCommandMessager.requestHouseCommand(OUTSIDE_LIGHTS_OFF);
+			houseCommandMessager.requestHouseCommand(FANCY_LIGHT_OFF);
 		}
 
 		if (desiredState == ON) {
-			houseCommandMessager.requestHouseCommand(OUTSIDE_LIGHTS_ON);
+			houseCommandMessager.requestHouseCommand(FANCY_LIGHT_ON);
 		}
 	}
 }

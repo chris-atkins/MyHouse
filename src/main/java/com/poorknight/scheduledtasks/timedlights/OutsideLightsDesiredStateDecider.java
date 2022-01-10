@@ -11,7 +11,7 @@ import static com.poorknight.scheduledtasks.timedlights.DesiredState.OFF;
 import static com.poorknight.scheduledtasks.timedlights.DesiredState.ON;
 import static org.joda.time.DateTimeZone.UTC;
 
-public class OutsideLightDesiredStateDecider {
+public class OutsideLightsDesiredStateDecider {
 
 	private static final String sunUrl = "http://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
 

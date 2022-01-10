@@ -15,10 +15,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PlantLightControllerTest {
+public class PlantLightsControllerTest {
 
 	@InjectMocks
-	private PlantLightController plantLightController;
+	private PlantLightsController plantLightsController;
 
 	@Mock
 	private PlantLightsDesiredStateDecider decider;
@@ -30,7 +30,7 @@ public class PlantLightControllerTest {
 	@Test
 	public void callsCommandMessagerWithCorrectCommandIfDeciderSaysOn() {
 		when(decider.findDesiredState()).thenReturn(ON);
-		plantLightController.putLightsToCorrectStateForTimeOfDay();
+		plantLightsController.putLightsToCorrectStateForTimeOfDay();
 
 		verify(houseCommandMessager).requestHouseCommand(PLANT_LIGHTS_ON);
 	}
@@ -38,7 +38,7 @@ public class PlantLightControllerTest {
 	@Test
 	public void callsCommandMessagerWithCorrectCommandIfDeciderSaysOff() {
 		when(decider.findDesiredState()).thenReturn(OFF);
-		plantLightController.putLightsToCorrectStateForTimeOfDay();
+		plantLightsController.putLightsToCorrectStateForTimeOfDay();
 
 		verify(houseCommandMessager).requestHouseCommand(PLANT_LIGHTS_OFF);
 	}

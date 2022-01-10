@@ -21,7 +21,7 @@ import static org.mockito.Mockito.when;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest({Client.class, DateTime.class})
-public class OutsideLightDesiredStateDeciderTest {
+public class OutsideLightsDesiredStateDeciderTest {
 
 	private final static String url =  "http://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
 
@@ -35,7 +35,7 @@ public class OutsideLightDesiredStateDeciderTest {
 	private WebResource.Builder builder;
 
 
-	private OutsideLightDesiredStateDecider decider;
+	private OutsideLightsDesiredStateDecider decider;
 
 	@Before
 	public void setup() {
@@ -44,7 +44,7 @@ public class OutsideLightDesiredStateDeciderTest {
 		PowerMockito.when(Client.create()).thenReturn(client);
 		PowerMockito.when(client.resource(url)).thenReturn(webResource);
 
-		decider = new OutsideLightDesiredStateDecider();
+		decider = new OutsideLightsDesiredStateDecider();
 	}
 
 	@Test

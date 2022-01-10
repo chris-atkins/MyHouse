@@ -6,12 +6,12 @@ import static com.poorknight.house.commands.HouseCommand.*;
 import static com.poorknight.scheduledtasks.timedlights.DesiredState.OFF;
 import static com.poorknight.scheduledtasks.timedlights.DesiredState.ON;
 
-public class PlantLightController {
+public class PlantLightsController {
 
 	private PlantLightsDesiredStateDecider decider;
 	private HouseCommandMessager houseCommandMessager;
 
-	public PlantLightController(final PlantLightsDesiredStateDecider decider, final HouseCommandMessager houseCommandMessager) {
+	public PlantLightsController(final PlantLightsDesiredStateDecider decider, final HouseCommandMessager houseCommandMessager) {
 		this.decider = decider;
 		this.houseCommandMessager = houseCommandMessager;
 	}

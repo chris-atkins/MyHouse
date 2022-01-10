@@ -13,13 +13,11 @@ import com.poorknight.housestatus.repository.HouseStatusRepository;
 import com.poorknight.housestatus.repository.MySqlConnectionParameters;
 import com.poorknight.housestatus.weather.WeatherRetriever;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager;
+import com.poorknight.scheduledtasks.FixedScheduleTaskManager.FancyLightControllerRunnable;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
 import com.poorknight.house.thermostat.ThermostatMessager;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager.PlantLightsControllerRunnable;
-import com.poorknight.scheduledtasks.timedlights.OutsideLightDesiredStateDecider;
-import com.poorknight.scheduledtasks.timedlights.OutsideLightsController;
-import com.poorknight.scheduledtasks.timedlights.PlantLightController;
-import com.poorknight.scheduledtasks.timedlights.PlantLightsDesiredStateDecider;
+import com.poorknight.scheduledtasks.timedlights.*;
 import com.poorknight.scheduledtasks.timedtemp.AutomatedHouseTemperatureController;
 import com.poorknight.time.TimeFinder;
 import com.poorknight.server.web.HelloWorldWebPageHandler;
@@ -105,15 +103,16 @@ public class MyHouseServer {
 
 		final OutsideLightControllerRunnable outsideLightscontrollerRunnable = buildOutsideLightControllerRunnable();
 		final PlantLightsControllerRunnable plantLightsControllerRunnable = buildPlantLightsControllerRunnable();
+		final FancyLightControllerRunnable fancyLightControllerRunnable = buildFancyLightControllerRunnable();
 		final AutomatedHouseTemperatureControllerRunnable automatedTempControllerRunnable = buildAutomatedHouseTemperatureControllerRunnable();
 		final HouseStatusRecorderRunnable houseStatusRecorderRunnable = buildHouseStatusRecorderRunnable();
 
-		return new FixedScheduleTaskManager(executor, outsideLightscontrollerRunnable, plantLightsControllerRunnable, automatedTempControllerRunnable, houseStatusRecorderRunnable);
+		return new FixedScheduleTaskManager(executor, outsideLightscontrollerRunnable, plantLightsControllerRunnable, fancyLightControllerRunnable, automatedTempControllerRunnable, houseStatusRecorderRunnable);
 	}
 
 	private static OutsideLightControllerRunnable buildOutsideLightControllerRunnable() {
 		final HouseCommandMessager houseCommandMessager = new HouseCommandMessager();
-		final OutsideLightDesiredStateDecider decider = new OutsideLightDesiredStateDecider();
+		final OutsideLightsDesiredStateDecider decider = new OutsideLightsDesiredStateDecider();
 		final OutsideLightsController outsideLightsController = new OutsideLightsController(decider, houseCommandMessager);
 		return new OutsideLightControllerRunnable(outsideLightsController);
 	}
@@ -121,8 +120,15 @@ public class MyHouseServer {
 	private static PlantLightsControllerRunnable buildPlantLightsControllerRunnable() {
 		final HouseCommandMessager houseCommandMessager = new HouseCommandMessager();
 		final PlantLightsDesiredStateDecider decider = new PlantLightsDesiredStateDecider();
-		final PlantLightController plantLightsController = new PlantLightController(decider, houseCommandMessager);
+		final PlantLightsController plantLightsController = new PlantLightsController(decider, houseCommandMessager);
 		return new PlantLightsControllerRunnable(plantLightsController);
+	}
+
+	private static FancyLightControllerRunnable buildFancyLightControllerRunnable() {
+		final HouseCommandMessager houseCommandMessager = new HouseCommandMessager();
+		final FancyLightDesiredStateDecider decider = new FancyLightDesiredStateDecider();
+		final FancyLightController fancyLightController = new FancyLightController(decider, houseCommandMessager);
+		return new FancyLightControllerRunnable(fancyLightController);
 	}
 
 	private static AutomatedHouseTemperatureControllerRunnable buildAutomatedHouseTemperatureControllerRunnable() {

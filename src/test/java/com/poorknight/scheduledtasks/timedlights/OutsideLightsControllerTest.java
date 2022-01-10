@@ -19,7 +19,7 @@ public class OutsideLightsControllerTest {
 	private OutsideLightsController outsideLightsController;
 
 	@Mock
-	private OutsideLightDesiredStateDecider decider;
+	private OutsideLightsDesiredStateDecider decider;
 
 	@Mock
 	private HouseCommandMessager houseCommandMessager;
