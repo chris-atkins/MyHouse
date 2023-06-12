@@ -8,7 +8,7 @@ import javax.ws.rs.core.MediaType;
 
 public class WeatherRetriever {
 
-	private String url = "http://api.openweathermap.org/data/2.5/weather?id=5010636&units=imperial&APPID=";
+	private String url = "https://api.openweathermap.org/data/2.5/weather?id=5010636&units=imperial&APPID=";
 
 	public WeatherStatus findCurrentWeather() {
 		JsonNode jsonNode = retrieveWeatherInfo();

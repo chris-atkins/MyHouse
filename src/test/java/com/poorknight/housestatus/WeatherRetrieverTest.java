@@ -24,7 +24,7 @@ import static org.mockito.Mockito.when;
 @PrepareForTest({Client.class, Environment.class})
 public class WeatherRetrieverTest {
 
-	private final static String url =  "http://api.openweathermap.org/data/2.5/weather?id=5010636&units=imperial&APPID=12345";
+	private final static String url =  "https://api.openweathermap.org/data/2.5/weather?id=5010636&units=imperial&APPID=12345";
 
 	private WeatherRetriever weatherRetriever;
 
