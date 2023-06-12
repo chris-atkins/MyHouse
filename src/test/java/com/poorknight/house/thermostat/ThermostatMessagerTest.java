@@ -16,12 +16,11 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.ws.rs.core.MediaType;
-import java.io.IOException;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Matchers.eq;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +30,7 @@ import static org.mockito.Mockito.when;
 public class ThermostatMessagerTest {
 
 	private final static String thermostatGetPath = "/house/status";
-	private final static String thermostatPostPath = "/tstat";
+	private final static String thermostatPostPath = "/thermostat/state";
 
 	@Mock
 	private WebResource.Builder getWebResource;
@@ -76,14 +75,14 @@ public class ThermostatMessagerTest {
 
 	@Test
 	public void postsNewDesiredTempToThermostat() {
-		messager.postHeatTargetTemperature(new BigDecimal("68.5"));
+		messager.setHeatModeOnWithTargetTemp(new BigDecimal("68.5"));
 
 		verify(builder).post(eq(JsonNode.class), captor.capture());
 		final JsonNode requestBody = captor.getValue();
 
-		assertThat(requestBody.get("t_heat").asDouble()).isEqualTo(68.5);
-		assertThat(requestBody.get("tmode").asInt()).isEqualTo(1);
-		assertThat(requestBody.get("hold").asInt()).isEqualTo(1);
+		assertThat(requestBody.get("targetTemp").asDouble()).isEqualTo(68.5);
+		assertThat(requestBody.get("mode").asText()).isEqualTo("HEAT");
+		assertThat(requestBody.size()).isEqualTo(2);
 	}
 
 	@Test
@@ -133,7 +132,7 @@ public class ThermostatMessagerTest {
 		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, "OFF", 173, "UNKNOWN"));
 
 		try {
-			final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+			messager.requestThermostatStatus();
 			fail("expectingException");
 		} catch (RuntimeException e) {
 			assertThat(e.getMessage()).isEqualTo("Unknown thermostat mode returned from house: UNKNOWN");
@@ -141,7 +140,7 @@ public class ThermostatMessagerTest {
 	}
 
 	@Test
-	public void houseStatusReadsValuesWithAirConditioningMode() throws IOException {
+	public void houseStatusReadsValuesWithAirConditioningMode() {
 		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(69.5, "AC_ON", 66.0, "AC"));
 
 		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
@@ -157,7 +156,7 @@ public class ThermostatMessagerTest {
 		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(69.5, "UNKNOWN", 66.0, "AC"));
 
 		try {
-			final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+			messager.requestThermostatStatus();
 			fail("expectingException");
 		} catch (RuntimeException e) {
 			assertThat(e.getMessage()).isEqualTo("Unknown thermostat state returned from house: UNKNOWN");

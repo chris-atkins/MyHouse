@@ -17,20 +17,20 @@ import static org.powermock.api.mockito.PowerMockito.when;
 @PrepareForTest({Random.class, GoingToWorkResponseBuilder.class})
 public class GoingToWorkResponseBuilderTest {
 
-	private GoingToWorkResponseBuilder goingToWorkResponseBuilder = new GoingToWorkResponseBuilder();;
+	private GoingToWorkResponseBuilder goingToWorkResponseBuilder;
 
 	@Mock
 	private Random random;
 
 
-
 	@Before
 	public void setUp() throws Exception {
 		PowerMockito.whenNew(Random.class).withNoArguments().thenReturn(random);
+		goingToWorkResponseBuilder = new GoingToWorkResponseBuilder();
 	}
 
 	@Test
-	public void threeTenthsOfTheTime_ResponsdsWith_HaveAGoodDay() throws Exception {
+	public void threeTenthsOfTheTime_RespondsWith_HaveAGoodDay() throws Exception {
 		when(random.nextInt(10)).thenReturn(0);
 		assertThat(goingToWorkResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a good day.");
 
@@ -42,7 +42,7 @@ public class GoingToWorkResponseBuilderTest {
 	}
 
 	@Test
-	public void threeTenthsOfTheTime_ResponsdsWith_HaveANiceDay() throws Exception {
+	public void threeTenthsOfTheTime_RespondsWith_HaveANiceDay() throws Exception {
 		when(random.nextInt(10)).thenReturn(3);
 		assertThat(goingToWorkResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Have a nice day.");
 
@@ -54,7 +54,7 @@ public class GoingToWorkResponseBuilderTest {
 	}
 
 	@Test
-	public void threeTenthsOfTheTime_ResponsdsWith_SeeYa() throws Exception {
+	public void threeTenthsOfTheTime_RespondsWith_SeeYa() throws Exception {
 		when(random.nextInt(10)).thenReturn(6);
 		assertThat(goingToWorkResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("See ya.");
 
@@ -66,7 +66,7 @@ public class GoingToWorkResponseBuilderTest {
 	}
 
 	@Test
-	public void oneTenthsOfTheTime_ResponsdsWith_FuckYou() throws Exception {
+	public void oneTenthsOfTheTime_RespondsWith_FuckYou() throws Exception {
 		when(random.nextInt(10)).thenReturn(9);
 		assertThat(goingToWorkResponseBuilder.buildHouseCommandAlexaResponse()).isEqualTo("Fuck you.");
 

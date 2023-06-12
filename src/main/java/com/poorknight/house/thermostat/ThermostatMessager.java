@@ -13,21 +13,19 @@ import java.math.BigDecimal;
 
 public class ThermostatMessager {
 
+	private static final String getEndpoint = "/house/status";
+	private static final String postEndpoint = "/thermostat/state";
 
-	private String postEndpoint = "/tstat";
-	private String getEndpoint = "/house/status";
 
-
-	public void postHeatTargetTemperature(final BigDecimal targetTemperature) {
+	public void setHeatModeOnWithTargetTemp(final BigDecimal targetTemperature) {
 		final JsonNode request = buildRequestToSetTempTo(targetTemperature);
 		postTempRequest(request);
 	}
 
 	private JsonNode buildRequestToSetTempTo(final BigDecimal targetTemperature) {
 		final ObjectNode request = JsonNodeFactory.instance.objectNode();
-		request.put("t_heat", targetTemperature.doubleValue());
-		request.put("tmode", 1);
-		request.put("hold", 1);
+		request.put("targetTemp", targetTemperature.doubleValue());
+		request.put("mode", "HEAT");
 
 		return request;
 	}

@@ -47,7 +47,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnight);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(64));
+		verify(thermostatMessager, times(5)).setHeatModeOnWithTargetTemp(new BigDecimal(64));
 	}
 
 	@Test
@@ -61,7 +61,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnight);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, times(0)).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, times(0)).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -75,7 +75,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnight);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -88,7 +88,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(saturdayNightMidnight);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 
@@ -102,7 +102,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnight);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -115,7 +115,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnightOhNine);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(64));
+		verify(thermostatMessager, times(5)).setHeatModeOnWithTargetTemp(new BigDecimal(64));
 	}
 
 	@Test
@@ -127,7 +127,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnight10);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 //
@@ -144,7 +144,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekdayMidnight);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(67));
+		verify(thermostatMessager, times(5)).setHeatModeOnWithTargetTemp(new BigDecimal(67));
 	}
 
 	@Test
@@ -157,7 +157,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(saturday7am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 
@@ -171,7 +171,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekday659);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -184,7 +184,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekday709);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, times(5)).postHeatTargetTemperature(new BigDecimal(67));
+		verify(thermostatMessager, times(5)).setHeatModeOnWithTargetTemp(new BigDecimal(67));
 	}
 
 	@Test
@@ -196,7 +196,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekday710);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 //
@@ -213,7 +213,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday3am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(64));
+		verify(thermostatMessager, times(2)).setHeatModeOnWithTargetTemp(new BigDecimal(64));
 	}
 
 	@Test
@@ -225,7 +225,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekday3am);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -240,7 +240,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday259am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -255,7 +255,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday309am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(64));
+		verify(thermostatMessager, times(2)).setHeatModeOnWithTargetTemp(new BigDecimal(64));
 	}
 
 	@Test
@@ -269,7 +269,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday310am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 //
@@ -286,7 +286,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday11am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(67));
+		verify(thermostatMessager, times(2)).setHeatModeOnWithTargetTemp(new BigDecimal(67));
 	}
 
 	@Test
@@ -298,7 +298,7 @@ public class AutomatedHouseTemperatureControllerTest {
 			when(timeFinder.getCurrentLocalTime()).thenReturn(weekday11am);
 			controller.setTempAtTimeTriggers();
 		}
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -313,7 +313,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday1059am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 
 	@Test
@@ -328,7 +328,7 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday1109am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, times(2)).postHeatTargetTemperature(new BigDecimal(67));
+		verify(thermostatMessager, times(2)).setHeatModeOnWithTargetTemp(new BigDecimal(67));
 	}
 
 	@Test
@@ -342,6 +342,6 @@ public class AutomatedHouseTemperatureControllerTest {
 		when(timeFinder.getCurrentLocalTime()).thenReturn(sunday1110am);
 		controller.setTempAtTimeTriggers();
 
-		verify(thermostatMessager, never()).postHeatTargetTemperature(any(BigDecimal.class));
+		verify(thermostatMessager, never()).setHeatModeOnWithTargetTemp(any(BigDecimal.class));
 	}
 }

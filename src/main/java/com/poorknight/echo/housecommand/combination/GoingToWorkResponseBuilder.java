@@ -4,9 +4,10 @@ import java.util.Random;
 
 public class GoingToWorkResponseBuilder {
 
+	private Random randomNumberGenerator = new Random();
 
 	/*package*/ String buildHouseCommandAlexaResponse() {
-		int randomOfTen = new Random().nextInt(10);
+		int randomOfTen = randomNumberGenerator.nextInt(10);
 
 		if (randomOfTen < 3) {
 			return "Have a good day.";

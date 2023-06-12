@@ -36,7 +36,7 @@ public class FixedScheduleTaskManager {
 	public void startAllTasks() {
 		System.out.println("STARTING TASKS");
 //		executor.scheduleAtFixedRate(outsideLightsController, 1L, 5, TimeUnit.MINUTES);
-//		executor.scheduleAtFixedRate(automatedTempController, 2L, 10L, TimeUnit.MINUTES);
+		executor.scheduleAtFixedRate(automatedTempController, 2L, 10L, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(plantLightsController, 3L, 10, TimeUnit.MINUTES);
 		executor.scheduleAtFixedRate(fancyLightController, 4L, 10, TimeUnit.MINUTES);
 //		executor.scheduleAtFixedRate(houseStatusRecorder, 30L, 60L, TimeUnit.SECONDS);

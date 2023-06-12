@@ -55,19 +55,19 @@ public class AutomatedHouseTemperatureController {
 
 	private void lowerHeatBetweenMidnightAnd7am(DateTime currentLocalTime) {
 		if (itIsWithin10MinutesFromMidnight(currentLocalTime)) {
-			thermostatMessager.postHeatTargetTemperature(new BigDecimal(64));
+			thermostatMessager.setHeatModeOnWithTargetTemp(new BigDecimal(64));
 		}
 		if (itIsWithin10MinutesFrom7am(currentLocalTime)) {
-			thermostatMessager.postHeatTargetTemperature(new BigDecimal(67));
+			thermostatMessager.setHeatModeOnWithTargetTemp(new BigDecimal(67));
 		}
 	}
 
 	private void lowerHeatBetween3amAnd11am(DateTime currentLocalTime) {
 		if (itIsWithin10MinutesFrom3am(currentLocalTime)) {
-			thermostatMessager.postHeatTargetTemperature(new BigDecimal(64));
+			thermostatMessager.setHeatModeOnWithTargetTemp(new BigDecimal(64));
 		}
 		if (itIsWithin10MinutesFrom11am(currentLocalTime)) {
-			thermostatMessager.postHeatTargetTemperature(new BigDecimal(67));
+			thermostatMessager.setHeatModeOnWithTargetTemp(new BigDecimal(67));
 		}
 	}
 
