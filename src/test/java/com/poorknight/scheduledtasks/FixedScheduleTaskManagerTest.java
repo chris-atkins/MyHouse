@@ -54,7 +54,7 @@ public class FixedScheduleTaskManagerTest {
 	@Test
 	public void startCallsHouseStatusReportController() throws Exception {
 		fixedScheduleTaskManager.startAllTasks();
-		verify(executor, times(0)).scheduleAtFixedRate(houseStatusReportController, 30L, 60L, TimeUnit.SECONDS);
+		verify(executor, times(1)).scheduleAtFixedRate(houseStatusReportController, 30L, 60L, TimeUnit.SECONDS);
 	}
 
 	@Test
