@@ -11,7 +11,7 @@ import com.poorknight.alerting.email.Emailer;
 
 public class TextMessageAlerter {
 
-	private static final String TO = "2483909123@vtext.com";
+	private static final String TO = "2483909123@msg.fi.google.com";
 	private static final String FROM = "chrisatkins55@gmail.com";
 
 	public static TextMessageAlerter instance() {

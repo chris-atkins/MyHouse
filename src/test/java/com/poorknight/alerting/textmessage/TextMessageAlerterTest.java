@@ -42,12 +42,12 @@ public class TextMessageAlerterTest {
 	@Before
 	public void setup() {
 		PowerMockito.mockStatic(Emailer.class);
-		when(Emailer.buildEmailer(new EmailTo("2483909123@vtext.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
+		when(Emailer.buildEmailer(new EmailTo("2483909123@msg.fi.google.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
 	}
 
 	@Test
 	public void requestsToSendEmail_FromEmailer_BuiltWithCorrectTOAndFROM() throws Exception {
-		when(Emailer.buildEmailer(new EmailTo("2483909123@vtext.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
+		when(Emailer.buildEmailer(new EmailTo("2483909123@msg.fi.google.com"), new EmailFrom("chrisatkins55@gmail.com"))).thenReturn(emailer);
 		textMessageAlerter.sendTextMessage("a message");
 		verify(emailer).sendEmail(Mockito.any(EmailSubject.class), Mockito.any(EmailBody.class));
 	}
