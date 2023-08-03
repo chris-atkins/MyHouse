@@ -110,6 +110,18 @@ public class ThermostatMessagerTest {
 	}
 
 	@Test
+	public void returnsHouseStatusWithLOCKOUTState() {
+		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, "LOCKOUT", 173, "FURNACE"));
+
+		final ThermostatStatus thermostatStatus = messager.requestThermostatStatus();
+
+		assertThat(thermostatStatus.getHouseTemp()).isEqualTo(155.5);
+		assertThat(thermostatStatus.getTempSetting()).isEqualTo(173);
+		assertThat(thermostatStatus.getFurnaceState()).isEqualTo(ThermostatStatus.FurnaceState.LOCKOUT);
+		assertThat(thermostatStatus.getThermostatMode()).isEqualTo(ThermostatStatus.ThermostatMode.FURNACE_MODE);
+	}
+
+	@Test
 	public void returnsHouseStatusWhenThermostatModeIsOff() {
 		when(builder.get(JsonNode.class)).thenReturn(buildJsonResponseFromThermostat(155.5, "OFF", 173, "OFF"));
 

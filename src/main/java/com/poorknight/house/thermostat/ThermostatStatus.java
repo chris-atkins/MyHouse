@@ -33,7 +33,7 @@ public class ThermostatStatus {
 	}
 
 	public enum FurnaceState {
-		HEAT_ON, AC_ON, OFF
+		HEAT_ON, AC_ON, LOCKOUT, OFF
 	}
 
 	public enum ThermostatMode {

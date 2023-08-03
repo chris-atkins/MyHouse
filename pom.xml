@@ -300,6 +300,10 @@
 					<configuration>
 						<argLine>
 							--illegal-access=permit
+							--add-opens java.base/java.lang=ALL-UNNAMED
+							--add-opens java.base/java.time=ALL-UNNAMED
+							--add-opens java.base/java.time.format=ALL-UNNAMED
+							--add-opens java.base/java.util=ALL-UNNAMED
 						</argLine>
 						<forkMode>always</forkMode>
 						<environmentVariables>

@@ -74,6 +74,7 @@ public class ThermostatMessager {
 			case "OFF": return FurnaceState.OFF;
 			case "HEAT_ON": return FurnaceState.HEAT_ON;
 			case "AC_ON": return FurnaceState.AC_ON;
+			case "LOCKOUT": return FurnaceState.LOCKOUT;
 			default: throw new RuntimeException("Unknown thermostat state returned from house: " + state);
 		}
 	}
