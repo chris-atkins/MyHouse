@@ -30,7 +30,7 @@ public class AutomatedHouseTemperatureController {
 		DateTime currentLocalTime = timeFinder.getCurrentLocalTime();
 
 		if (itIsAWeekday(currentLocalTime)) {
-			lowerHeatBetweenMidnightAnd7am(currentLocalTime);
+			lowerHeatBetweenMidnightAnd740am(currentLocalTime);
 		} else {
 			lowerHeatBetween3amAnd11am(currentLocalTime);
 		}
@@ -53,11 +53,11 @@ public class AutomatedHouseTemperatureController {
 		return true;
 	}
 
-	private void lowerHeatBetweenMidnightAnd7am(DateTime currentLocalTime) {
+	private void lowerHeatBetweenMidnightAnd740am(DateTime currentLocalTime) {
 		if (itIsWithin10MinutesFromMidnight(currentLocalTime)) {
 			thermostatMessager.setHeatModeOnWithTargetTemp(new BigDecimal(64));
 		}
-		if (itIsWithin10MinutesFrom7am(currentLocalTime)) {
+		if (itIsWithin10MinutesFrom740am(currentLocalTime)) {
 			thermostatMessager.setHeatModeOnWithTargetTemp(new BigDecimal(67));
 		}
 	}
@@ -72,25 +72,25 @@ public class AutomatedHouseTemperatureController {
 	}
 
 	private boolean itIsWithin10MinutesFromMidnight(DateTime currentLocalTime) {
-		return isWithin10MinutesOfHour(currentLocalTime, 0);
+		return isWithin10MinutesOfHourAndMinute(currentLocalTime, 0, 0);
 	}
 
-	private boolean itIsWithin10MinutesFrom7am(DateTime currentLocalTime) {
-		return isWithin10MinutesOfHour(currentLocalTime, 7);
+	private boolean itIsWithin10MinutesFrom740am(DateTime currentLocalTime) {
+		return isWithin10MinutesOfHourAndMinute(currentLocalTime, 7, 40);
 	}
 
 	private boolean itIsWithin10MinutesFrom3am(DateTime currentLocalTime) {
-		return isWithin10MinutesOfHour(currentLocalTime, 3);
+		return isWithin10MinutesOfHourAndMinute(currentLocalTime, 3, 0);
 	}
 
 	private boolean itIsWithin10MinutesFrom11am(DateTime currentLocalTime) {
-		return isWithin10MinutesOfHour(currentLocalTime, 11);
+		return isWithin10MinutesOfHourAndMinute(currentLocalTime, 11, 0);
 	}
 
-	private boolean isWithin10MinutesOfHour(DateTime currentLocalTime, int i) {
+	private boolean isWithin10MinutesOfHourAndMinute(DateTime currentLocalTime, int targetHour, int targetMinute) {
 		int hourOfDay = currentLocalTime.getHourOfDay();
 		int minuteOfHour = currentLocalTime.getMinuteOfHour();
-		if (hourOfDay == i && minuteOfHour < 10) {
+		if (hourOfDay == targetHour &&  minuteOfHour >= targetMinute && minuteOfHour < (targetMinute + 10)) {
 			return true;
 		}
 		return false;
