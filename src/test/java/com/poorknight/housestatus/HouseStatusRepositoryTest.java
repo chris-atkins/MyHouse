@@ -18,7 +18,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
-import org.testcontainers.containers.MySQLContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.sql.*;
 import java.util.List;
@@ -44,7 +44,7 @@ public class HouseStatusRepositoryTest {
 
 
 		@ClassRule
-		public static MySQLContainer mySQLContainer = new MySQLContainer("mysql:5.7.24")
+		public static PostgreSQLContainer mySQLContainer = new PostgreSQLContainer<>("postgres:16-alpine")
 				.withDatabaseName("myhouse")
 				.withUsername("Chris")
 				.withPassword("theBestPassword");
@@ -81,8 +81,8 @@ public class HouseStatusRepositoryTest {
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			System.out.println("Connected to database");
 
-			String insert1 = "INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP) values (\"2017-01-01 00:00:00\", \"2018-01-01 00:00:00\", 68.5)";
-			String insert2 = "INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP) values (\"2017-02-02 00:00:00\", \"2018-02-02 00:00:00\", 64.25)";
+			String insert1 = "INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP) values ('2017-01-01 00:00:00', '2018-01-01 00:00:00', 68.5)";
+			String insert2 = "INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP) values ('2017-02-02 00:00:00', '2018-02-02 00:00:00', 64.25)";
 
 			Statement statement = connection.createStatement();
 			statement.execute(insert1);
@@ -326,7 +326,7 @@ public class HouseStatusRepositoryTest {
 			String formatString = "INSERT INTO HOUSE_STATUS(" +
 					"TIME_UTC, TIME_LOCAL, HOUSE_TEMP, TEMP_SETTING, FURNACE_STATE, " +
 					"EXTERNAL_TEMP_F, EXTERNAL_WIND_SPEED_MPH, EXTERNAL_HUMIDITY_PERCENT, EXTERNAL_PRESSURE_HPA) " +
-					"values (\"%s\", \"%s\", %5.2f, %5.2f, \"%s\", %5.2f, %5.2f, %5.2f, %6.2f)";
+					"values ('%s', '%s', %5.2f, %5.2f, '%s', %5.2f, %5.2f, %5.2f, %6.2f)";
 			String insertStatement = String.format(formatString, "2018-03-03T12:30:00", "2018-04-04T04:30:00", 1d, 1d, "OFF", 1d, 1d, 1d, 1d);
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);

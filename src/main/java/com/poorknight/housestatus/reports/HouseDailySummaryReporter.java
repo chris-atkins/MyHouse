@@ -92,6 +92,7 @@ public class HouseDailySummaryReporter {
 	}
 
 	private Double findAverageTimeBetweenHeaterCyclesAtOneTemp(List<HouseDataPoint> dataPoints) {
+		// TODO - NONE OF THESE CLCULATIONS TAKES "LOCKOUT" STATE INTO CONSIDERATION
 		return findAverageTimeBetweenCycles(dataPoints, FurnaceState.HEAT_ON);
 	}
 
@@ -100,6 +101,9 @@ public class HouseDailySummaryReporter {
 	}
 
 	private Double findAverageTimeBetweenCycles(List<HouseDataPoint> dataPoints, FurnaceState targetState) {
+
+		// TODO - NONE OF THESE CALCULATIONS TAKES "LOCKOUT" STATE INTO CONSIDERATION
+
 		if (dataPoints.size() == 0) {
 			return null;
 		}

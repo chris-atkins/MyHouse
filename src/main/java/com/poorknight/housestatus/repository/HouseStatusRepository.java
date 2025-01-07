@@ -29,7 +29,8 @@ public class HouseStatusRepository {
 		try {
 			connection = databaseConnector.getConnection();
 			statement = connection.createStatement();
-			statement.execute(buildInsertStatement(currentUtcTime, currentLocalTime, thermostatStatus, weatherStatus));
+			String insertStatement = buildInsertStatement(currentUtcTime, currentLocalTime, thermostatStatus, weatherStatus);
+			statement.execute(insertStatement);
 
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
@@ -68,14 +69,14 @@ public class HouseStatusRepository {
 		String formatString = "INSERT INTO HOUSE_STATUS(" +
 				"TIME_UTC, TIME_LOCAL, HOUSE_TEMP, TEMP_SETTING, FURNACE_STATE, " +
 				"EXTERNAL_TEMP_F, EXTERNAL_WIND_SPEED_MPH, EXTERNAL_HUMIDITY_PERCENT, EXTERNAL_PRESSURE_HPA, THERMOSTAT_MODE) " +
-				"values (\"%s\", \"%s\", %5.2f, %5.2f, \"%s\", %5.2f, %5.2f, %5.2f, %6.2f, \"%s\")";
+				"values ('%s', '%s', %5.2f, %5.2f, '%s', %5.2f, %5.2f, %5.2f, %6.2f, '%s')";
 		return String.format(formatString, utcTime, localTime, temp, tempSetting, furnaceState, externalTemp, windSpeed, humidity, pressure, thermostatMode);
 	}
 
 	public List<HouseDataPoint> retrieveHouseStatusFrom(DateTime startTimeUtc, DateTime endTimeUtc) {
 		String startTimeString = startTimeUtc.toString(DATE_TIME_PATTERN);
 		String endTimeString = endTimeUtc.toString(DATE_TIME_PATTERN);
-		String query = "SELECT * FROM HOUSE_STATUS WHERE TIME_UTC >= \"" + startTimeString + "\" AND TIME_UTC <= \"" + endTimeString + "\"";
+		String query = "SELECT * FROM HOUSE_STATUS WHERE TIME_UTC >= '" + startTimeString + "' AND TIME_UTC <= '" + endTimeString + "'";
 
 		Connection connection = null;
 		Statement statement = null;

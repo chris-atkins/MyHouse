@@ -43,7 +43,7 @@
 		<hamcrest-library.version>2.1</hamcrest-library.version>
 		<hamcrest-core.version>2.1</hamcrest-core.version>
 		<hamcrest-date.version>2.0.5</hamcrest-date.version>
-		<testcontainers.mysql.version>1.10.7</testcontainers.mysql.version>
+		<testcontainers.postgres.version>1.20.1</testcontainers.postgres.version>
 		<mysql-connector-java.version>8.0.16</mysql-connector-java.version>
 
 		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -54,7 +54,8 @@
 
 		<slf4j-api.version>1.7.26</slf4j-api.version>
 		<logback-classic.version>1.2.3</logback-classic.version>
-		<flyway-core.version>5.2.4</flyway-core.version>
+		<flyway-core.version>7.0.4</flyway-core.version>
+		<flyway-postgres.version>10.18.2</flyway-postgres.version>
 	</properties>
 
 	<!-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ DEPENDENCIES ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ -->
@@ -150,15 +151,21 @@
 		</dependency>
 
 		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<version>${mysql-connector-java.version}</version>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>${flyway-core.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-			<version>${flyway-core.version}</version>
+			<artifactId>flyway-database-postgresql</artifactId>
+			<version>${flyway-postgres.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.postgresql</groupId>
+			<artifactId>postgresql</artifactId>
+			<version>42.7.3</version>
 		</dependency>
 
 		<dependency>
@@ -244,8 +251,8 @@
 
 		<dependency>
 			<groupId>org.testcontainers</groupId>
-			<artifactId>mysql</artifactId>
-			<version>${testcontainers.mysql.version}</version>
+			<artifactId>postgresql</artifactId>
+			<version>${testcontainers.postgres.version}</version>
 			<scope>test</scope>
 		</dependency>
 

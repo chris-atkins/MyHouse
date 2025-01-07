@@ -7,7 +7,6 @@ import com.poorknight.house.thermostat.ThermostatStatus;
 import com.poorknight.house.thermostat.ThermostatStatus.FurnaceState;
 import com.poorknight.house.thermostat.ThermostatStatus.ThermostatMode;
 import org.assertj.core.data.Offset;
-import org.jetbrains.annotations.NotNull;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.junit.Before;
@@ -17,6 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import javax.validation.constraints.NotNull;
 import java.util.Arrays;
 import java.util.Collections;
 
