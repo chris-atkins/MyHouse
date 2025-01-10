@@ -66,7 +66,7 @@ public class HouseStatusRepository {
 		Double humidity = weatherStatus.getHumidityPercent();
 		Double pressure = weatherStatus.getPressureHPa();
 
-		String formatString = "INSERT INTO house_status(" +
+		String formatString = "INSERT INTO my_house.house_status(" +
 				"time_utc, time_local, house_temp, temp_setting, furnace_state, " +
 				"external_temp_f, external_wind_speed_mph, external_humidity_percent, external_pressure_hpa, thermostat_mode) " +
 				"values ('%s', '%s', %5.2f, %5.2f, '%s', %5.2f, %5.2f, %5.2f, %6.2f, '%s')";
@@ -76,7 +76,7 @@ public class HouseStatusRepository {
 	public List<HouseDataPoint> retrieveHouseStatusFrom(DateTime startTimeUtc, DateTime endTimeUtc) {
 		String startTimeString = startTimeUtc.toString(DATE_TIME_PATTERN);
 		String endTimeString = endTimeUtc.toString(DATE_TIME_PATTERN);
-		String query = "SELECT * FROM house_status WHERE time_utc >= '" + startTimeString + "' AND time_utc <= '" + endTimeString + "'";
+		String query = "SELECT * FROM my_house.house_status WHERE time_utc >= '" + startTimeString + "' AND time_utc <= '" + endTimeString + "'";
 
 		Connection connection = null;
 		Statement statement = null;
