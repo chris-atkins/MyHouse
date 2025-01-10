@@ -66,9 +66,9 @@ public class HouseStatusRepository {
 		Double humidity = weatherStatus.getHumidityPercent();
 		Double pressure = weatherStatus.getPressureHPa();
 
-		String formatString = "INSERT INTO HOUSE_STATUS(" +
-				"TIME_UTC, TIME_LOCAL, HOUSE_TEMP, TEMP_SETTING, FURNACE_STATE, " +
-				"EXTERNAL_TEMP_F, EXTERNAL_WIND_SPEED_MPH, EXTERNAL_HUMIDITY_PERCENT, EXTERNAL_PRESSURE_HPA, THERMOSTAT_MODE) " +
+		String formatString = "INSERT INTO house_status(" +
+				"time_utc, time_local, house_temp, temp_setting, furnace_state, " +
+				"external_temp_f, external_wind_speed_mph, external_humidity_percent, external_pressure_hpa, thermostat_mode) " +
 				"values ('%s', '%s', %5.2f, %5.2f, '%s', %5.2f, %5.2f, %5.2f, %6.2f, '%s')";
 		return String.format(formatString, utcTime, localTime, temp, tempSetting, furnaceState, externalTemp, windSpeed, humidity, pressure, thermostatMode);
 	}
@@ -76,7 +76,7 @@ public class HouseStatusRepository {
 	public List<HouseDataPoint> retrieveHouseStatusFrom(DateTime startTimeUtc, DateTime endTimeUtc) {
 		String startTimeString = startTimeUtc.toString(DATE_TIME_PATTERN);
 		String endTimeString = endTimeUtc.toString(DATE_TIME_PATTERN);
-		String query = "SELECT * FROM HOUSE_STATUS WHERE TIME_UTC >= '" + startTimeString + "' AND TIME_UTC <= '" + endTimeString + "'";
+		String query = "SELECT * FROM house_status WHERE time_utc >= '" + startTimeString + "' AND time_utc <= '" + endTimeString + "'";
 
 		Connection connection = null;
 		Statement statement = null;
@@ -115,20 +115,20 @@ public class HouseStatusRepository {
 	}
 
 	private HouseDataPoint buildHouseDataPointFromCurrentResult(ResultSet resultSet) throws SQLException {
-		DateTime localTime = DATE_TIME_FORMAT.parseDateTime(resultSet.getString("TIME_LOCAL"));
-		DateTime utcTime = DATE_TIME_FORMAT.parseDateTime(resultSet.getString("TIME_UTC"));
+		DateTime localTime = DATE_TIME_FORMAT.parseDateTime(resultSet.getString("time_local"));
+		DateTime utcTime = DATE_TIME_FORMAT.parseDateTime(resultSet.getString("time_utc"));
 
-		Double houseTemp = resultSet.getDouble("HOUSE_TEMP");
-		Double tempSetting = resultSet.getDouble("TEMP_SETTING");
-		FurnaceState furnaceState = FurnaceState.valueOf(resultSet.getString("FURNACE_STATE"));
-		String thermostat_mode = resultSet.getString("THERMOSTAT_MODE");
+		Double houseTemp = resultSet.getDouble("house_temp");
+		Double tempSetting = resultSet.getDouble("temp_setting");
+		FurnaceState furnaceState = FurnaceState.valueOf(resultSet.getString("furnace_state"));
+		String thermostat_mode = resultSet.getString("thermostat_mode");
 		ThermostatMode thermostatMode = thermostat_mode == null ? null : ThermostatMode.valueOf(thermostat_mode);
 		ThermostatStatus thermostatStatus = new ThermostatStatus(houseTemp, tempSetting, furnaceState, thermostatMode);
 
-		Double tempFahrenheit = resultSet.getDouble("EXTERNAL_TEMP_F");
-		Double windSpeedMph = resultSet.getDouble("EXTERNAL_WIND_SPEED_MPH");
-		Double humidityPercent = resultSet.getDouble("EXTERNAL_HUMIDITY_PERCENT");
-		Double pressureHPa = resultSet.getDouble("EXTERNAL_PRESSURE_HPA");
+		Double tempFahrenheit = resultSet.getDouble("external_temp_f");
+		Double windSpeedMph = resultSet.getDouble("external_wind_speed_mph");
+		Double humidityPercent = resultSet.getDouble("external_humidity_percent");
+		Double pressureHPa = resultSet.getDouble("external_pressure_hpa");
 		WeatherStatus weatherStatus = new WeatherStatus(tempFahrenheit, windSpeedMph, humidityPercent, pressureHPa);
 
 		return new HouseDataPoint(localTime, utcTime, thermostatStatus, weatherStatus);
