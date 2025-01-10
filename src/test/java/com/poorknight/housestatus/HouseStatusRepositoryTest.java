@@ -45,7 +45,7 @@ public class HouseStatusRepositoryTest {
 
 		@ClassRule
 		public static PostgreSQLContainer mySQLContainer = new PostgreSQLContainer<>("postgres:16-alpine")
-				.withDatabaseName("myhouse")
+				.withDatabaseName("my_house")
 				.withUsername("Chris")
 				.withPassword("theBestPassword");
 
@@ -55,7 +55,8 @@ public class HouseStatusRepositoryTest {
 			connectionProps.put("user", "Chris");
 			connectionProps.put("password", "theBestPassword");
 
-			Flyway flyway = Flyway.configure().dataSource(mySQLContainer.getJdbcUrl(), "Chris", "theBestPassword").load();
+			Flyway flyway = Flyway.configure().dataSource(mySQLContainer.getJdbcUrl(), "Chris", "theBestPassword")
+					.schemas("my_house").defaultSchema("my_house").load();
 			flyway.migrate();
 
 			DatabaseConnectionParameters mysqlConnectionParameters = new DatabaseConnectionParameters(mySQLContainer.getJdbcUrl(), connectionProps);
@@ -68,7 +69,7 @@ public class HouseStatusRepositoryTest {
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 
 			Statement statement = connection.createStatement();
-			statement.execute("DELETE FROM HOUSE_STATUS");
+			statement.execute("DELETE FROM my_house.house_status");
 			statement.close();
 			connection.close();
 			System.out.println("Deleted All Records in tearDown()");
@@ -81,8 +82,8 @@ public class HouseStatusRepositoryTest {
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			System.out.println("Connected to database");
 
-			String insert1 = "INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP) values ('2017-01-01 00:00:00', '2018-01-01 00:00:00', 68.5)";
-			String insert2 = "INSERT INTO HOUSE_STATUS(TIME_UTC, TIME_LOCAL, HOUSE_TEMP) values ('2017-02-02 00:00:00', '2018-02-02 00:00:00', 64.25)";
+			String insert1 = "INSERT INTO my_house.house_status(time_utc, time_local, house_temp) values ('2017-01-01 00:00:00', '2018-01-01 00:00:00', 68.5)";
+			String insert2 = "INSERT INTO my_house.house_status(time_utc, time_local, house_temp) values ('2017-02-02 00:00:00', '2018-02-02 00:00:00', 64.25)";
 
 			Statement statement = connection.createStatement();
 			statement.execute(insert1);
@@ -90,13 +91,13 @@ public class HouseStatusRepositoryTest {
 			statement.close();
 
 			statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM HOUSE_STATUS");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM my_house.house_status");
 
 			resultSet.next();
-			int id1 = resultSet.getInt("ID");
-			String utcTime = resultSet.getString("TIME_UTC");
-			String localTime = resultSet.getString("TIME_LOCAL");
-			double temp = resultSet.getDouble("HOUSE_TEMP");
+			int id1 = resultSet.getInt("id");
+			String utcTime = resultSet.getString("time_utc");
+			String localTime = resultSet.getString("time_local");
+			double temp = resultSet.getDouble("house_temp");
 			System.out.println("Row1: " + id1 + " | " + utcTime + " | " + localTime + " | " + temp);
 			assertThat(id1).isGreaterThan(0);
 			assertThat(utcTime).isEqualTo("2017-01-01 00:00:00");
@@ -104,10 +105,10 @@ public class HouseStatusRepositoryTest {
 			assertThat(temp).isEqualTo(68.5);
 
 			resultSet.next();
-			int id2 = resultSet.getInt("ID");
-			utcTime = resultSet.getString("TIME_UTC");
-			localTime = resultSet.getString("TIME_LOCAL");
-			temp = resultSet.getDouble("HOUSE_TEMP");
+			int id2 = resultSet.getInt("id");
+			utcTime = resultSet.getString("time_utc");
+			localTime = resultSet.getString("time_local");
+			temp = resultSet.getDouble("house_temp");
 
 			System.out.println("Row:2 " + id2 + " | " + utcTime + " | " + localTime + " | " + temp);
 			assertThat(id2).isEqualTo(id1 + 1);
@@ -139,19 +140,19 @@ public class HouseStatusRepositoryTest {
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM HOUSE_STATUS");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM my_house.house_status");
 			resultSet.next();
 
-			String utcTimeString = resultSet.getString("TIME_UTC");
-			String localTimeString = resultSet.getString("TIME_LOCAL");
-			double temp = resultSet.getDouble("HOUSE_TEMP");
-			double setTemp = resultSet.getDouble("TEMP_SETTING");
-			String stateOfFurnace = resultSet.getString("FURNACE_STATE");
-			double outsideTemp = resultSet.getDouble("EXTERNAL_TEMP_F");
-			double windSpeed = resultSet.getDouble("EXTERNAL_WIND_SPEED_MPH");
-			double humidity = resultSet.getDouble("EXTERNAL_HUMIDITY_PERCENT");
-			double pressure = resultSet.getDouble("EXTERNAL_PRESSURE_HPA");
-			String modeOfThermostate = resultSet.getString("THERMOSTAT_MODE");
+			String utcTimeString = resultSet.getString("time_utc");
+			String localTimeString = resultSet.getString("time_local");
+			double temp = resultSet.getDouble("house_temp");
+			double setTemp = resultSet.getDouble("temp_setting");
+			String stateOfFurnace = resultSet.getString("furnace_state");
+			double outsideTemp = resultSet.getDouble("external_temp_f");
+			double windSpeed = resultSet.getDouble("external_wind_speed_mph");
+			double humidity = resultSet.getDouble("external_humidity_percent");
+			double pressure = resultSet.getDouble("external_pressure_hpa");
+			String modeOfThermostate = resultSet.getString("thermostat_mode");
 
 			assertThat(utcTimeString).isEqualTo("2018-03-03 12:30:00");
 			assertThat(localTimeString).isEqualTo("2018-04-04 04:30:00");
@@ -218,10 +219,10 @@ public class HouseStatusRepositoryTest {
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM HOUSE_STATUS");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM my_house.house_status");
 			resultSet.next();
 
-			double outsideTemp = resultSet.getDouble("EXTERNAL_TEMP_F");
+			double outsideTemp = resultSet.getDouble("external_temp_f");
 
 			assertThat(outsideTemp).isEqualTo(101.01);
 
@@ -241,10 +242,10 @@ public class HouseStatusRepositoryTest {
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM HOUSE_STATUS");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM my_house.house_status");
 			resultSet.next();
 
-			double outsideTemp = resultSet.getDouble("EXTERNAL_TEMP_F");
+			double outsideTemp = resultSet.getDouble("external_temp_f");
 
 			assertThat(outsideTemp).isEqualTo(-13.55);
 
@@ -264,10 +265,10 @@ public class HouseStatusRepositoryTest {
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM HOUSE_STATUS");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM my_house.house_status");
 			resultSet.next();
 
-			double outsideTemp = resultSet.getDouble("EXTERNAL_HUMIDITY_PERCENT");
+			double outsideTemp = resultSet.getDouble("external_humidity_percent");
 
 			assertThat(outsideTemp).isEqualTo(100d);
 
@@ -287,10 +288,10 @@ public class HouseStatusRepositoryTest {
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM HOUSE_STATUS");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM my_house.house_status");
 			resultSet.next();
 
-			double humidityPercent = resultSet.getDouble("EXTERNAL_HUMIDITY_PERCENT");
+			double humidityPercent = resultSet.getDouble("external_humidity_percent");
 
 			assertThat(humidityPercent).isEqualTo(55.55);
 
@@ -310,10 +311,10 @@ public class HouseStatusRepositoryTest {
 
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 			Statement statement = connection.createStatement();
-			ResultSet resultSet = statement.executeQuery("SELECT * FROM HOUSE_STATUS");
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM my_house.house_status");
 			resultSet.next();
 
-			double windSpeed = resultSet.getDouble("EXTERNAL_WIND_SPEED_MPH");
+			double windSpeed = resultSet.getDouble("external_wind_speed_mph");
 
 			assertThat(windSpeed).isEqualTo(155.55);
 
@@ -323,9 +324,9 @@ public class HouseStatusRepositoryTest {
 
 		@Test
 		public void handlesNullThermostatMode() throws Exception {
-			String formatString = "INSERT INTO HOUSE_STATUS(" +
-					"TIME_UTC, TIME_LOCAL, HOUSE_TEMP, TEMP_SETTING, FURNACE_STATE, " +
-					"EXTERNAL_TEMP_F, EXTERNAL_WIND_SPEED_MPH, EXTERNAL_HUMIDITY_PERCENT, EXTERNAL_PRESSURE_HPA) " +
+			String formatString = "INSERT INTO my_house.house_status(" +
+					"time_utc, time_local, house_temp, temp_setting, furnace_state, " +
+					"external_temp_f, external_wind_speed_mph, external_humidity_percent, external_pressure_hpa) " +
 					"values ('%s', '%s', %5.2f, %5.2f, '%s', %5.2f, %5.2f, %5.2f, %6.2f)";
 			String insertStatement = String.format(formatString, "2018-03-03T12:30:00", "2018-04-04T04:30:00", 1d, 1d, "OFF", 1d, 1d, 1d, 1d);
 
