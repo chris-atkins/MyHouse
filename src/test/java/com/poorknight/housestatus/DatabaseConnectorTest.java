@@ -1,7 +1,7 @@
 package com.poorknight.housestatus;
 
 import com.poorknight.housestatus.repository.DatabaseConnector;
-import com.poorknight.housestatus.repository.MySqlConnectionParameters;
+import com.poorknight.housestatus.repository.DatabaseConnectionParameters;
 import com.poorknight.server.settings.Environment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,7 +28,7 @@ public class DatabaseConnectorTest {
 
 		DatabaseConnector databaseConnector = new DatabaseConnector();
 
-		MySqlConnectionParameters mysqlConnectionParameters = databaseConnector.getMysqlConnectionParameters();
+		DatabaseConnectionParameters mysqlConnectionParameters = databaseConnector.getDatabaseConnectionParameters();
 		assertThat(mysqlConnectionParameters.getJdbcUrl()).isEqualTo("oh hi");
 		assertThat(mysqlConnectionParameters.getConnectionProps().getProperty("user")).isEqualTo("the best one");
 		assertThat(mysqlConnectionParameters.getConnectionProps().getProperty("password")).isEqualTo("penultimate one out of two");

@@ -2,12 +2,12 @@ package com.poorknight.housestatus.repository;
 
 import java.util.Properties;
 
-public class MySqlConnectionParameters {
+public class DatabaseConnectionParameters {
 
 	private final String jdbcUrl;
 	private final Properties connectionProps;
 
-	public MySqlConnectionParameters(String jdbcUrl, Properties connectionProps) {
+	public DatabaseConnectionParameters(String jdbcUrl, Properties connectionProps) {
 		this.jdbcUrl = jdbcUrl;
 		this.connectionProps = connectionProps;
 	}

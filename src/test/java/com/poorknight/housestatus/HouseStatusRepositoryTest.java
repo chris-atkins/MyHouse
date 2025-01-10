@@ -3,7 +3,7 @@ package com.poorknight.housestatus;
 import com.poorknight.housestatus.repository.DatabaseConnector;
 import com.poorknight.housestatus.repository.HouseDataPoint;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
-import com.poorknight.housestatus.repository.MySqlConnectionParameters;
+import com.poorknight.housestatus.repository.DatabaseConnectionParameters;
 import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.house.thermostat.ThermostatStatus;
 import com.poorknight.house.thermostat.ThermostatStatus.FurnaceState;
@@ -58,7 +58,7 @@ public class HouseStatusRepositoryTest {
 			Flyway flyway = Flyway.configure().dataSource(mySQLContainer.getJdbcUrl(), "Chris", "theBestPassword").load();
 			flyway.migrate();
 
-			MySqlConnectionParameters mysqlConnectionParameters = new MySqlConnectionParameters(mySQLContainer.getJdbcUrl(), connectionProps);
+			DatabaseConnectionParameters mysqlConnectionParameters = new DatabaseConnectionParameters(mySQLContainer.getJdbcUrl(), connectionProps);
 			DatabaseConnector databaseConnector = new DatabaseConnector(mysqlConnectionParameters);
 			repository = new HouseStatusRepository(databaseConnector);
 		}

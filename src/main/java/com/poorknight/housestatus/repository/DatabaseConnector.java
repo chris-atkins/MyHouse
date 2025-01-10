@@ -9,7 +9,7 @@ import java.util.Properties;
 
 public class DatabaseConnector {
 
-	private MySqlConnectionParameters mysqlConnectionParameters;
+	private DatabaseConnectionParameters databaseConnectionParameters;
 
 	public DatabaseConnector() {
 		String jdbcString = Environment.getEnvironmentVariable("JDBC_CONNECTION_STRING");
@@ -19,18 +19,18 @@ public class DatabaseConnector {
 		Properties connectionProps = new Properties();
 		connectionProps.setProperty("user", user);
 		connectionProps.setProperty("password", password);
-		this.mysqlConnectionParameters = new MySqlConnectionParameters(jdbcString, connectionProps);
+		this.databaseConnectionParameters = new DatabaseConnectionParameters(jdbcString, connectionProps);
 	}
 
-	public DatabaseConnector(MySqlConnectionParameters mysqlConnectionParameters) {
-		this.mysqlConnectionParameters = mysqlConnectionParameters;
+	public DatabaseConnector(DatabaseConnectionParameters databaseConnectionParameters) {
+		this.databaseConnectionParameters = databaseConnectionParameters;
 	}
 
 	public Connection getConnection() throws SQLException {
-		return DriverManager.getConnection(mysqlConnectionParameters.getJdbcUrl(), mysqlConnectionParameters.getConnectionProps());
+		return DriverManager.getConnection(databaseConnectionParameters.getJdbcUrl(), databaseConnectionParameters.getConnectionProps());
 	}
 
-	public MySqlConnectionParameters getMysqlConnectionParameters() {
-		return this.mysqlConnectionParameters;
+	public DatabaseConnectionParameters getDatabaseConnectionParameters() {
+		return this.databaseConnectionParameters;
 	}
 }

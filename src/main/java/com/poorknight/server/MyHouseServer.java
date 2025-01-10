@@ -10,7 +10,7 @@ import com.poorknight.housestatus.reports.HouseDailySummaryReporter;
 import com.poorknight.housestatus.reports.HouseStatusReporter;
 import com.poorknight.housestatus.repository.DatabaseConnector;
 import com.poorknight.housestatus.repository.HouseStatusRepository;
-import com.poorknight.housestatus.repository.MySqlConnectionParameters;
+import com.poorknight.housestatus.repository.DatabaseConnectionParameters;
 import com.poorknight.housestatus.weather.WeatherRetriever;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager.FancyLightControllerRunnable;
@@ -51,7 +51,7 @@ public class MyHouseServer {
 		final HttpConnectionFactory httpConnectionFactory = setupHttps();
 		final ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
 
-		// ServerConnector serverConnector = new ServerConnector(server, setupHttp());
+//		 ServerConnector serverConnector = new ServerConnector(server, setupHttp());
 
 		serverConnector.setPort(PORT);
 		server.addConnector(serverConnector);
@@ -89,12 +89,16 @@ public class MyHouseServer {
 
 	private static void prepareDatabase() {
 		DatabaseConnector connector = new DatabaseConnector();
-		MySqlConnectionParameters mysqlConnectionParameters = connector.getMysqlConnectionParameters();
-		String jdbcUrl = mysqlConnectionParameters.getJdbcUrl();
-		String user = mysqlConnectionParameters.getConnectionProps().getProperty("user");
-		String password = mysqlConnectionParameters.getConnectionProps().getProperty("password");
+		DatabaseConnectionParameters connectionParameters = connector.getDatabaseConnectionParameters();
+		String jdbcUrl = connectionParameters.getJdbcUrl();
+		String user = connectionParameters.getConnectionProps().getProperty("user");
+		String password = connectionParameters.getConnectionProps().getProperty("password");
 
-		Flyway flyway = Flyway.configure().dataSource(jdbcUrl, user, password).load();
+		Flyway flyway = Flyway.configure()
+				.dataSource(jdbcUrl, user, password)
+				.schemas("my_house")
+				.defaultSchema("my_house")
+				.load();
 		flyway.migrate();
 	}
 
