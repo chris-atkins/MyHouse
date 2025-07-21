@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)

@@ -7,26 +7,24 @@ import com.poorknight.housestatus.weather.WeatherStatus;
 import com.poorknight.server.settings.Environment;
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.ws.rs.core.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Client.class, Environment.class})
+@ExtendWith(MockitoExtension.class)
 public class WeatherRetrieverTest {
 
 	private final static String url =  "https://api.openweathermap.org/data/2.5/weather?id=5010636&units=imperial&APPID=12345";
 
-	private WeatherRetriever weatherRetriever;
+	private WeatherRetriever weatherRetriever = new WeatherRetriever();;
 
 	@Mock
 	private Client client;
@@ -37,29 +35,27 @@ public class WeatherRetrieverTest {
 	@Mock
 	private WebResource.Builder builder;
 
-	@Before
-	public void setup() {
-		PowerMockito.mockStatic(Client.class);
-		PowerMockito.mockStatic(Environment.class);
-		PowerMockito.when(Client.create()).thenReturn(client);
-		PowerMockito.when(client.resource(url)).thenReturn(webResource);
-		PowerMockito.when(Environment.getEnvironmentVariable("WEATHER_APP_ID")).thenReturn("12345");
-		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-
-		weatherRetriever = new WeatherRetriever();
-	}
-
 	@Test
 	public void returnsCorrectWeather() throws Exception {
-		JsonNode response = buildResponse(1.2, 3.4, 5.6, 7.8);
-		when(builder.get(JsonNode.class)).thenReturn(response);
+		try (MockedStatic<Client> mockedClient = mockStatic(Client.class)) {
+			try (MockedStatic<Environment> mockedEnvironment = mockStatic(Environment.class)) {
 
-		WeatherStatus currentWeather = weatherRetriever.findCurrentWeather();
+				mockedEnvironment.when(() -> Environment.getEnvironmentVariable("WEATHER_APP_ID")).thenReturn("12345");
 
-		assertThat(currentWeather.getTempFahrenheit()).isEqualTo(1.2);
-		assertThat(currentWeather.getWindSpeedMph()).isEqualTo(3.4);
-		assertThat(currentWeather.getHumidityPercent()).isEqualTo(5.6);
-		assertThat(currentWeather.getPressureHPa()).isEqualTo(7.8);
+				mockedClient.when(Client::create).thenReturn(client);
+				when(client.resource(url)).thenReturn(webResource);
+				when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+				JsonNode response = buildResponse(1.2, 3.4, 5.6, 7.8);
+				when(builder.get(JsonNode.class)).thenReturn(response);
+
+				WeatherStatus currentWeather = weatherRetriever.findCurrentWeather();
+
+				assertThat(currentWeather.getTempFahrenheit()).isEqualTo(1.2);
+				assertThat(currentWeather.getWindSpeedMph()).isEqualTo(3.4);
+				assertThat(currentWeather.getHumidityPercent()).isEqualTo(5.6);
+				assertThat(currentWeather.getPressureHPa()).isEqualTo(7.8);
+			}
+		}
 	}
 
 	private JsonNode buildResponse(Double temp, Double windSpeed, Double humidity, Double pressure) throws Exception {

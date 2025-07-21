@@ -21,9 +21,9 @@
 	<properties>
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<java.release.version>11</java.release.version>
-		<!--<maven.compiler.source>1.8</maven.compiler.source>-->
-		<!--<maven.compiler.target>1.8</maven.compiler.target>-->
+		<java.release.version>18</java.release.version>
+		<maven.compiler.source>18</maven.compiler.source>
+		<maven.compiler.target>18</maven.compiler.target>
 
 		<jetty.version>9.4.15.v20190215</jetty.version>
 		<alexa-skills-kit.version>1.8.1</alexa-skills-kit.version>
@@ -36,14 +36,15 @@
 		<apache.commons.lang.version>3.8.1</apache.commons.lang.version>
 
 		<junit.version>4.13.1</junit.version>
+		<junit-jupiter.version>5.7.0</junit-jupiter.version>
 		<assertj.version>3.12.1</assertj.version>
-		<mockito-core.version>2.25.1</mockito-core.version>
+		<mockito-core.version>5.18.0</mockito-core.version>
 		<powermock-api-mockito2.version>2.0.0</powermock-api-mockito2.version>
 		<powermock-module-junit4.version>2.0.0</powermock-module-junit4.version>
 		<hamcrest-library.version>2.1</hamcrest-library.version>
 		<hamcrest-core.version>2.1</hamcrest-core.version>
 		<hamcrest-date.version>2.0.5</hamcrest-date.version>
-		<testcontainers.postgres.version>1.20.1</testcontainers.postgres.version>
+		<testcontainers.postgres.version>1.20.4</testcontainers.postgres.version>
 		<mysql-connector-java.version>8.0.16</mysql-connector-java.version>
 
 		<maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -191,6 +192,30 @@
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 			<version>${junit.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-api</artifactId>
+			<scope>test</scope>
+			<version>${junit-jupiter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<scope>test</scope>
+			<version>${junit-jupiter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-junit-jupiter</artifactId>
+			<version>${junit-jupiter.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-inline</artifactId>
+			<version>3.8.0</version>
+			<scope>test</scope>
 		</dependency>
 
 		<dependency>

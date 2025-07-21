@@ -28,7 +28,7 @@ import static com.poorknight.house.thermostat.ThermostatStatus.FurnaceState.*;
 import static com.poorknight.house.thermostat.ThermostatStatus.FurnaceState.OFF;
 import static com.poorknight.house.thermostat.ThermostatStatus.ThermostatMode.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Matchers.anyString;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;

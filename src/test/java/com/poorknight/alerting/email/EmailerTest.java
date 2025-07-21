@@ -4,7 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 
 import javax.mail.Address;
 import javax.mail.AuthenticationFailedException;
@@ -13,24 +14,17 @@ import javax.mail.Session;
 import javax.mail.Transport;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.poorknight.server.settings.Environment;
-
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({ Transport.class, Environment.class })
+@ExtendWith(MockitoExtension.class)
 public class EmailerTest {
 
-	private final String smtpPassword = RandomStringUtils.random(10);
-	private final String smtpUser = RandomStringUtils.random(10);
 	private final EmailTo to = new EmailTo("hi@its.me");
 	private final EmailFrom from = new EmailFrom("oh@hello.there");
 	private final EmailSubject subject = new EmailSubject(RandomStringUtils.random(10));
@@ -41,24 +35,22 @@ public class EmailerTest {
 	@Captor
 	private ArgumentCaptor<Message> messageCaptor;
 
-	@Before
+	@BeforeEach
 	public void setup() {
-		PowerMockito.mockStatic(Transport.class);
-		PowerMockito.mockStatic(Environment.class);
-		when(Environment.getEnvironmentVariable("SMTP_USER")).thenReturn(smtpUser);
-		when(Environment.getEnvironmentVariable("SMTP_PASSWORD")).thenReturn(smtpPassword);
 		emailer = Emailer.buildEmailer(to, from);
 	}
 
 	@Test
 	public void emailIsSetupCorrectly() throws Exception {
-		emailer.sendEmail(subject, body);
-		PowerMockito.verifyStatic(Transport.class);
-		Transport.send(messageCaptor.capture());
+		try (MockedStatic<Transport> mockedTransport = mockStatic(Transport.class)) {
 
-		final Message message = messageCaptor.getValue();
-		assertSessionIsCorrect(message.getSession());
-		assertMessageContentsAreCorrect(message);
+			emailer.sendEmail(subject, body);
+			mockedTransport.verify(() -> Transport.send(messageCaptor.capture()));
+
+			final Message message = messageCaptor.getValue();
+			assertSessionIsCorrect(message.getSession());
+			assertMessageContentsAreCorrect(message);
+		}
 	}
 
 	private void assertSessionIsCorrect(final Session session) {
@@ -79,18 +71,16 @@ public class EmailerTest {
 		assertThat(actualFrom[0].toString(), equalTo(from.getFrom()));
 		assertThat(actualRecipients.length, equalTo(1));
 		assertThat(actualRecipients[0].toString(), equalTo(to.getTo()));
-		assertThat(actualSubject.toString(), equalTo(subject.getSubject()));
-		assertThat(actualContent.toString(), equalTo(body.getBody()));
+		assertThat(actualSubject, equalTo(subject.getSubject()));
+		assertThat(actualContent, equalTo(body.getBody()));
 	}
 
 	@Test
 	public void throwsExceptionIfAuthenticationFails() throws Exception {
-		try {
-			PowerMockito.doThrow(new AuthenticationFailedException()).when(Transport.class);
-			Transport.send(Mockito.any(Message.class));
+		try (MockedStatic<Transport> mockedTransport = mockStatic(Transport.class)) {
+			mockedTransport.when(() -> Transport.send(any(Message.class))).thenThrow(AuthenticationFailedException.class);
 
-			final Emailer failEmailer = Emailer.buildEmailer(to, from);
-			failEmailer.sendEmail(subject, body);
+			emailer.sendEmail(subject, body);
 			fail("expecting exception");
 
 		} catch (final RuntimeException e) {
