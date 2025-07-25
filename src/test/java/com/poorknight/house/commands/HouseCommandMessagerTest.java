@@ -3,18 +3,15 @@ package com.poorknight.house.commands;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.TextNode;
-import com.poorknight.house.commands.HouseCommandMessager;
 import com.poorknight.server.WebResourceFactory;
 import com.sun.jersey.api.client.WebResource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 
 import javax.ws.rs.core.MediaType;
@@ -24,11 +21,9 @@ import static com.poorknight.house.commands.HouseCommand.DIM_LIGHTS;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(WebResourceFactory.class)
+@ExtendWith(MockitoExtension.class)
 public class HouseCommandMessagerTest {
 
 	private final static String houseCommandPath = "/house/command";
@@ -42,38 +37,39 @@ public class HouseCommandMessagerTest {
 	@Captor
 	private ArgumentCaptor<JsonNode> captor;
 
-	private HouseCommandMessager messager;
-
-	@Before
-	public void setup() {
-		PowerMockito.mockStatic(WebResourceFactory.class);
-		PowerMockito.when(WebResourceFactory.buildSecuredHomeWebResource(houseCommandPath)).thenReturn(webResource);
-		messager = new HouseCommandMessager();
-	}
+	private HouseCommandMessager messager= new HouseCommandMessager();
 
 	@Test
 	public void putsDesiredCommandInCorrectFormat() {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+		try(MockedStatic<WebResourceFactory> mockedFactory = mockStatic(WebResourceFactory.class)) {
+			mockedFactory.when(() -> WebResourceFactory.buildSecuredHomeWebResource(houseCommandPath)).thenReturn(webResource);
 
-		messager.requestHouseCommand(AT_WORK_MODE);
-		verify(builder).put(eq(JsonNode.class), captor.capture());
+			when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+			when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
 
-		JsonNode sentRequest = captor.getValue();
+			messager.requestHouseCommand(AT_WORK_MODE);
+			verify(builder).put(eq(JsonNode.class), captor.capture());
 
-		final JsonNode expectedRequest = JsonNodeFactory.instance.objectNode().put("command", AT_WORK_MODE.asPiString());
-		assertThat(sentRequest).isEqualTo(expectedRequest);
+			JsonNode sentRequest = captor.getValue();
+
+			final JsonNode expectedRequest = JsonNodeFactory.instance.objectNode().put("command", AT_WORK_MODE.asPiString());
+			assertThat(sentRequest).isEqualTo(expectedRequest);
+		}
 	}
 
 	@Test
 	public void returnsJsonResponseFromPi() {
-		when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		TextNode responseFromPi = JsonNodeFactory.instance.textNode(RandomStringUtils.random(10));
-		when(builder.put(eq(JsonNode.class), any(JsonNode.class))).thenReturn(responseFromPi);
+		try(MockedStatic<WebResourceFactory> mockedFactory = mockStatic(WebResourceFactory.class)) {
+			mockedFactory.when(() -> WebResourceFactory.buildSecuredHomeWebResource(houseCommandPath)).thenReturn(webResource);
 
-		JsonNode response = messager.requestHouseCommand(DIM_LIGHTS);
+			when(webResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+			when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+			TextNode responseFromPi = JsonNodeFactory.instance.textNode(RandomStringUtils.random(10));
+			when(builder.put(eq(JsonNode.class), any(JsonNode.class))).thenReturn(responseFromPi);
 
-		assertThat(response).isEqualTo(responseFromPi);
+			JsonNode response = messager.requestHouseCommand(DIM_LIGHTS);
+
+			assertThat(response).isEqualTo(responseFromPi);
+		}
 	}
 }

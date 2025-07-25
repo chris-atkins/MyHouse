@@ -2,23 +2,21 @@ package com.poorknight.endpoints;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.echo.EchoRequestHandler;
 import com.poorknight.echo.EchoRequestHandlerFactory;
 import com.poorknight.echo.EchoResponse;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(EchoRequestHandlerFactory.class)
+@ExtendWith(MockitoExtension.class)
 public class EchoEndpointTest {
 
 	private final EchoEndpoint endpoint = new EchoEndpoint();
@@ -32,17 +30,15 @@ public class EchoEndpointTest {
 	@Mock
 	private EchoResponse expectedResponse;
 
-	@Before
-	public void setup() {
-		PowerMockito.mockStatic(EchoRequestHandlerFactory.class);
-	}
-
 	@Test
 	public void enpointReturnsResultFromHandlerRetrievedFromFactory() throws Exception {
-		when(EchoRequestHandlerFactory.handlerFor(request)).thenReturn(handler);
-		when(handler.handle()).thenReturn(expectedResponse);
+		try (MockedStatic<EchoRequestHandlerFactory> mockedFactory = mockStatic(EchoRequestHandlerFactory.class)) {
 
-		final EchoResponse actualResponse = endpoint.postEchoRequest(request);
-		assertThat(actualResponse, is(expectedResponse));
+			mockedFactory.when(() -> EchoRequestHandlerFactory.handlerFor(request)).thenReturn(handler);
+			when(handler.handle()).thenReturn(expectedResponse);
+
+			final EchoResponse actualResponse = endpoint.postEchoRequest(request);
+			assertThat(actualResponse, is(expectedResponse));
+		}
 	}
 }

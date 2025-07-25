@@ -4,28 +4,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.poorknight.server.WebResourceFactory;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.verify;
 import static org.powermock.api.mockito.PowerMockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(WebResourceFactory.class)
+@ExtendWith(MockitoExtension.class)
 public class HueMessagerTest {
 
-	private HueMessager hueMessager;
+	private HueMessager hueMessager = new HueMessager();
 
 	@Mock
 	private WebResource.Builder webResource;
@@ -39,66 +34,83 @@ public class HueMessagerTest {
 	private final String lightsPath = "/lights/state";
 	private final String expectedRestType = "application/json";
 
-	@Before
+	@BeforeEach
 	public void setup() {
-		PowerMockito.mockStatic(WebResourceFactory.class);
-		when(WebResourceFactory.buildSecuredHomeWebResource(lightsPath)).thenReturn(webResource);
 		when(webResource.type(expectedRestType)).thenReturn(webResourceBuilder);
-		hueMessager = new HueMessager();
 	}
 
 	@Test
-	public void sendsOffRequestWhenCalled() throws Exception {
-		hueMessager.sendLightsOffRequest();
-		final JsonNode sentRequest = captureSentHueArgument();
-		assertThat(sentRequest.get("on").asBoolean(), equalTo(false));
+	public void sendsOffRequestWhenCalled() {
+		try(MockedStatic<WebResourceFactory> mockedFactory = mockStatic(WebResourceFactory.class)) {
+			mockedFactory.when(() -> WebResourceFactory.buildSecuredHomeWebResource(lightsPath)).thenReturn(webResource);
+
+			hueMessager.sendLightsOffRequest();
+			final JsonNode sentRequest = captureSentHueArgument();
+			assertThat(sentRequest.get("on").asBoolean(), equalTo(false));
+		}
 	}
 
 	@Test
-	public void sendsOnRequestWhenCalled_WithSameArgumentsAsNORMAL() throws Exception {
-		hueMessager.sendLightsOnRequest();
-		final JsonNode sentRequest = captureSentHueArgument();
-		assertExpectedNonChangingFields(sentRequest);
+	public void sendsOnRequestWhenCalled_WithSameArgumentsAsNORMAL() {
+		try(MockedStatic<WebResourceFactory> mockedFactory = mockStatic(WebResourceFactory.class)) {
+			mockedFactory.when(() -> WebResourceFactory.buildSecuredHomeWebResource(lightsPath)).thenReturn(webResource);
 
-		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
-		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.3852));
-		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.3815));
+			hueMessager.sendLightsOnRequest();
+			final JsonNode sentRequest = captureSentHueArgument();
+			assertExpectedNonChangingFields(sentRequest);
+
+			assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+			assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.3852));
+			assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.3815));
+		}
 	}
 
 	@Test
-	public void sendsColorRequestWhenCalled_WithNORMAL() throws Exception {
-		hueMessager.sendLightColorRequest(LightColor.NORMAL);
+	public void sendsColorRequestWhenCalled_WithNORMAL() {
+		try(MockedStatic<WebResourceFactory> mockedFactory = mockStatic(WebResourceFactory.class)) {
+			mockedFactory.when(() -> WebResourceFactory.buildSecuredHomeWebResource(lightsPath)).thenReturn(webResource);
 
-		final JsonNode sentRequest = captureSentHueArgument();
-		assertExpectedNonChangingFields(sentRequest);
+			hueMessager.sendLightColorRequest(LightColor.NORMAL);
 
-		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
-		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.3852));
-		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.3815));
+			final JsonNode sentRequest = captureSentHueArgument();
+			assertExpectedNonChangingFields(sentRequest);
+
+			assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+			assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.3852));
+			assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.3815));
+		}
 	}
 
 	@Test
-	public void sendsColorRequestWhenCalled_WithRED() throws Exception {
-		hueMessager.sendLightColorRequest(LightColor.RED);
+	public void sendsColorRequestWhenCalled_WithRED() {
+		try(MockedStatic<WebResourceFactory> mockedFactory = mockStatic(WebResourceFactory.class)) {
+			mockedFactory.when(() -> WebResourceFactory.buildSecuredHomeWebResource(lightsPath)).thenReturn(webResource);
 
-		final JsonNode sentRequest = captureSentHueArgument();
-		assertExpectedNonChangingFields(sentRequest);
+			hueMessager.sendLightColorRequest(LightColor.RED);
 
-		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
-		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.5787));
-		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.2694));
+			final JsonNode sentRequest = captureSentHueArgument();
+			assertExpectedNonChangingFields(sentRequest);
+
+			assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+			assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.5787));
+			assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.2694));
+		}
 	}
 
 	@Test
-	public void sendsColorRequestWhenCalled_WithBLUE() throws Exception {
-		hueMessager.sendLightColorRequest(LightColor.BLUE);
+	public void sendsColorRequestWhenCalled_WithBLUE() {
+		try(MockedStatic<WebResourceFactory> mockedFactory = mockStatic(WebResourceFactory.class)) {
+			mockedFactory.when(() -> WebResourceFactory.buildSecuredHomeWebResource(lightsPath)).thenReturn(webResource);
 
-		final JsonNode sentRequest = captureSentHueArgument();
-		assertExpectedNonChangingFields(sentRequest);
+			hueMessager.sendLightColorRequest(LightColor.BLUE);
 
-		assertThat(sentRequest.get("xy").isArray(), equalTo(true));
-		assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.1723));
-		assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.0495));
+			final JsonNode sentRequest = captureSentHueArgument();
+			assertExpectedNonChangingFields(sentRequest);
+
+			assertThat(sentRequest.get("xy").isArray(), equalTo(true));
+			assertThat(sentRequest.get("xy").get(0).asDouble(), equalTo(0.1723));
+			assertThat(sentRequest.get("xy").get(1).asDouble(), equalTo(0.0495));
+		}
 	}
 
 	private void assertExpectedNonChangingFields(final JsonNode sentRequest) {

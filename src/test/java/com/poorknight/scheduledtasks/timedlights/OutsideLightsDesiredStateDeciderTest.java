@@ -6,21 +6,21 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.WebResource;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.ws.rs.core.MediaType;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({Client.class, DateTime.class})
+@ExtendWith(MockitoExtension.class)
 public class OutsideLightsDesiredStateDeciderTest {
 
 	private final static String url =  "http://api.sunrise-sunset.org/json?lat=42.5141149&lng=-83.2139536&formatted=0";
@@ -35,66 +35,80 @@ public class OutsideLightsDesiredStateDeciderTest {
 	private WebResource.Builder builder;
 
 
-	private OutsideLightsDesiredStateDecider decider;
+	private OutsideLightsDesiredStateDecider decider = new OutsideLightsDesiredStateDecider();
 
-	@Before
+	@BeforeEach
 	public void setup() {
-		PowerMockito.mockStatic(Client.class);
-		PowerMockito.mockStatic(DateTime.class);
-		PowerMockito.when(Client.create()).thenReturn(client);
-		PowerMockito.when(client.resource(url)).thenReturn(webResource);
-
-		decider = new OutsideLightsDesiredStateDecider();
+		when(client.resource(url)).thenReturn(webResource);
 	}
 
 	@Test
 	public void returnsStateON_IfBetweenSunsetAndSunrise() throws Exception {
-		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2017-12-05T11:35:30+00:00", "2017-12-05T11:35:28+00:00"));
-		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2017-12-05T11:35:29+00:00"));
+		try(MockedStatic<Client> mockedClient = Mockito.mockStatic(Client.class)) {
+			try(MockedStatic<DateTime> mockedDateTime = Mockito.mockStatic(DateTime.class)) {
 
-		final DesiredState desiredState = decider.findDesiredState();
+				mockedClient.when(Client::create).thenReturn(client);
 
-		assertThat(desiredState).isEqualTo(DesiredState.ON);
+				when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+				when(builder.get(JsonNode.class)).thenReturn(buildResponse("2017-12-05T11:35:30+00:00", "2017-12-05T11:35:28+00:00"));
+				mockedDateTime.when(() -> DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2017-12-05T11:35:29+00:00"));
+
+				final DesiredState desiredState = decider.findDesiredState();
+
+				assertThat(desiredState).isEqualTo(DesiredState.ON);
+			}
+		}
 	}
 
 	@Test
 	public void returnsStateOFF_IfBetweenSunriseAndSunset() throws Exception {
-		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2017-12-05T11:35:00+00:00", "2017-12-05T11:35:02+00:00"));
-		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2017-12-05T11:35:01+00:00"));
+		try(MockedStatic<Client> mockedClient = Mockito.mockStatic(Client.class)) {
+			try (MockedStatic<DateTime> mockedDateTime = Mockito.mockStatic(DateTime.class)) {
 
-		final DesiredState desiredState = decider.findDesiredState();
+				mockedClient.when(Client::create).thenReturn(client);
 
-		assertThat(desiredState).isEqualTo(DesiredState.OFF);
+				when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+				when(builder.get(JsonNode.class)).thenReturn(buildResponse("2017-12-05T11:35:00+00:00", "2017-12-05T11:35:02+00:00"));
+				mockedDateTime.when(() -> DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2017-12-05T11:35:01+00:00"));
+
+				final DesiredState desiredState = decider.findDesiredState();
+
+				assertThat(desiredState).isEqualTo(DesiredState.OFF);
+			}
+		}
 	}
 
 	@Test
 	public void handlesResultsFromSunsetWebsite_ThatArePrematureNextDayTimes() throws Exception {
-		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
+		try(MockedStatic<Client> mockedClient = Mockito.mockStatic(Client.class)) {
+			try (MockedStatic<DateTime> mockedDateTime = Mockito.mockStatic(DateTime.class)) {
 
-		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T00:21:09.240Z"));
-		DesiredState desiredState = decider.findDesiredState();
-		assertThat(desiredState).isEqualTo(DesiredState.OFF);
+				mockedClient.when(Client::create).thenReturn(client);
 
+				when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+				when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
 
-
-		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
-
-		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:11:09.195Z"));
-		desiredState = decider.findDesiredState();
-		assertThat(desiredState).isEqualTo(DesiredState.OFF);
+				mockedDateTime.when(() -> DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T00:21:09.240Z"));
+				DesiredState desiredState = decider.findDesiredState();
+				assertThat(desiredState).isEqualTo(DesiredState.OFF);
 
 
+				when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+				when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
 
-		when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-		when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
+				mockedDateTime.when(() -> DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:11:09.195Z"));
+				desiredState = decider.findDesiredState();
+				assertThat(desiredState).isEqualTo(DesiredState.OFF);
 
-		PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:16:09.328Z"));
-		desiredState = decider.findDesiredState();
-		assertThat(desiredState).isEqualTo(DesiredState.ON);
+
+				when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
+				when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
+
+				PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:16:09.328Z"));
+				desiredState = decider.findDesiredState();
+				assertThat(desiredState).isEqualTo(DesiredState.ON);
+			}
+		}
 	}
 
 	private JsonNode buildResponse(final String sunrise, final String sunset) throws Exception {

@@ -3,14 +3,11 @@ package com.poorknight.server;
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.sun.jersey.api.client.WebResource;
 import org.glassfish.jersey.SslConfigurator;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
+import org.mockito.MockedStatic;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import javax.net.ssl.SSLContext;
@@ -21,81 +18,83 @@ import java.util.Map;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest({SslConfigurator.class, TextMessageAlerter.class})
+@ExtendWith(MockitoExtension.class)
 public class WebResourceFactoryTest {
 
 	@Mock
 	private TextMessageAlerter textMessageAlerter;
 
-	@Before
-	public void setUp() {
-		PowerMockito.mockStatic(TextMessageAlerter.class);
-		when(TextMessageAlerter.instance()).thenReturn(textMessageAlerter);
-	}
-
-	@After
-	public void tearDown() {
-		WebResourceFactory.setHouseIp(null);
-	}
-
 	@Test
 	public void overridesIpFromEnvironmentVariable_WithAMethod() throws Exception {
-		setUpMocksForSslConfig();
-		Map<String, String> env = new ImmutableMap.Builder<String, String>()
-				.put("HOUSE_URL", "1.2.3.4")
-				.put("HOUSE_TRUSTSTORE_PATH", "nothing")
-				.put("HOUSE_TRUSTSTORE_PASSWORD", "really").build();
-		setEnv(env);
+		try (MockedStatic<SslConfigurator> mockedSSLConfig = mockStatic(SslConfigurator.class)) {
+			try (MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class)) {
+				staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
 
-		WebResource.Builder webResourceBuilder = WebResourceFactory.buildSecuredHomeWebResource("/theBestPath");
-		String url = getUrl(webResourceBuilder);
-		assertThat(url).isEqualTo("1.2.3.4/theBestPath");
+				setUpMocksForSslConfig(mockedSSLConfig);
+				Map<String, String> env = new ImmutableMap.Builder<String, String>()
+						.put("HOUSE_URL", "1.2.3.4")
+						.put("HOUSE_TRUSTSTORE_PATH", "nothing")
+						.put("HOUSE_TRUSTSTORE_PASSWORD", "really").build();
+				setEnv(env);
 
-		WebResourceFactory.setHouseIp("5.5.5.5");
+				WebResource.Builder webResourceBuilder = WebResourceFactory.buildSecuredHomeWebResource("/theBestPath");
+				String url = getUrl(webResourceBuilder);
+				assertThat(url).isEqualTo("1.2.3.4/theBestPath");
 
-		webResourceBuilder = WebResourceFactory.buildSecuredHomeWebResource("/theBestPath");
-		url = getUrl(webResourceBuilder);
-		assertThat(url).isEqualTo("5.5.5.5/theBestPath");
+				WebResourceFactory.setHouseIp("5.5.5.5");
+
+				webResourceBuilder = WebResourceFactory.buildSecuredHomeWebResource("/theBestPath");
+				url = getUrl(webResourceBuilder);
+				assertThat(url).isEqualTo("5.5.5.5/theBestPath");
+			}
+		}
 	}
 
 	@Test
 	public void whenOverridingIp_AndItDoesNotMatchEnv_SendsATextMessage() throws Exception {
-		Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
-		setEnv(env);
+		try (MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class)) {
+			staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
 
-		WebResourceFactory.setHouseIp("5.5.5.5");
-		verify(textMessageAlerter).sendTextMessage("House IP address changed: 5.5.5.5");
+			WebResourceFactory.setHouseIp("6.6.6.6");
+			verify(textMessageAlerter).sendTextMessage("House IP address changed: 6.6.6.6");
+		}
 	}
 
 	@Test
 	public void whenOverridingIpMultipleTimes_AndItDoesNotMatchEnv_OnlySendsOneTextMessage() throws Exception {
-		Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
-		setEnv(env);
+		try (MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class)) {
+			staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
 
-		WebResourceFactory.setHouseIp("5.5.5.5");
-		WebResourceFactory.setHouseIp("5.5.5.5");
-		WebResourceFactory.setHouseIp("5.5.5.5");
-		WebResourceFactory.setHouseIp("5.5.5.5");
-		verify(textMessageAlerter, times(1)).sendTextMessage("House IP address changed: 5.5.5.5");
+			Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
+			setEnv(env);
+
+			WebResourceFactory.setHouseIp("7.7.7.7");
+			WebResourceFactory.setHouseIp("7.7.7.7");
+			WebResourceFactory.setHouseIp("7.7.7.7");
+			WebResourceFactory.setHouseIp("7.7.7.7");
+			verify(textMessageAlerter, times(1)).sendTextMessage("House IP address changed: 7.7.7.7");
+		}
 	}
 
 	@Test
 	public void whenOverridingIpMultipleTimes_AndItDoesNotMatchPrevious_SendsOneTextMessage() throws Exception {
-		Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
-		setEnv(env);
+		try (MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class)) {
+			staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
 
-		WebResourceFactory.setHouseIp("1.2.3.4");
-		WebResourceFactory.setHouseIp("1.2.3.4");
-		WebResourceFactory.setHouseIp("3.3.3.3");
-		WebResourceFactory.setHouseIp("3.3.3.3");
-		verify(textMessageAlerter, times(1)).sendTextMessage("House IP address changed: 3.3.3.3");
+			Map<String, String> env = new ImmutableMap.Builder<String, String>().put("HOUSE_URL", "1.2.3.4").build();
+			setEnv(env);
+
+			WebResourceFactory.setHouseIp("1.2.3.4");
+			WebResourceFactory.setHouseIp("1.2.3.4");
+			WebResourceFactory.setHouseIp("3.3.3.3");
+			WebResourceFactory.setHouseIp("3.3.3.3");
+			verify(textMessageAlerter, times(1)).sendTextMessage("House IP address changed: 3.3.3.3");
+		}
 	}
 
-	private void setUpMocksForSslConfig() {
-		PowerMockito.mockStatic(SslConfigurator.class);
+	private void setUpMocksForSslConfig(MockedStatic<SslConfigurator> mockedSSLConfig) {
 		SslConfigurator sslConfigurator = mock(SslConfigurator.class);
-		PowerMockito.when(SslConfigurator.newInstance()).thenReturn(sslConfigurator);
+		mockedSSLConfig.when(SslConfigurator::newInstance).thenReturn(sslConfigurator);
 		when(sslConfigurator.trustStoreFile(anyString())).thenReturn(sslConfigurator);
 		when(sslConfigurator.trustStorePassword(anyString())).thenReturn(sslConfigurator);
 		when(sslConfigurator.createSSLContext()).thenReturn(mock(SSLContext.class));
