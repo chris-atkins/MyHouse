@@ -3,16 +3,16 @@ package com.poorknight.scheduledtasks;
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.poorknight.housestatus.HouseStatusRecorder;
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager.HouseStatusRecorderRunnable;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class HouseStatusRecorderRunnableTest {
 
 	@Mock
@@ -30,7 +30,7 @@ public class HouseStatusRecorderRunnableTest {
 		verify(houseStatusRecorder).recordCurrentHouseStatus();
 	}
 
-	@Test(expected = Test.None.class)
+	@Test
 	public void doesNotThrowException()  {
 		final HouseStatusRecorderRunnable task = new HouseStatusRecorderRunnable(houseStatusRecorder, textMessageAlerter);
 
@@ -39,7 +39,7 @@ public class HouseStatusRecorderRunnableTest {
 		task.run();
 	}
 
-	@Test(expected = Test.None.class)
+	@Test
 	public void sendsATextOnException()  {
 		final HouseStatusRecorderRunnable task = new HouseStatusRecorderRunnable(houseStatusRecorder, textMessageAlerter);
 
@@ -50,7 +50,7 @@ public class HouseStatusRecorderRunnableTest {
 		verify(textMessageAlerter).sendTextMessage("An exception occurred while recording house status.  Check the logs for details.");
 	}
 
-	@Test(expected = Test.None.class)
+	@Test
 	public void doesNotThrowAnExceptionIfOneHappensWhileSendingATextOnException()  {
 		final HouseStatusRecorderRunnable task = new HouseStatusRecorderRunnable(houseStatusRecorder, textMessageAlerter);
 

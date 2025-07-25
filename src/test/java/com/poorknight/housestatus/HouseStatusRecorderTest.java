@@ -7,18 +7,18 @@ import com.poorknight.house.thermostat.ThermostatMessager;
 import com.poorknight.house.thermostat.ThermostatStatus;
 import com.poorknight.time.TimeFinder;
 import org.joda.time.DateTime;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.poorknight.house.thermostat.ThermostatStatus.FurnaceState.HEAT_ON;
 import static com.poorknight.house.thermostat.ThermostatStatus.ThermostatMode.FURNACE_MODE;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class HouseStatusRecorderTest {
 
 	@InjectMocks

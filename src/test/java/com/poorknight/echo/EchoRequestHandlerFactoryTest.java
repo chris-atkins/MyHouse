@@ -12,15 +12,12 @@ import com.poorknight.echo.housecommand.temperature.HouseTempDownHandler;
 import com.poorknight.echo.housecommand.temperature.HouseTempUpHandler;
 import com.poorknight.echo.thermostat.HouseTempSettingHandler;
 import com.poorknight.echo.thermostat.TempCheckHandler;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.Assert.fail;
 
-@RunWith(JUnit4.class)
 public class EchoRequestHandlerFactoryTest {
 
 	@Test
@@ -170,10 +167,15 @@ public class EchoRequestHandlerFactoryTest {
 		assertThat(handler, is(instanceOf(GoingToWorkRequestHandler.class)));
 	}
 
-	@Test(expected = RuntimeException.class)
+	@Test
 	public void throwsExceptionForUnknownIntent() {
-		final JsonNode request = buildRequest("IDontKnowThisIntent");
-		EchoRequestHandlerFactory.handlerFor(request);
+		try {
+			final JsonNode request = buildRequest("IDontKnowThisIntent");
+			EchoRequestHandlerFactory.handlerFor(request);
+			fail("expecting exception");
+		} catch (RuntimeException e) {
+			assertThat(e.getMessage(), is("Unknown intent: IDontKnowThisIntent"));
+		}
 	}
 
 	@Test

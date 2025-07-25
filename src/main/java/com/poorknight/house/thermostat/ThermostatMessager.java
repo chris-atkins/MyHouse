@@ -44,7 +44,7 @@ public class ThermostatMessager {
 
 	public  BigDecimal requestCurrentTemp() {
 		final ThermostatStatus status = requestThermostatStatus();
-		return new BigDecimal(status.getHouseTemp());
+		return BigDecimal.valueOf(status.getHouseTemp());
 	}
 
 	public ThermostatStatus requestThermostatStatus() {

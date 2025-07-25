@@ -11,7 +11,7 @@ public enum LightColor {
 
 	public static LightColor fromString(final String stringToMatch) {
 		final String potentialMatch = stringToMatch.toLowerCase();
-		for (final LightColor color : LightColor.values()) {
+		for (final LightColor color : values()) {
 			if (color.name.equals(potentialMatch)) {
 				return color;
 			}

@@ -12,13 +12,19 @@ import org.flywaydb.core.Flyway;
 import org.joda.time.DateTime;
 import org.junit.*;
 import org.junit.experimental.runners.Enclosed;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.testcontainers.junit.jupiter.Container;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 import java.sql.*;
 import java.util.List;
@@ -33,24 +39,24 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(Enclosed.class)
+@Testcontainers
 public class HouseStatusRepositoryTest {
 
-	@RunWith(JUnit4.class)
-	public static class HouseStatusRepositoryIntegrationTest {
+	@Nested
+    class HouseStatusRepositoryIntegrationTest {
 
 		private static Properties connectionProps;
 		private static HouseStatusRepository repository;
 
 
-		@ClassRule
+		@Container
 		public static PostgreSQLContainer mySQLContainer = new PostgreSQLContainer<>("postgres:16-alpine")
 				.withDatabaseName("my_house")
 				.withUsername("Chris")
 				.withPassword("theBestPassword");
 
-		@BeforeClass
-		public static void setUp() throws Exception {
+		@BeforeAll
+		public static void setUp()  {
 			connectionProps = new Properties();
 			connectionProps.put("user", "Chris");
 			connectionProps.put("password", "theBestPassword");
@@ -64,7 +70,7 @@ public class HouseStatusRepositoryTest {
 			repository = new HouseStatusRepository(databaseConnector);
 		}
 
-		@After
+		@AfterEach
 		public void tearDown() throws Exception {
 			Connection connection = DriverManager.getConnection(mySQLContainer.getJdbcUrl(), connectionProps);
 
@@ -342,8 +348,9 @@ public class HouseStatusRepositoryTest {
 		}
 	}
 
-	@RunWith(MockitoJUnitRunner.class)
-	public static class HouseStatusRepositoryMockTest {
+	@Nested
+	@ExtendWith(MockitoExtension.class)
+	public class HouseStatusRepositoryMockTest {
 
 		@InjectMocks
 		private HouseStatusRepository repository;

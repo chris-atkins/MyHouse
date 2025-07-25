@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.powermock.api.mockito.PowerMockito;
 
 import javax.ws.rs.core.MediaType;
 
@@ -104,7 +103,7 @@ public class OutsideLightsDesiredStateDeciderTest {
 				when(webResource.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
 				when(builder.get(JsonNode.class)).thenReturn(buildResponse("2018-07-04T10:01:24.000Z", "2018-07-05T01:13:26.000Z"));
 
-				PowerMockito.when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:16:09.328Z"));
+				when(DateTime.now(DateTimeZone.UTC)).thenReturn(new DateTime("2018-07-04T01:16:09.328Z"));
 				desiredState = decider.findDesiredState();
 				assertThat(desiredState).isEqualTo(DesiredState.ON);
 			}

@@ -100,7 +100,8 @@ public class WebResourceFactoryTest {
 		when(sslConfigurator.createSSLContext()).thenReturn(mock(SSLContext.class));
 	}
 
-	private static void setEnv(Map<String, String> newenv) throws Exception {
+	@SuppressWarnings("unchecked")
+    private static void setEnv(Map<String, String> newenv) throws Exception {
 		try {
 			Class<?> processEnvironmentClass = Class.forName("java.lang.ProcessEnvironment");
 			Field theEnvironmentField = processEnvironmentClass.getDeclaredField("theEnvironment");

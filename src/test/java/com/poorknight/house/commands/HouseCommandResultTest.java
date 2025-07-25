@@ -1,14 +1,11 @@
 package com.poorknight.house.commands;
 
-import com.poorknight.house.commands.HouseCommandResult;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
-@RunWith(JUnit4.class)
 public class HouseCommandResultTest {
 
 	@Test

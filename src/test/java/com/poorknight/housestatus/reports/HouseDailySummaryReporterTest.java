@@ -9,12 +9,12 @@ import com.poorknight.house.thermostat.ThermostatStatus.ThermostatMode;
 import org.assertj.core.data.Offset;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.validation.constraints.NotNull;
 import java.util.Arrays;
@@ -25,7 +25,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class HouseDailySummaryReporterTest {
 
 	@InjectMocks
@@ -38,7 +38,7 @@ public class HouseDailySummaryReporterTest {
 	DateTime startingTime;
 	int minutesCounter;
 
-	@Before
+	@BeforeEach
 	public void setUp() {
 		startingTime = DateTime.now();
 		minutesCounter = 0;

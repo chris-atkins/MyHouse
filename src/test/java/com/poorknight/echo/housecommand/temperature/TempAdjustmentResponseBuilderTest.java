@@ -4,9 +4,8 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.echo.EchoResponse;
 import org.apache.commons.lang3.RandomUtils;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import static com.poorknight.house.commands.HouseCommand.HOUSE_TEMP_DOWN;
 import static com.poorknight.house.commands.HouseCommand.HOUSE_TEMP_UP;
@@ -15,7 +14,6 @@ import static com.poorknight.echo.housecommand.temperature.HouseTemperatureMode.
 import static com.poorknight.echo.housecommand.temperature.HouseTemperatureMode.FURNACE;
 import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnit4.class)
 public class TempAdjustmentResponseBuilderTest {
 
 	@Test

@@ -5,19 +5,14 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.server.WebResourceFactory;
 import com.sun.jersey.api.client.WebResource;
-import org.junit.Before;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import javax.ws.rs.core.MediaType;
 import java.math.BigDecimal;
@@ -29,7 +24,6 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-@PrepareForTest(WebResourceFactory.class)
 public class ThermostatMessagerTest {
 
     private final static String thermostatGetPath = "/house/status";
@@ -51,9 +45,6 @@ public class ThermostatMessagerTest {
 
     @BeforeEach
     public void setup() {
-//        when(getWebResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-//		when(postWebResource.type(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
-
         when(builder.accept(MediaType.APPLICATION_JSON_TYPE)).thenReturn(builder);
 
         messager = new ThermostatMessager();

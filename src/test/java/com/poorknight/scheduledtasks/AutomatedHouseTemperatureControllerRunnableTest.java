@@ -1,16 +1,16 @@
 package com.poorknight.scheduledtasks;
 
 import com.poorknight.scheduledtasks.timedtemp.AutomatedHouseTemperatureController;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.poorknight.scheduledtasks.FixedScheduleTaskManager.*;
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class AutomatedHouseTemperatureControllerRunnableTest {
 
 	@Mock
@@ -25,7 +25,7 @@ public class AutomatedHouseTemperatureControllerRunnableTest {
 		verify(automatedHouseTemperatureController).setTempAtTimeTriggers();
 	}
 
-	@Test(expected = Test.None.class)
+	@Test
 	public void doesNotThrowException() throws Exception {
 		final AutomatedHouseTemperatureControllerRunnable task = new AutomatedHouseTemperatureControllerRunnable(automatedHouseTemperatureController);
 

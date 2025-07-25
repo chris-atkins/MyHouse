@@ -27,7 +27,7 @@ public enum HouseCommand {
 	}
 
 	public static HouseCommand fromPiString(String stringToParse) {
-		for (HouseCommand command : HouseCommand.values()) {
+		for (HouseCommand command : values()) {
 			if (command.piString.equals(stringToParse)) {
 				return command;
 			}

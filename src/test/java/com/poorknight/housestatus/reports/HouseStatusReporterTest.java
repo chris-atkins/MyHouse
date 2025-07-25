@@ -7,10 +7,9 @@ import com.poorknight.time.TimeFinder;
 import com.poorknight.time.TimeFinder.UtcTimeRange;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
 import java.util.ArrayList;
@@ -20,14 +19,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
-@RunWith(JUnit4.class)
 public class HouseStatusReporterTest {
 
 	private HouseStatusReporter houseStatusReporter;
 
 	private HouseStatusRepository houseStatusRepository;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		houseStatusRepository = Mockito.mock(HouseStatusRepository.class);
 		houseStatusReporter = new HouseStatusReporter(houseStatusRepository);

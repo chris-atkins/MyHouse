@@ -5,17 +5,17 @@ import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.poorknight.echo.EchoResponse;
 import com.poorknight.house.commands.HouseCommand;
 import com.poorknight.house.commands.HouseCommandMessager;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.testcontainers.shaded.org.apache.commons.lang3.RandomStringUtils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class HouseTempUpHandlerTest {
 
 	@InjectMocks

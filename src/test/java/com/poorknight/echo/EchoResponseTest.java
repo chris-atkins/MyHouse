@@ -2,34 +2,28 @@ package com.poorknight.echo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.assertj.core.api.Assertions;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(JUnit4.class)
 public class EchoResponseTest {
 
 	@Test
-	public void buildsCorrectNoOutputSpeechResponse() throws Exception {
+	public void buildsCorrectNoOutputSpeechResponse() {
 		final EchoResponse echoResponse = EchoResponse.noOutputSpeechResponse();
-		assertThat(echoResponse.getVersion(), equalTo("1.0"));
-		assertThat(echoResponse.getResponse().getOutputSpeech(), nullValue());
-		assertThat(echoResponse.getResponse().getShouldEndSession(), equalTo(Boolean.TRUE));
+		assertThat(echoResponse.getVersion()).isEqualTo("1.0");
+		assertThat(echoResponse.getResponse().getOutputSpeech()).isNull();
+		assertThat(echoResponse.getResponse().getShouldEndSession()).isEqualTo(Boolean.TRUE);
 	}
 
 	@Test
-	public void buildsCorrectResponseWithSpeech() throws Exception {
+	public void buildsCorrectResponseWithSpeech() {
 		final EchoResponse echoResponse = EchoResponse.responseWithSpeech("Hi there");
-		assertThat(echoResponse.getVersion(), equalTo("1.0"));
-		assertThat(echoResponse.getResponse().getOutputSpeech().getText(), equalTo("Hi there"));
-		assertThat(echoResponse.getResponse().getOutputSpeech().getType(), equalTo("PlainText"));
-		assertThat(echoResponse.getResponse().getShouldEndSession(), equalTo(Boolean.TRUE));
+		assertThat(echoResponse.getVersion()).isEqualTo("1.0");
+		assertThat(echoResponse.getResponse().getOutputSpeech().getText()).isEqualTo("Hi there");
+		assertThat(echoResponse.getResponse().getOutputSpeech().getType()).isEqualTo("PlainText");
+		assertThat(echoResponse.getResponse().getShouldEndSession()).isEqualTo(Boolean.TRUE);
 	}
 
 	@Test
@@ -38,6 +32,6 @@ public class EchoResponseTest {
 
 		String jsonString = new ObjectMapper().writeValueAsString(echoResponse);
 
-		Assertions.assertThat(jsonString).isEqualTo("{\"version\":\"1.0\",\"response\":{\"shouldEndSession\":true}}");
+		assertThat(jsonString).isEqualTo("{\"version\":\"1.0\",\"response\":{\"shouldEndSession\":true}}");
 	}
 }

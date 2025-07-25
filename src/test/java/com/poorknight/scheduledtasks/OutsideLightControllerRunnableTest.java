@@ -2,15 +2,16 @@ package com.poorknight.scheduledtasks;
 
 import com.poorknight.scheduledtasks.FixedScheduleTaskManager.OutsideLightControllerRunnable;
 import com.poorknight.scheduledtasks.timedlights.OutsideLightsController;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.Mockito.verify;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class OutsideLightControllerRunnableTest {
 
 	@Mock
@@ -25,7 +26,7 @@ public class OutsideLightControllerRunnableTest {
 		verify(outsideLightsController).putLightsToCorrectStateForTimeOfDay();
 	}
 
-	@Test(expected = Test.None.class)
+	@Test
 	public void doesNotThrowException() throws Exception {
 		final OutsideLightControllerRunnable task = new OutsideLightControllerRunnable(outsideLightsController);
 

@@ -1,18 +1,15 @@
 package com.poorknight.echo.lights.color;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Fail.fail;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.poorknight.house.lights.LightColor;
 
-@RunWith(JUnit4.class)
 public class DesiredColorTranslatorTest {
 
 	private final DesiredColorTranslator translator = new DesiredColorTranslator();
@@ -20,36 +17,46 @@ public class DesiredColorTranslatorTest {
 	private final JsonNodeFactory nodeFactory = JsonNodeFactory.instance;
 
 	@Test
-	public void translatesNormalCorrectly() throws Exception {
+	public void translatesNormalCorrectly() {
 		final JsonNode slots = buildJsonNodeWithDesiredColor("Normal");
 		final LightColor lightColor = translator.translate(slots);
-		assertThat(lightColor, equalTo(LightColor.NORMAL));
+		assertThat(lightColor).isEqualTo(LightColor.NORMAL);
 	}
 
 	@Test
-	public void translatesBlueCorrectly() throws Exception {
+	public void translatesBlueCorrectly() {
 		final JsonNode slots = buildJsonNodeWithDesiredColor("Blue");
 		final LightColor lightColor = translator.translate(slots);
-		assertThat(lightColor, equalTo(LightColor.BLUE));
+		assertThat(lightColor).isEqualTo(LightColor.BLUE);
 	}
 
 	@Test
-	public void translatesRedCorrectly() throws Exception {
+	public void translatesRedCorrectly() {
 		final JsonNode slots = buildJsonNodeWithDesiredColor("Red");
 		final LightColor lightColor = translator.translate(slots);
-		assertThat(lightColor, equalTo(LightColor.RED));
+		assertThat(lightColor).isEqualTo(LightColor.RED);
 	}
 
-	@Test(expected = LightColorRequestTranslationException.class)
-	public void throwsExceptionOnUnknownColorValue() throws Exception {
-		final JsonNode slots = buildJsonNodeWithDesiredColor("UnknownColor");
-		translator.translate(slots);
+	@Test
+	public void throwsExceptionOnUnknownColorValue() {
+		try {
+			final JsonNode slots = buildJsonNodeWithDesiredColor("UnknownColor");
+			translator.translate(slots);
+			fail("expecting exception");
+		} catch (RuntimeException e) {
+			assertThat(e).isInstanceOf(LightColorRequestTranslationException.class);
+		}
 	}
 
-	@Test(expected = LightColorRequestTranslationException.class)
-	public void throwsExceptionWhenNoDesiredColorNodeExists() throws Exception {
-		final JsonNode slots = buildJsonNodeWithNoDesiredColorSlot();
-		translator.translate(slots);
+	@Test
+	public void throwsExceptionWhenNoDesiredColorNodeExists() {
+		try {
+			final JsonNode slots = buildJsonNodeWithNoDesiredColorSlot();
+			translator.translate(slots);
+			fail("expecting exception");
+		} catch (RuntimeException e) {
+			assertThat(e).isInstanceOf(LightColorRequestTranslationException.class);
+		}
 	}
 
 	private JsonNode buildJsonNodeWithDesiredColor(final String desiredColorString) {

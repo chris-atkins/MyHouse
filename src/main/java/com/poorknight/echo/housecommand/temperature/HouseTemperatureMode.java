@@ -5,14 +5,14 @@ public enum HouseTemperatureMode {
 	AC("AC"),
 	FURNACE("furnace");
 
-	private String piString;
+	private final String piString;
 
 	HouseTemperatureMode(String piString) {
 		this.piString = piString;
 	}
 
 	public static HouseTemperatureMode fromPiString(String stringToParse) {
-		for (HouseTemperatureMode value : HouseTemperatureMode.values()) {
+		for (HouseTemperatureMode value : values()) {
 			if (value.piString.equals(stringToParse)) {
 				return value;
 			}

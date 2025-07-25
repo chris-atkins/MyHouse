@@ -6,10 +6,9 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import org.apache.commons.lang3.RandomUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -19,7 +18,6 @@ import com.poorknight.echo.EchoResponse;
 import com.poorknight.house.lights.HueMessager;
 import com.poorknight.house.lights.LightColor;
 
-@RunWith(JUnit4.class)
 public class LightColorRequestHandlerTest {
 
 	private final HueMessager hueMessager = Mockito.mock(HueMessager.class);
@@ -28,7 +26,7 @@ public class LightColorRequestHandlerTest {
 	private LightColorRequestHandler handler;
 	private LightColor lightColor;
 
-	@Before
+	@BeforeEach
 	public void setup() {
 		final JsonNode request = buildRequestWithSlots();
 		lightColor = randomLightColor();

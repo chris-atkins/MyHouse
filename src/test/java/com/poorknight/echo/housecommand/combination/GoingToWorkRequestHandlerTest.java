@@ -5,18 +5,18 @@ import com.poorknight.echo.EchoResponseData;
 import com.poorknight.house.commands.HouseCommand;
 import com.poorknight.house.commands.HouseCommandMessager;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import static com.poorknight.house.commands.HouseCommand.AT_WORK_MODE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class GoingToWorkRequestHandlerTest {
 
 	private GoingToWorkRequestHandler handler;
@@ -29,7 +29,7 @@ public class GoingToWorkRequestHandlerTest {
 
 	private HouseCommand houseCommand = AT_WORK_MODE;
 
-	@Before
+	@BeforeEach
 	public void setUp() throws Exception {
 		handler = new GoingToWorkRequestHandler(houseCommandMessager, goingToWorkResponseBuilder);
 	}

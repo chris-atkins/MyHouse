@@ -3,13 +3,11 @@ package com.poorknight.echo.hello;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.poorknight.echo.EchoResponse;
 
-@RunWith(JUnit4.class)
 public class HelloRequestHandlerTest {
 
 	private final HelloRequestHandler handler = new HelloRequestHandler();
