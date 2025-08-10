@@ -1,0 +1,24 @@
+projectName: my-house
+appName: my-house-backend
+publicUrl: www.poorknight.com
+
+replicaCount: 1
+
+containerRegistry: registry.digitalocean.com/chris-container-registry
+imageLabel: backend-latest
+
+servicePort: 80
+containerPort: 8443
+
+smtpUser: "hidden"
+smtpPassword: "hidden"
+houseUrl: "hidden"
+houseTruststorePath: "hidden"
+houseTruststorePassword: "hidden"
+sslKeystorePath: "hidden"
+sslKeystorePassword: "hidden"
+authenticationSecret: "hidden"
+jdbcConnectionString: "hidden"
+dbUser: "hidden"
+dbPassword: "hidden"
+weatherAppId: "hidden"

@@ -1,0 +1,84 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: prod
+  name: {{ .Values.appName }}
+  labels:
+    app: {{ .Values.appName }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Values.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.appName }}
+    spec:
+      containers:
+        - image: "{{ .Values.containerRegistry }}/{{ .Values.projectName }}:{{ .Values.imageLabel }}"
+          imagePullPolicy: Always
+          name: {{ .Values.appName }}
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+          env:
+            - name: SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: smtpUser
+            - name: SMTP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: smtpPassword
+            - name: HOUSE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: houseUrl
+            - name: HOUSE_TRUSTSTORE_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: houseTruststorePath
+            - name: HOUSE_TRUSTSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: houseTruststorePassword
+            - name: SSL_KEYSTORE_PATH
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: sslKeystorePath
+            - name: SSL_KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: sslKeystorePassword
+            - name: AUTHENTICATION_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: authenticationSecret
+            - name: JDBC_CONNECTION_STRING
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: jdbcConnectionString
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: dbUser
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: dbPassword
+            - name: WEATHER_APP_ID
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Values.appName }}-secret"
+                  key: weatherAppId

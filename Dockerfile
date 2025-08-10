@@ -3,3 +3,4 @@ COPY MyHouse.jar /
 COPY keystore /Users/chrisatkins/myssl/keystore
 COPY truststore /Users/chrisatkins/myssl/truststore
 CMD ["java", "-jar", "MyHouse.jar"]
+EXPOSE 8443
