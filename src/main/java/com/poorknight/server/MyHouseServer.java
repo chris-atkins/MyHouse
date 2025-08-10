@@ -157,18 +157,18 @@ public class MyHouseServer {
 //		org.apache.log4j.BasicConfigurator.configure();
 	}
 
-	private static SslConnectionFactory setupSSL() {
-		return SSLConnectionFactoryBuilder.build();
-	}
+//	private static SslConnectionFactory setupSSL() {
+//		return SSLConnectionFactoryBuilder.build();
+//	}
 
-	private static HttpConnectionFactory setupHttps() {
-		final HttpConfiguration httpConf = new HttpConfiguration();
-		httpConf.setSecurePort(PORT);
-		httpConf.setSecureScheme(HTTPS_SCHEME);
-		httpConf.addCustomizer(new SecureRequestCustomizer());
-		final HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConf);
-		return httpConnectionFactory;
-	}
+//	private static HttpConnectionFactory setupHttps() {
+//		final HttpConfiguration httpConf = new HttpConfiguration();
+//		httpConf.setSecurePort(PORT);
+//		httpConf.setSecureScheme(HTTPS_SCHEME);
+//		httpConf.addCustomizer(new SecureRequestCustomizer());
+//		final HttpConnectionFactory httpConnectionFactory = new HttpConnectionFactory(httpConf);
+//		return httpConnectionFactory;
+//	}
 
 	private static ServletContextHandler buildEchoContextHandler(final String rootPath) {
 		final ServletContextHandler echoApiContextHandler = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
