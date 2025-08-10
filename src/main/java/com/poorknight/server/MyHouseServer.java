@@ -47,8 +47,8 @@ public class MyHouseServer {
 
 		final Server server = new Server();
 
-		final SslConnectionFactory sslConnectionFactory = setupSSL();
-		final HttpConnectionFactory httpConnectionFactory = setupHttps();
+//		final SslConnectionFactory sslConnectionFactory = setupSSL();
+//		final HttpConnectionFactory httpConnectionFactory = setupHttps();
 
 //		final ServerConnector serverConnector = new ServerConnector(server, sslConnectionFactory, httpConnectionFactory);
 		 ServerConnector serverConnector = new ServerConnector(server, setupHttp());
