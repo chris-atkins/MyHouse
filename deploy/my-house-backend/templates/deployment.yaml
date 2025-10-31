@@ -14,6 +14,8 @@ spec:
     metadata:
       labels:
         app: {{ .Values.appName }}
+      annotations:
+        deploymentTime: "{{ now | date "2000-01-01T00:00:01Z" }}"
     spec:
       containers:
         - image: "{{ .Values.containerRegistry }}/{{ .Values.projectName }}:{{ .Values.imageLabel }}"
