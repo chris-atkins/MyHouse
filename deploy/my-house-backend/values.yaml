@@ -2,7 +2,7 @@ projectName: my-house
 appName: my-house-backend
 publicUrl: www.poorknight.com
 
-replicaCount: 1
+replicaCount: 0
 
 containerRegistry: registry.digitalocean.com/chris-container-registry
 imageLabel: backend-latest
