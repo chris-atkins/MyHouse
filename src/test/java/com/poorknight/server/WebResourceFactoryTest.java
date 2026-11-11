@@ -4,7 +4,9 @@ import com.poorknight.alerting.textmessage.TextMessageAlerter;
 import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.api.client.config.ClientConfig;
+import org.assertj.core.util.Throwables;
 import org.glassfish.jersey.SslConfigurator;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -104,9 +106,7 @@ public class WebResourceFactoryTest {
 		try (MockedStatic<SslConfigurator> mockedSSLConfig = mockStatic(SslConfigurator.class);
 			 MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class);
 			 ServerSocket silentPi = new ServerSocket(0, 50, InetAddress.getLoopbackAddress())) {
-			staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
-			setUpMocksForSslConfig(mockedSSLConfig);
-			setEnv(ImmutableMap.of("HOUSE_TRUSTSTORE_PATH", "nothing", "HOUSE_TRUSTSTORE_PASSWORD", "really"));
+			setUpPiCallMocks(mockedSSLConfig, staticTextMessageAlerter);
 			// The kernel completes the TCP handshake from the listen backlog, but nothing ever answers.
 			WebResourceFactory.setHouseIp("http://127.0.0.1:" + silentPi.getLocalPort());
 
@@ -119,8 +119,11 @@ public class WebResourceFactoryTest {
 					() -> catchThrowable(() -> piResource.get(String.class)));
 			final Duration elapsed = Duration.ofNanos(System.nanoTime() - started);
 
-			assertThat(thrown).isInstanceOf(ClientHandlerException.class).hasRootCauseInstanceOf(SocketTimeoutException.class);
-			assertThat(elapsed).isBetween(Duration.ofMillis(WebResourceFactory.READ_TIMEOUT_MILLIS - 500), Duration.ofMillis(WebResourceFactory.READ_TIMEOUT_MILLIS + 3000));
+			// EchoEndpoint tells a read timeout ("may still have worked") from a connect failure by this real JDK message.
+			assertThat(thrown).isInstanceOf(ClientHandlerException.class);
+			assertThat(Throwables.getRootCause(thrown)).isInstanceOf(SocketTimeoutException.class).hasMessage("Read timed out");
+			// A read timeout can't fire early; no upper bound, the preemptive guard covers hangs.
+			assertThat(elapsed).isGreaterThanOrEqualTo(Duration.ofMillis(WebResourceFactory.READ_TIMEOUT_MILLIS - 500));
 		}
 	}
 
@@ -128,9 +131,7 @@ public class WebResourceFactoryTest {
 	public void piCallsHaveConnectAndReadTimeoutsThatFitInsideAlexasResponseWindow() throws Exception {
 		try (MockedStatic<SslConfigurator> mockedSSLConfig = mockStatic(SslConfigurator.class);
 			 MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class)) {
-			staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
-			setUpMocksForSslConfig(mockedSSLConfig);
-			setEnv(ImmutableMap.of("HOUSE_TRUSTSTORE_PATH", "nothing", "HOUSE_TRUSTSTORE_PASSWORD", "really"));
+			setUpPiCallMocks(mockedSSLConfig, staticTextMessageAlerter);
 			WebResourceFactory.setHouseIp("https://1.2.3.4:5000");
 
 			final WebResource resource = getWebResource(WebResourceFactory.buildSecuredHomeWebResource("/house/status"));
@@ -138,9 +139,21 @@ public class WebResourceFactoryTest {
 			assertThat(resource.getProperties())
 					.containsEntry(ClientConfig.PROPERTY_CONNECT_TIMEOUT, 2000)
 					.containsEntry(ClientConfig.PROPERTY_READ_TIMEOUT, 5000);
-			// Alexa gives a skill ~8s to answer; a hung Pi must fail before that so we can answer ourselves.
-			assertThat(WebResourceFactory.CONNECT_TIMEOUT_MILLIS + WebResourceFactory.READ_TIMEOUT_MILLIS).isLessThan(8000);
 		}
+	}
+
+	@AfterEach
+	public void resetHouseIp() throws Exception {
+		// houseIp is static; without this, test order decides which URL later tests see.
+		final Field houseIp = WebResourceFactory.class.getDeclaredField("houseIp");
+		houseIp.setAccessible(true);
+		houseIp.set(null, null);
+	}
+
+	private void setUpPiCallMocks(MockedStatic<SslConfigurator> mockedSSLConfig, MockedStatic<TextMessageAlerter> staticTextMessageAlerter) throws Exception {
+		staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
+		setUpMocksForSslConfig(mockedSSLConfig);
+		setEnv(ImmutableMap.of("HOUSE_TRUSTSTORE_PATH", "nothing", "HOUSE_TRUSTSTORE_PASSWORD", "really"));
 	}
 
 	private void setUpMocksForSslConfig(MockedStatic<SslConfigurator> mockedSSLConfig) {

@@ -2,6 +2,7 @@ package com.poorknight.endpoints;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.catchThrowableOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.mockStatic;
@@ -9,6 +10,7 @@ import static org.mockito.Mockito.when;
 
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
+import java.net.UnknownHostException;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -18,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.poorknight.echo.EchoRequestHandler;
@@ -66,7 +69,7 @@ public class EchoEndpointTest {
 	public void whenThePiTimesOutReading_SaysTheCommandMayStillHaveWorked() throws Exception {
 		when(handler.handle()).thenThrow(new ClientHandlerException(new SocketTimeoutException("Read timed out")));
 
-		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.HOUSE_SLOW_TO_RESPOND);
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.MAY_STILL_HAVE_WORKED);
 	}
 
 	@Test
@@ -88,14 +91,14 @@ public class EchoEndpointTest {
 		final Exception nested = new RuntimeException(new SocketTimeoutException("Read timed out"));
 		when(handler.handle()).thenThrow(new ClientHandlerException(nested));
 
-		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.HOUSE_SLOW_TO_RESPOND);
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.MAY_STILL_HAVE_WORKED);
 	}
 
 	@Test
-	public void whenTheClientFailsWithNoCause_SaysItCouldNotReachTheHouse() throws Exception {
+	public void whenTheClientFailsWithNoCause_SaysItMayStillHaveWorked() throws Exception {
 		when(handler.handle()).thenThrow(new ClientHandlerException("no cause"));
 
-		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.MAY_STILL_HAVE_WORKED);
 	}
 
 	@Test
@@ -107,11 +110,64 @@ public class EchoEndpointTest {
 	}
 
 	@Test
-	public void whenThePiReturnsAServerError_SaysItCouldNotReachTheHouse() throws Exception {
+	public void whenThePiReturnsAServerError_SaysItMayStillHaveWorked() throws Exception {
 		final UniformInterfaceException piError = new UniformInterfaceException(responseWithStatus(500));
 		when(handler.handle()).thenThrow(piError);
 
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.MAY_STILL_HAVE_WORKED);
+	}
+
+	@Test
+	public void whenNginxTimesOutWaitingForThePi_SaysItMayStillHaveWorked() throws Exception {
+		final UniformInterfaceException piError = new UniformInterfaceException(responseWithStatus(504));
+		when(handler.handle()).thenThrow(piError);
+
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.MAY_STILL_HAVE_WORKED);
+	}
+
+	@Test
+	public void whenThePiAppIsUnavailableBehindNginx_SaysItCouldNotReachTheHouse() throws Exception {
+		final UniformInterfaceException piError = new UniformInterfaceException(responseWithStatus(503));
+		when(handler.handle()).thenThrow(piError);
+
 		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
+	}
+
+	@Test
+	public void whenThePiRejectsTheSecret_SaysItCouldNotReachTheHouse() throws Exception {
+		final UniformInterfaceException piError = new UniformInterfaceException(responseWithStatus(401));
+		when(handler.handle()).thenThrow(piError);
+
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
+	}
+
+	@Test
+	public void whenThePiHostCannotBeResolved_SaysItCouldNotReachTheHouse() throws Exception {
+		when(handler.handle()).thenThrow(new ClientHandlerException(new UnknownHostException("pi.example")));
+
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
+	}
+
+	@Test
+	public void whenConnectTimeoutMessageIsLowercase_StillSaysItCouldNotReachTheHouse() throws Exception {
+		when(handler.handle()).thenThrow(new ClientHandlerException(new SocketTimeoutException("connect timed out")));
+
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
+	}
+
+	@Test
+	public void whenATimeoutHasAnUnexpectedMessage_ErrsTowardsMayStillHaveWorked() throws Exception {
+		when(handler.handle()).thenThrow(new ClientHandlerException(new SocketTimeoutException("some future JDK wording")));
+
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.MAY_STILL_HAVE_WORKED);
+	}
+
+	@Test
+	public void whenThePiAnswersWithAnUnreadableBody_SaysItMayStillHaveWorked() throws Exception {
+		final Exception parseFailure = catchThrowableOfType(() -> new ObjectMapper().readTree("{not json"), JsonProcessingException.class);
+		when(handler.handle()).thenThrow(new ClientHandlerException(parseFailure));
+
+		assertThat(speechOf(endpoint.postEchoRequest(request))).isEqualTo(EchoEndpoint.MAY_STILL_HAVE_WORKED);
 	}
 
 	@Test
@@ -129,6 +185,22 @@ public class EchoEndpointTest {
 		when(handler.handle()).thenThrow(new ClientHandlerException(new ConnectException("Connection refused")));
 
 		assertThat(speechOf(endpoint.postEchoRequest(sessionEnded))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
+	}
+
+	@Test
+	public void piFailuresAreHandled_WhenTheIntentNameIsNotText() throws Exception {
+		final JsonNode oddRequest = new ObjectMapper().readTree("{\"request\":{\"intent\":{\"name\":5}}}");
+		when(handler.handle()).thenThrow(new ClientHandlerException(new ConnectException("Connection refused")));
+
+		assertThat(speechOf(endpoint.postEchoRequest(oddRequest))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
+	}
+
+	@Test
+	public void piFailuresAreHandled_WhenTheRequestIsNotAnObject() throws Exception {
+		final JsonNode oddRequest = new ObjectMapper().readTree("{\"request\":\"just a string\"}");
+		when(handler.handle()).thenThrow(new ClientHandlerException(new ConnectException("Connection refused")));
+
+		assertThat(speechOf(endpoint.postEchoRequest(oddRequest))).isEqualTo(EchoEndpoint.COULD_NOT_REACH_HOUSE);
 	}
 
 	@Test
