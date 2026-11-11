@@ -15,6 +15,12 @@ import javax.net.ssl.SSLContext;
 
 public class WebResourceFactory {
 
+	// Alexa allows a skill ~8s to respond. Failing within that window lets the skill answer
+	// "couldn't reach the house" itself instead of Alexa's generic invalid-response error,
+	// and stops a hung Pi from wedging the scheduled-task threads forever.
+	static final int CONNECT_TIMEOUT_MILLIS = 2000;
+	static final int READ_TIMEOUT_MILLIS = 5000;
+
 	private static String houseIp = null;
 
 	public static void setHouseIp(String newIp) {
@@ -40,6 +46,8 @@ public class WebResourceFactory {
 		final HostnameVerifier hostnameVerifier = HttpsURLConnection.getDefaultHostnameVerifier();
 		final ClientConfig config = new DefaultClientConfig();
 		config.getProperties().put(HTTPSProperties.PROPERTY_HTTPS_PROPERTIES, new HTTPSProperties(hostnameVerifier, buildSSLContext()));
+		config.getProperties().put(ClientConfig.PROPERTY_CONNECT_TIMEOUT, CONNECT_TIMEOUT_MILLIS);
+		config.getProperties().put(ClientConfig.PROPERTY_READ_TIMEOUT, READ_TIMEOUT_MILLIS);
 		final Client client = Client.create(config);
 
 		return client.resource(url).header("auth-secret", authSecret);

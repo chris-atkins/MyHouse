@@ -1,7 +1,9 @@
 package com.poorknight.server;
 
 import com.poorknight.alerting.textmessage.TextMessageAlerter;
+import com.sun.jersey.api.client.ClientHandlerException;
 import com.sun.jersey.api.client.WebResource;
+import com.sun.jersey.api.client.config.ClientConfig;
 import org.glassfish.jersey.SslConfigurator;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,10 +14,15 @@ import org.testcontainers.shaded.com.google.common.collect.ImmutableMap;
 
 import javax.net.ssl.SSLContext;
 import java.lang.reflect.Field;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+import java.net.SocketTimeoutException;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTimeoutPreemptively;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -92,6 +99,50 @@ public class WebResourceFactoryTest {
 		}
 	}
 
+	@Test
+	public void piCallsGiveUp_WhenThePiAcceptsTheConnectionButNeverResponds() throws Exception {
+		try (MockedStatic<SslConfigurator> mockedSSLConfig = mockStatic(SslConfigurator.class);
+			 MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class);
+			 ServerSocket silentPi = new ServerSocket(0, 50, InetAddress.getLoopbackAddress())) {
+			staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
+			setUpMocksForSslConfig(mockedSSLConfig);
+			setEnv(ImmutableMap.of("HOUSE_TRUSTSTORE_PATH", "nothing", "HOUSE_TRUSTSTORE_PASSWORD", "really"));
+			// The kernel completes the TCP handshake from the listen backlog, but nothing ever answers.
+			WebResourceFactory.setHouseIp("http://127.0.0.1:" + silentPi.getLocalPort());
+
+			// Built on this thread: Mockito's static mocks don't apply on the guard's worker thread.
+			final WebResource.Builder piResource = WebResourceFactory.buildSecuredHomeWebResource("/house/status");
+
+			final long started = System.nanoTime();
+			// Preemptive guard: without a read timeout this call hangs forever (JUnit's @Timeout can't interrupt it).
+			final Throwable thrown = assertTimeoutPreemptively(Duration.ofSeconds(20),
+					() -> catchThrowable(() -> piResource.get(String.class)));
+			final Duration elapsed = Duration.ofNanos(System.nanoTime() - started);
+
+			assertThat(thrown).isInstanceOf(ClientHandlerException.class).hasRootCauseInstanceOf(SocketTimeoutException.class);
+			assertThat(elapsed).isBetween(Duration.ofMillis(WebResourceFactory.READ_TIMEOUT_MILLIS - 500), Duration.ofMillis(WebResourceFactory.READ_TIMEOUT_MILLIS + 3000));
+		}
+	}
+
+	@Test
+	public void piCallsHaveConnectAndReadTimeoutsThatFitInsideAlexasResponseWindow() throws Exception {
+		try (MockedStatic<SslConfigurator> mockedSSLConfig = mockStatic(SslConfigurator.class);
+			 MockedStatic<TextMessageAlerter> staticTextMessageAlerter = mockStatic(TextMessageAlerter.class)) {
+			staticTextMessageAlerter.when(TextMessageAlerter::instance).thenReturn(textMessageAlerter);
+			setUpMocksForSslConfig(mockedSSLConfig);
+			setEnv(ImmutableMap.of("HOUSE_TRUSTSTORE_PATH", "nothing", "HOUSE_TRUSTSTORE_PASSWORD", "really"));
+			WebResourceFactory.setHouseIp("https://1.2.3.4:5000");
+
+			final WebResource resource = getWebResource(WebResourceFactory.buildSecuredHomeWebResource("/house/status"));
+
+			assertThat(resource.getProperties())
+					.containsEntry(ClientConfig.PROPERTY_CONNECT_TIMEOUT, 2000)
+					.containsEntry(ClientConfig.PROPERTY_READ_TIMEOUT, 5000);
+			// Alexa gives a skill ~8s to answer; a hung Pi must fail before that so we can answer ourselves.
+			assertThat(WebResourceFactory.CONNECT_TIMEOUT_MILLIS + WebResourceFactory.READ_TIMEOUT_MILLIS).isLessThan(8000);
+		}
+	}
+
 	private void setUpMocksForSslConfig(MockedStatic<SslConfigurator> mockedSSLConfig) {
 		SslConfigurator sslConfigurator = mock(SslConfigurator.class);
 		mockedSSLConfig.when(SslConfigurator::newInstance).thenReturn(sslConfigurator);
@@ -129,8 +180,12 @@ public class WebResourceFactoryTest {
 	}
 
 	private String getUrl(WebResource.Builder webResourceBuilder) throws Exception {
+		return getWebResource(webResourceBuilder).toString();
+	}
+
+	private WebResource getWebResource(WebResource.Builder webResourceBuilder) throws Exception {
 		Field field = webResourceBuilder.getClass().getDeclaredField("this$0");
 		field.setAccessible(true);
-		return field.get(webResourceBuilder).toString();
+		return (WebResource) field.get(webResourceBuilder);
 	}
 }
