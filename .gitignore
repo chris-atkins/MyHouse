@@ -7,3 +7,5 @@ MyHouse.iml
 .idea
 openjdk-11.0.2_linux-x64_bin.tar.gz
 myhousedata.csv
+# Copied from target/ by the Jenkinsfile for the image build
+/MyHouse.jar

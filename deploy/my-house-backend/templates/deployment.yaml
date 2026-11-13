@@ -1,3 +1,15 @@
+{{- /* The app's Secrets live outside Helm: <app>-env (settings, copied by
+       do-k8s-cluster/scripts/adopt-secret.sh) and <app>-files (the truststore and keystore). An
+       upgrade without them would delete the old Helm-made Secret and leave new pods unable to
+       start. Only checked on upgrade, so `helm template` still renders offline. */}}
+{{- if .Release.IsUpgrade }}
+{{- range $suffix := list "env" "files" }}
+{{- $name := printf "%s-%s" $.Values.appName $suffix }}
+{{- if not (lookup "v1" "Secret" $.Release.Namespace $name) }}
+{{- fail (printf "Secret %s does not exist in namespace %s. Create it before deploying (do-k8s-cluster/jenkins/README.md, \"Moving an app over\")." $name $.Release.Namespace) }}
+{{- end }}
+{{- end }}
+{{- end }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -18,69 +30,86 @@ spec:
         deploymentTime: "{{ now | unixEpoch }}"
     spec:
       containers:
-        - image: "{{ .Values.containerRegistry }}/{{ .Values.projectName }}:{{ .Values.imageLabel }}"
-          imagePullPolicy: Always
+        # Image tags never move (<variant>-<commit>), so a tag already on the node is the right image.
+        - image: "{{ .Values.containerRegistry }}/{{ .Values.projectName }}:{{ required "imageLabel is set by the CI pipeline (backend-<commit>), or backend-precutover to undo the cutover" .Values.imageLabel }}"
+          imagePullPolicy: IfNotPresent
           name: {{ .Values.appName }}
           ports:
             - containerPort: {{ .Values.containerPort }}
+          # HOUSE_TRUSTSTORE_PATH and SSL_KEYSTORE_PATH point here (the paths the old image used).
+          volumeMounts:
+            - name: ssl-files
+              mountPath: /Users/chrisatkins/myssl
+              readOnly: true
           env:
             - name: SMTP_USER
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: smtpUser
             - name: SMTP_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: smtpPassword
             - name: HOUSE_URL
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: houseUrl
             - name: HOUSE_TRUSTSTORE_PATH
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: houseTruststorePath
             - name: HOUSE_TRUSTSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: houseTruststorePassword
             - name: SSL_KEYSTORE_PATH
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: sslKeystorePath
             - name: SSL_KEYSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: sslKeystorePassword
             - name: AUTHENTICATION_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: authenticationSecret
             - name: JDBC_CONNECTION_STRING
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: jdbcConnectionString
             - name: DB_USER
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: dbUser
             - name: DB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: dbPassword
             - name: WEATHER_APP_ID
               valueFrom:
                 secretKeyRef:
-                  name: "{{ .Values.appName }}-secret"
+                  name: "{{ .Values.appName }}-env"
                   key: weatherAppId
+      volumes:
+        - name: ssl-files
+          secret:
+            secretName: "{{ .Values.appName }}-files"
+            # Named, so a Secret missing either key stops the new pod from starting (and the old
+            # one keeps running) instead of failing later, on the first call to the house.
+            items:
+              - key: truststore
+                path: truststore
+              - key: keystore
+                path: keystore

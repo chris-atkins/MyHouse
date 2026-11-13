@@ -5,20 +5,10 @@ publicUrl: www.poorknight.com
 replicaCount: 1
 
 containerRegistry: registry.digitalocean.com/chris-container-registry
-imageLabel: backend-latest
+# imageLabel has no default: the Jenkinsfile sets it to the image it just built.
 
 servicePort: 80
 containerPort: 8443
 
-smtpUser: "hidden"
-smtpPassword: "hidden"
-houseUrl: "hidden"
-houseTruststorePath: "hidden"
-houseTruststorePassword: "hidden"
-sslKeystorePath: "hidden"
-sslKeystorePassword: "hidden"
-authenticationSecret: "hidden"
-jdbcConnectionString: "hidden"
-dbUser: "hidden"
-dbPassword: "hidden"
-weatherAppId: "hidden"
+# The app's settings are in the Secret my-house-backend-env, and the truststore and keystore files
+# in my-house-backend-files. Both live only in the cluster (see do-k8s-cluster/jenkins/README.md).

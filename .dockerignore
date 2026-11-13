@@ -1,0 +1,3 @@
+# The image needs only the jar the Jenkinsfile copies here; everything else stays out.
+*
+!MyHouse.jar

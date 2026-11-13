@@ -1,6 +1,6 @@
 FROM eclipse-temurin:18-jdk-alpine
 COPY MyHouse.jar /
-COPY keystore /Users/chrisatkins/myssl/keystore
-COPY truststore /Users/chrisatkins/myssl/truststore
+# The truststore (and the unused keystore) are mounted at /Users/chrisatkins/myssl from the
+# Secret my-house-backend-files, so the image holds no credentials.
 CMD ["java", "-jar", "MyHouse.jar"]
 EXPOSE 8443
